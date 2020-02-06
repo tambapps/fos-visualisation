@@ -27,10 +27,6 @@ public final class FosDataParser {
     fosById.put(id, fos);
   }
 
-  private static int parseId(String line) {
-    return Integer.parseInt(line.split(",")[0].replaceAll("\"", ""));
-  }
-
   public static FosData parseData() throws IOException {
     Map<Integer, Fos> fosById = new HashMap<>();
     Map<Integer, Fos> fosByYear = new HashMap<>();
