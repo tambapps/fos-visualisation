@@ -7,7 +7,7 @@ import java.util.Map;
 @Data
 public class Fos {
 
-  // id and year stored in map from FosData
+  // id stored in map from FosData
   private final Map<String, Float> fosWeights;
   private final int year;
   private final int nCitations;
