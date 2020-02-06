@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class FosDataParserTest {
@@ -14,6 +13,7 @@ public class FosDataParserTest {
     FosData fosData = FosDataParser.parseData();
 
     assertNotNull(fosData.getFosOccurenceMap());
-    assertEquals(18901, fosData.getFosOccurenceMap().size());
+    assertNotNull(fosData.getFosById());
+    assertNotNull(fosData.getFosByYear());
   }
 }

@@ -15,15 +15,19 @@ public class Properties {
     }
   }
 
-  public String get(String key) {
+  public static String get(String key) {
     return PROPERTIES.getProperty(key);
   }
 
-  public Integer getInt(String key) {
-    return Integer.parseInt(PROPERTIES.getProperty(key));
+  public static Integer getInt(String key) {
+    String number = PROPERTIES.getProperty(key);
+    if (number == null) {
+      return null;
+    }
+    return Integer.parseInt(number);
   }
 
-  public Integer getIntOrDefault(String key, int defaultValue) {
+  public  static Integer getIntOrDefault(String key, int defaultValue) {
     if (!PROPERTIES.containsKey(key)) {
       return defaultValue;
     }

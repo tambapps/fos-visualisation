@@ -7,9 +7,8 @@ import java.util.Map;
 @Data
 public class FosData {
 
+  private final Map<Integer, Fos> fosById;
+  private final Map<Integer, Fos> fosByYear;
   private final Map<String, Integer> fosOccurenceMap;
 
-  public FosData(Map<String, Integer> fosOccurenceMap) {
-    this.fosOccurenceMap = fosOccurenceMap;
-  }
 }
