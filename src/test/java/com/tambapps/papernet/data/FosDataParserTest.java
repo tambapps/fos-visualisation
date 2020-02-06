@@ -9,8 +9,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class FosDataParserTest {
 
-
-
   @Test
   public void test() throws IOException {
     FosData fosData = FosDataParser.parseData();
