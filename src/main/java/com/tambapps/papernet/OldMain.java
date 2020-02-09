@@ -1,4 +1,4 @@
-package com.tambapps.papernet.gl;
+package com.tambapps.papernet;
 
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shape.Circle;
@@ -44,7 +44,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class GlWindow {
+public class OldMain {
 
   // The window handle
   private long window;
@@ -53,20 +53,6 @@ public abstract class GlWindow {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
     init();
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the GLCapabilities instance and makes the OpenGL
-    // bindings available for use.
-    GL.createCapabilities();
-    // Set the clear color
-    glClearColor(.0f, 0.0f, 0.0f, 0.0f);
-
-    try {
-      onInitialized();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
     loop();
 
     // Free the window callbacks and destroy the window
@@ -133,22 +119,46 @@ public abstract class GlWindow {
   }
 
   private void loop() {
+    // This line is critical for LWJGL's interoperation with GLFW's
+    // OpenGL context, or any context that is managed externally.
+    // LWJGL detects the context that is current in the current thread,
+    // creates the GLCapabilities instance and makes the OpenGL
+    // bindings available for use.
+    GL.createCapabilities();
+
+    // Set the clear color
+    glClearColor(.0f, 0.0f, 0.0f, 0.0f);
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
     while ( !glfwWindowShouldClose(window) ) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-      onDraw();
+      // DRAW EVERYTHING HERE
+      // display here
+      if (shader == null) {
+        try {
+          shader = new Shader("shader");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      shader.bind();
+      shader.setUniform("green", 1);
+      rectangle.draw();
+
+
       glfwSwapBuffers(window); // swap the color buffers
       // Poll for window events. The key callback above will only be
       // invoked during this call.
       glfwPollEvents();
     }
   }
+  Shader shader;
+  Circle rectangle = new Circle();
 
-  public abstract void onDraw();
-  public abstract void onInitialized() throws IOException;
-
+  public static void main(String[] args) {
+    new OldMain().run();
+  }
 
 }
