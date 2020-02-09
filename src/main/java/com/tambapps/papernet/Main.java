@@ -4,6 +4,7 @@ import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shape.Circle;
 import com.tambapps.papernet.gl.shape.Rectangle;
+import com.tambapps.papernet.gl.text.Text;
 
 import java.io.IOException;
 
@@ -26,7 +27,8 @@ public class Main extends GlWindow {
   public void onDraw() {
     shader.bind();
     shader.setUniform("green", 1);
-    rectangle.draw();
+    //rectangle.draw();
+    Text.drawString("test", 0, 0, 0.3f, 1000);
   }
 
   public static void main(String[] args) throws IOException {
