@@ -17,20 +17,13 @@ public class Main extends GlWindow {
   }
 
   @Override
-  public void onInitialized() throws IOException {
+  public void onGlContextInitialized() throws IOException {
     shader = new Shader("shader");
 
   }
 
   @Override
   public void onDraw() {
-    if (shader == null) {
-      try {
-        shader = new Shader("shader");
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
     shader.bind();
     shader.setUniform("green", 1);
     rectangle.draw();

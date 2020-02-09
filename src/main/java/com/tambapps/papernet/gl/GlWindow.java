@@ -1,7 +1,5 @@
 package com.tambapps.papernet.gl;
 
-import com.tambapps.papernet.gl.shader.Shader;
-import com.tambapps.papernet.gl.shape.Circle;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -63,7 +61,7 @@ public abstract class GlWindow {
     glClearColor(.0f, 0.0f, 0.0f, 0.0f);
 
     try {
-      onInitialized();
+      onGlContextInitialized();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -148,7 +146,7 @@ public abstract class GlWindow {
   }
 
   public abstract void onDraw();
-  public abstract void onInitialized() throws IOException;
+  public abstract void onGlContextInitialized() throws IOException;
 
 
 }
