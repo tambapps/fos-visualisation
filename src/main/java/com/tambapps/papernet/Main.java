@@ -10,6 +10,7 @@ import com.tambapps.papernet.visualisation.Bubble;
 
 import java.io.IOException;
 
+// TODO UTILISER TEXTURE EN BACKGROUND
 public class Main extends GlWindow {
 
   Bubble bubble;
