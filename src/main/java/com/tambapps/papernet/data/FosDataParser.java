@@ -19,17 +19,17 @@ public final class FosDataParser {
     fosOccurenceMap.put(fos, Integer.parseInt(line.substring(commaIndex + 1)));
   }
 
-  private static void addFosInMaps(Map<Integer, Fos> fosById, Map<Integer, Fos> fosByYear, String line) {
+  private static void addFosInMaps(Map<Integer, ResearchPaper> fosById, Map<Integer, ResearchPaper> fosByYear, String line) {
     String[] fields = FosParser.parseFields(line);
-    Fos fos = FosParser.parse(fields);
+    ResearchPaper researchPaper = FosParser.parse(fields);
     int id = FosParser.parseId(fields);
-    fosByYear.put(fos.getYear(), fos);
-    fosById.put(id, fos);
+    fosByYear.put(researchPaper.getYear(), researchPaper);
+    fosById.put(id, researchPaper);
   }
 
   public static FosData parseData() throws IOException {
-    Map<Integer, Fos> fosById = new HashMap<>();
-    Map<Integer, Fos> fosByYear = new HashMap<>();
+    Map<Integer, ResearchPaper> fosById = new HashMap<>();
+    Map<Integer, ResearchPaper> fosByYear = new HashMap<>();
     Map<String, Integer> fosOccurenceMap = new HashMap<>();
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(FosDataParser.class.getResourceAsStream("/data/fos.csv")))) {
       reader.lines().skip(1).forEach((line) -> addFosOccurenceEntry(fosOccurenceMap, line));

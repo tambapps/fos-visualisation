@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
 
-public class FosDataParserTest {
+public class ResearchPaperDataParserTest {
 
   @Test
   public void test() throws IOException {

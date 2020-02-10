@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class Fos {
+public class ResearchPaper {
 
   // id stored in map from FosData
   private final Map<String, Float> fosWeights;

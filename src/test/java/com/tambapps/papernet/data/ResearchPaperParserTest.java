@@ -10,7 +10,7 @@ import static com.tambapps.papernet.data.FosParser.TITLE;
 import static com.tambapps.papernet.data.FosParser.YEAR;
 import static org.junit.Assert.assertEquals;
 
-public class FosParserTest {
+public class ResearchPaperParserTest {
 
   private static final int FOS_ID = 103547078;
   private static final int FOS_YEAR = 2011;
@@ -34,8 +34,8 @@ public class FosParserTest {
   @Test
   public void parseFosFromFields() {
     String[] fields = FosParser.parseFields(TEST_LINE);
-    Fos fos = FosParser.parse(fields);
-    assertEquals(FOS_YEAR, fos.getYear());
+    ResearchPaper researchPaper = FosParser.parse(fields);
+    assertEquals(FOS_YEAR, researchPaper.getYear());
   }
 
 }

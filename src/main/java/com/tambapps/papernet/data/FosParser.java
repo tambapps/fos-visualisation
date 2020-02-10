@@ -17,8 +17,8 @@ class FosParser {
 
   private FosParser() {}
 
-  public static Fos parse(String[] fields) {
-    return new Fos(parseFosWeights(fields[FOS]), Integer.parseInt(fields[YEAR]), Integer.parseInt(fields[N_CITATION]));
+  public static ResearchPaper parse(String[] fields) {
+    return new ResearchPaper(parseFosWeights(fields[FOS]), Integer.parseInt(fields[YEAR]), Integer.parseInt(fields[N_CITATION]));
   }
 
   private static Map<String, Float> parseFosWeights(String field) {
