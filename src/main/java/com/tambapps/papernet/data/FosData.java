@@ -12,8 +12,12 @@ import java.util.Map;
 public class FosData {
 
   private final Map<Integer, ResearchPaper> fosById;
-  private final Map<Integer, ResearchPaper> fosByYear;
+  private final Map<Integer, List<ResearchPaper>> fosByYear;
   private final Map<String, Integer> fosOccurenceMap;
+
+  public Collection<ResearchPaper> getAllPapers() {
+    return fosById.values();
+  }
 
   public static Map<String, List<Float>> getAllFosWeights(Collection<ResearchPaper> foses) {
     Map<String, List<Float>> fosWeights = new HashMap<>();

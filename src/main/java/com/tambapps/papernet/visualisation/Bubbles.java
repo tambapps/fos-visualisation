@@ -6,7 +6,6 @@ import com.tambapps.papernet.data.WeightedCitation;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 public class Bubbles {
 
   private static final float MAX_RADIUS = 0.5f;
-  private static final float MIN_RADIUS = 0.2f;
+  private static final float MIN_RADIUS = 0.1f;
 
   private static float radiusScore(List<WeightedCitation> radiusScore) {
     return radiusScore.stream()

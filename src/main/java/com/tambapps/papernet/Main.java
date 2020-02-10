@@ -1,5 +1,8 @@
 package com.tambapps.papernet;
 
+import com.tambapps.papernet.data.FosData;
+import com.tambapps.papernet.data.FosDataParser;
+import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
@@ -7,37 +10,30 @@ import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Rectangle;
 import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.visualisation.Bubble;
+import com.tambapps.papernet.visualisation.Bubbles;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 // TODO UTILISER TEXTURE EN BACKGROUND
 public class Main extends GlWindow {
 
-  Bubble bubble;
-  Rectangle rectangle;
-  Shader shader;
-
-  Main() throws IOException {
-    rectangle = new Rectangle();
-  }
+  List<Bubble> bubbles;
 
   @Override
   public void onGlContextInitialized() throws IOException {
-    shader = ShaderFactory.rgbShader(1, 1f, 0.5f);
-    shader.setUniformVariable("red", 1f);
-    shader.setUniformVariable("green", 1f);
-    shader.setUniformVariable("blue", 0.5f);
-
-    rectangle.setX(-1 + rectangle.getWidth() / 2 + 0.1f);
-bubble = Bubble.newBubble("caca", 0, 1, 0, 0.2f);
+    Collection<ResearchPaper> papers = FosDataParser.parseData(10).getAllPapers();
+    bubbles = Bubbles.toBubbles(papers);
+    for (Bubble bubble : bubbles) {
+      bubble.setX((float)Math.random());
+      bubble.setY((float)Math.random());
+    }
   }
 
   @Override
   public void onDraw() {
-    shader.bind();
-    rectangle.draw();
-    Text.drawString("test", 0, 0, 0.3f, 1000);
-    bubble.draw();
+    bubbles.forEach(Bubble::draw);
   }
 
   public static void main(String[] args) throws IOException {

@@ -30,4 +30,12 @@ public class Bubble {
       0.2f, circle.getRadius() * 40);
   }
 
+  public void setX(float x) {
+    circle.setX(x);
+  }
+
+  public void setY(float y) {
+    circle.setY(y);
+  }
+
 }
