@@ -12,6 +12,7 @@ import com.tambapps.papernet.visualisation.Bubbles;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,7 +21,8 @@ import static org.lwjgl.opengl.GL11.glFlush;
 // TODO UTILISER TEXTURE EN BACKGROUND
 public class Main extends GlWindow {
 
-  List<Bubble> bubbles;
+  private List<Bubble> bubbles;
+  private List<Curve> links;
 
  // FontTT fontTT;
   private Texture texture;
@@ -31,7 +33,8 @@ public class Main extends GlWindow {
     System.out.println("Finished loading...");
     long startTime = System.currentTimeMillis();
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
-    bubbles = Bubbles.toBubbles(papers);
+    links = new ArrayList<>();
+    bubbles = Bubbles.toBubbles(papers, links);
     for (Bubble bubble : bubbles) {
       bubble.setX((float)Math.random() * 2 - 1);
       bubble.setY((float)Math.random() * 2 - 1);
@@ -50,7 +53,8 @@ public class Main extends GlWindow {
     texture.bind();
     texture.draw();
 
-     bubbles.forEach(Bubble::draw);
+    links.forEach(Curve::draw);
+    bubbles.forEach(Bubble::draw);
 
     curve.draw();
  //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);

@@ -3,12 +3,14 @@ package com.tambapps.papernet.visualisation;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
+import com.tambapps.papernet.gl.shape.Curve;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -28,8 +30,10 @@ public class Bubbles {
       .reduce(0f, Float::sum);
   }
 
-  public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers) {
+  public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers, List<Curve> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
+    Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
+    researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap)); // TODO fill links with this map
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> radiusScore(e.getValue())));
@@ -74,6 +78,19 @@ public class Bubbles {
       .map(e -> createBubble(e.getKey(), e.getValue()))
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
+  }
+
+  private static void fillConnectionsMap(ResearchPaper paper, Map<String, Map<String, Integer>> connectedOccurenceMap) {
+    for (String fos : paper.getFosWeights().keySet()) {
+      for (String fos2 : paper.getFosWeights().keySet()) {
+        if (fos.equals(fos2)) continue;
+        String first = fos.compareTo(fos2) <= 0 ? fos : fos2; // order them in order to have all links for a couple of fos in one entry
+        String second = first.equals(fos) ? fos2 : fos;
+        Map<String, Integer> occMap = connectedOccurenceMap.computeIfAbsent(first, k -> new HashMap<>());
+        int occ = occMap.getOrDefault(second, 0);
+        occMap.put(second, occ + 1);
+      }
+    }
   }
 
   private static Bubble createBubble(String fos, BubbleData data) {
