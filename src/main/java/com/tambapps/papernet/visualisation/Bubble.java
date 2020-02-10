@@ -7,6 +7,8 @@ import com.tambapps.papernet.gl.text.Text;
 
 import java.io.IOException;
 
+import static org.lwjgl.opengl.GL20.glUseProgram;
+
 public class Bubble {
 
   private Shader shader;
@@ -22,15 +24,16 @@ public class Bubble {
   }
 
   public static Bubble newBubble(String text, float r, float g, float b, float radius) throws IOException {
-    return new Bubble(ShaderFactory.rgbShader(r, g, b), new Circle(radius), text, ShaderFactory.rgbShader(0, 0, 0));
+    return new Bubble(ShaderFactory.rgbShader(r, g, b), new Circle(radius), text, ShaderFactory.rgbShader(1, 0, 0));
   }
 
   public void draw() {
     shader.bind();
     circle.draw();
     textShader.bind();
+    glUseProgram(0);
     Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
-      0.2f, circle.getRadius() * 40);
+      0.2f, 40);
   }
 
   public void setX(float x) {

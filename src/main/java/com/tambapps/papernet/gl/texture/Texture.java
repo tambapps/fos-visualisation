@@ -76,16 +76,16 @@ public class Texture {
     glUseProgram(0); // penser a reset le shader quand drawing quelquechose
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
-    glVertex2f(-0.5f, 0.5f);
+    glVertex2f(-1f, 1f);
 
     glTexCoord2f(1, 0);
-    glVertex2f(0.5f, 0.5f);
+    glVertex2f(1f, 1f);
 
     glTexCoord2f(1, 1);
-    glVertex2f(0.5f, -0.5f);
+    glVertex2f(1f, -1f);
 
     glTexCoord2f(0, 1);
-    glVertex2f(-0.5f, -0.5f);
+    glVertex2f(-1f, -1f);
     glEnd();
   }
 }
