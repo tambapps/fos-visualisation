@@ -3,6 +3,8 @@ package com.tambapps.papernet.gl.shader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
@@ -22,12 +24,14 @@ import static org.lwjgl.opengl.GL20.glGetShaderi;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
 public class Shader {
 
+  private final Map<String, Float> uniformVariables = new HashMap<>();
   private int programm;
   private int vs; // vertex shader id
   private int fs; // fragment shader id
@@ -51,16 +55,21 @@ public class Shader {
     }
   }
 
-  public void setUniform(String name, int value) {
+  public void setUniformVariable(String name, float value) {
+    uniformVariables.put(name, value);
+  }
+
+  private void setUniform(String name, float value) {
     int location = glGetUniformLocation(programm, name);
     if (location == -1) {
       return; // location doesn't exists
     }
-    glUniform1i(location, value);
+    glUniform1f(location, value);
   }
 
   public void bind() {
     glUseProgram(programm);
+    uniformVariables.forEach(this::setUniform);
   }
 
   private int createShader(int glShaderType, String filename) throws IOException {

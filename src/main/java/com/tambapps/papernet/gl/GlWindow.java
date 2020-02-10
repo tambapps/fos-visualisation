@@ -44,6 +44,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class GlWindow {
 
+  private static final int WINDOW_WIDTH = 720;
+  private static final int WINDOW_HEIGHT = 720;
   // The window handle
   private long window;
 
@@ -91,7 +93,7 @@ public abstract class GlWindow {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
     // Create the window
-    window = glfwCreateWindow(1000, 600, "Hello World!", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World!", NULL, NULL);
     if ( window == NULL )
       throw new RuntimeException("Failed to create the GLFW window");
 

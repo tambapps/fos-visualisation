@@ -1,11 +1,13 @@
 package com.tambapps.papernet.gl.shape;
 
+import lombok.Data;
+
 import static org.lwjgl.opengl.GL11.GL_POLYGON;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
-
+@Data
 public class Circle {
 
   private static final float PI = (float) Math.PI;
@@ -14,6 +16,10 @@ public class Circle {
   private float x;
   private float y;
   private float radius = 0.1f;
+
+  public Circle(float radius) {
+    this.radius = radius;
+  }
 
   public void draw() {
     glBegin(GL_POLYGON);
