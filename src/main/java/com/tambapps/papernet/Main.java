@@ -4,6 +4,7 @@ import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
+import com.tambapps.papernet.gl.shape.Curve;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
@@ -23,6 +24,7 @@ public class Main extends GlWindow {
 
  // FontTT fontTT;
   private Texture texture;
+  private Curve curve = new Curve(-1, -1, 0.1f, 0.1f, 0.25f, 0.25f, 1, -1, 4);
 
   @Override
   public void onGlContextInitialized() throws IOException {
@@ -46,6 +48,8 @@ public class Main extends GlWindow {
     texture.draw();
 
      bubbles.forEach(Bubble::draw);
+
+    curve.draw();
  //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
 
