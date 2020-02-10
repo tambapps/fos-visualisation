@@ -28,6 +28,8 @@ public class Main extends GlWindow {
 
   @Override
   public void onGlContextInitialized() throws IOException {
+    System.out.println("Finished loading...");
+    long startTime = System.currentTimeMillis();
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     bubbles = Bubbles.toBubbles(papers);
     for (Bubble bubble : bubbles) {
@@ -40,6 +42,7 @@ public class Main extends GlWindow {
     } catch (Exception e) {
       throw new IOException(e);
     }
+    System.out.format("Finished loading objects (in %d s)", (System.currentTimeMillis() - startTime) / 1000L);
   }
 // TODO rewrite TextureLoader and test fonTTTZ
   @Override
