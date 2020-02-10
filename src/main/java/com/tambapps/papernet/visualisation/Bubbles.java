@@ -8,6 +8,7 @@ import lombok.Value;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -68,10 +69,10 @@ public class Bubbles {
         radiusScore.get(e.getKey()), finalMinScore, finalMaxScore,
         citations.get(e.getKey()), finalMinCitations, finalMaxCitations)));
 
-    // TODO order by radius decroissant
     return fosBubbleData.entrySet()
       .stream()
       .map(e -> createBubble(e.getKey(), e.getValue()))
+      .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
   }
 

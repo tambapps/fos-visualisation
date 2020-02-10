@@ -9,39 +9,31 @@ import java.io.IOException;
 
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-public class Bubble {
+public class Bubble extends Circle {
 
   private Shader shader;
   private Shader textShader;
-  private Circle circle;
   private String text;
 
-  private Bubble(Shader shader, Circle circle, String text, Shader textShader) {
+  private Bubble(float radius, Shader shader, String text, Shader textShader) {
+    super(radius);
     this.shader = shader;
-    this.circle = circle;
     this.text = text;
     this.textShader = textShader;
   }
 
   public static Bubble newBubble(String text, float r, float g, float b, float radius) throws IOException {
-    return new Bubble(ShaderFactory.rgbShader(r, g, b), new Circle(radius), text, ShaderFactory.rgbShader(1, 0, 0));
+    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, ShaderFactory.rgbShader(1, 0, 0));
   }
 
   public void draw() {
     shader.bind();
-    circle.draw();
+    super.draw();
     textShader.bind();
     glUseProgram(0);
-    Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
-      0.2f, 40);
-  }
-
-  public void setX(float x) {
-    circle.setX(x);
-  }
-
-  public void setY(float y) {
-    circle.setY(y);
+    // TODO draw text
+   // Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
+     // 0.2f, 40);
   }
 
 }
