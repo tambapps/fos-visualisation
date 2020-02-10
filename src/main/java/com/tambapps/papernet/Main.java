@@ -21,8 +21,8 @@ public class Main extends GlWindow {
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     bubbles = Bubbles.toBubbles(papers);
     for (Bubble bubble : bubbles) {
-      bubble.setX((float)Math.random());
-      bubble.setY((float)Math.random());
+      bubble.setX((float)Math.random() * 2 - 1);
+      bubble.setY((float)Math.random() * 2 - 1);
     }
   }
 
