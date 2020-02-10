@@ -26,9 +26,9 @@ public class Bubble {
   }
 
   public void draw() {
+    shader.bind();
     circle.draw();
-    shader.bind();
-    shader.bind();
+    textShader.bind();
     Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
       0.2f, circle.getRadius() * 40);
   }
