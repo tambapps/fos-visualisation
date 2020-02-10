@@ -27,7 +27,7 @@ public class Curve {
   public void draw() {
     GL11.glLineWidth(width);
     GL11.glBegin(GL11.GL_LINES);
-    GL11.glEnable(GL11.GL_LINE_WIDTH);
+ //   GL11.glEnable(GL11.GL_LINE_WIDTH);
 
     int segments  = NB_SEGMENTS;
 
@@ -72,7 +72,7 @@ public class Curve {
     glVertex3f(x2, y2, 0);
 
     GL11.glEnd();
-    GL11.glDisable(GL11.GL_LINE_WIDTH);
+ //   GL11.glDisable(GL11.GL_LINE_WIDTH);
   }
 
 }

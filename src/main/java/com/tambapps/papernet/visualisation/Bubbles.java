@@ -21,8 +21,11 @@ public class Bubbles {
   private static Color START_COLOR = new Color(0, 0, 1);
   private static Color END_COLOR = new Color(1, 0, 0);
 
-  private static final float MAX_RADIUS = 0.5f;
   private static final float MIN_RADIUS = 0.05f;
+  private static final float MAX_RADIUS = 0.5f;
+
+  private static final float MIN_LINK_WIDTH = 2; // curves can only be from 1 to 10
+  private static final float MAX_LINK_WIDTH = 10;
 
   private static float radiusScore(List<WeightedCitation> radiusScore) {
     return radiusScore.stream()
@@ -32,8 +35,6 @@ public class Bubbles {
 
   public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers, List<Curve> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
-    Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
-    researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap)); // TODO fill links with this map
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> radiusScore(e.getValue())));
@@ -73,11 +74,35 @@ public class Bubbles {
         radiusScore.get(e.getKey()), finalMinScore, finalMaxScore,
         citations.get(e.getKey()), finalMinCitations, finalMaxCitations)));
 
+    // links
+    Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
+    researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap)); // TODO fill links with this map
+    float maxLinkOcc = connectedOccurenceMap.values()
+      .stream()
+      .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
+      .max().getAsInt();
+    float minLinkOcc = connectedOccurenceMap.values()
+      .stream()
+      .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
+      .min().getAsInt();
+    fillLinks(links, connectedOccurenceMap, fosBubbleData, minLinkOcc, maxLinkOcc);
+
     return fosBubbleData.entrySet()
       .stream()
       .map(e -> createBubble(e.getKey(), e.getValue()))
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
+  }
+
+  private static void fillLinks(List<Curve> links, Map<String, Map<String, Integer>> connectedOccurenceMap,
+                                Map<String, BubbleData> fosBubbleData, float minLinkOcc, float maxLinkOcc) {
+    for (String fos1 : connectedOccurenceMap.keySet()) {
+      Map<String, Integer> occMap = connectedOccurenceMap.get(fos1);
+      for (String fos2 : occMap.keySet()) {
+        int nbOcc = occMap.get(fos2);
+
+      }
+    }
   }
 
   private static void fillConnectionsMap(ResearchPaper paper, Map<String, Map<String, Integer>> connectedOccurenceMap) {

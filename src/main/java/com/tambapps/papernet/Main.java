@@ -26,7 +26,7 @@ public class Main extends GlWindow {
 
  // FontTT fontTT;
   private Texture texture;
-  private Curve curve = new Curve(-1, -1, 0.1f, 0.1f, 0.25f, 0.25f, 1, -1, 4);
+  private Curve curve = new Curve(-1, -1, 0.1f, 0.1f, 0.25f, 0.25f, 1, -1, 2);
 
   @Override
   public void onGlContextInitialized() throws IOException {
