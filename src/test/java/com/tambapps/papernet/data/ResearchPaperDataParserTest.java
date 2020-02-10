@@ -10,10 +10,10 @@ public class ResearchPaperDataParserTest {
 
   @Test
   public void test() throws IOException {
-    FosData fosData = FosDataParser.parseData();
+    ResearchPaperData researchPaperData = ResearchPaperDataParser.parseData();
 
-    assertNotNull(fosData.getFosOccurenceMap());
-    assertNotNull(fosData.getFosById());
-    assertNotNull(fosData.getFosByYear());
+    assertNotNull(researchPaperData.getFosOccurenceMap());
+    assertNotNull(researchPaperData.getPaperById());
+    assertNotNull(researchPaperData.getPapersByYear());
   }
 }

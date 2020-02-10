@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class FosData {
+public class ResearchPaperData {
 
-  private final Map<Integer, ResearchPaper> fosById;
-  private final Map<Integer, List<ResearchPaper>> fosByYear;
+  private final Map<Integer, ResearchPaper> paperById;
+  private final Map<Integer, List<ResearchPaper>> papersByYear;
   private final Map<String, Integer> fosOccurenceMap;
 
   public Collection<ResearchPaper> getAllPapers() {
-    return fosById.values();
+    return paperById.values();
   }
 
   public static Map<String, List<Float>> getAllFosWeights(Collection<ResearchPaper> foses) {

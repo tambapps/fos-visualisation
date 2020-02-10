@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public final class FosDataParser {
+public final class ResearchPaperDataParser {
 
-  private FosDataParser() {}
+  private ResearchPaperDataParser() {}
 
   private static void addFosOccurenceEntry(Map<String, Integer> fosOccurenceMap, String line) {
     int commaIndex = line.lastIndexOf(',');
@@ -21,7 +21,7 @@ public final class FosDataParser {
     fosOccurenceMap.put(fos, Integer.parseInt(line.substring(commaIndex + 1)));
   }
 
-  private static void addFosInMaps(Map<Integer, ResearchPaper> fosById, Map<Integer, List<ResearchPaper>> fosByYear, String line) {
+  private static void addPaperInMaps(Map<Integer, ResearchPaper> fosById, Map<Integer, List<ResearchPaper>> fosByYear, String line) {
     String[] fields = FosParser.parseFields(line);
     ResearchPaper researchPaper = FosParser.parse(fields);
     int id = FosParser.parseId(fields);
@@ -30,25 +30,25 @@ public final class FosDataParser {
     fosById.put(id, researchPaper);
   }
 
-  public static FosData parseData() throws IOException {
+  public static ResearchPaperData parseData() throws IOException {
     int maxFos = Optional.ofNullable(Properties.getInt("maxFos")).orElse(Integer.MAX_VALUE);
     return parseData(maxFos);
   }
 
-  public static FosData parseData(int maxFos) throws IOException {
+  public static ResearchPaperData parseData(int maxFos) throws IOException {
     Map<Integer, ResearchPaper> fosById = new HashMap<>();
     Map<Integer, List<ResearchPaper>> fosByYear = new HashMap<>();
     Map<String, Integer> fosOccurenceMap = new HashMap<>();
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(FosDataParser.class.getResourceAsStream("/data/fos.csv")))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResearchPaperDataParser.class.getResourceAsStream("/data/fos.csv")))) {
       reader.lines().skip(1).forEach((line) -> addFosOccurenceEntry(fosOccurenceMap, line));
     }
 
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(FosDataParser.class.getResourceAsStream("/data/dblp.v11.csv")))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResearchPaperDataParser.class.getResourceAsStream("/data/dblp.v11.csv")))) {
       reader.lines()
         .skip(1)
         .limit(maxFos)
-        .forEach((line) -> addFosInMaps(fosById, fosByYear, line));
+        .forEach((line) -> addPaperInMaps(fosById, fosByYear, line));
     }
-    return new FosData(fosById, fosByYear, fosOccurenceMap);
+    return new ResearchPaperData(fosById, fosByYear, fosOccurenceMap);
   }
 }

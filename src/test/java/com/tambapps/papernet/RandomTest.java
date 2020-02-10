@@ -1,6 +1,6 @@
 package com.tambapps.papernet;
 
-import com.tambapps.papernet.data.FosDataParser;
+import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
@@ -14,7 +14,7 @@ public class RandomTest {
 
   @Test
   public void randomTest() throws IOException {
-    Collection<ResearchPaper> papers = FosDataParser.parseData(10).getAllPapers();
+    Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     List<Bubble> bubbles = Bubbles.toBubbles(papers);
     System.out.println(bubbles);
   }

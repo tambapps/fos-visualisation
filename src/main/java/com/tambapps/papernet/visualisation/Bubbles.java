@@ -1,7 +1,7 @@
 package com.tambapps.papernet.visualisation;
 
 import com.tambapps.papernet.data.ResearchPaper;
-import com.tambapps.papernet.data.FosData;
+import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
 import lombok.AllArgsConstructor;
 
@@ -23,7 +23,7 @@ public class Bubbles {
   }
 
   public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers) {
-    Map<String, List<WeightedCitation>> fosWeightedCitations = FosData.getFosWeightedCitations(researchPapers);
+    Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> radiusScore(e.getValue())));

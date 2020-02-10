@@ -1,14 +1,9 @@
 package com.tambapps.papernet;
 
-import com.tambapps.papernet.data.FosData;
-import com.tambapps.papernet.data.FosDataParser;
+import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
-import com.tambapps.papernet.gl.shader.Shader;
-import com.tambapps.papernet.gl.shader.ShaderFactory;
 
-import com.tambapps.papernet.gl.shape.Rectangle;
-import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
 
@@ -23,7 +18,7 @@ public class Main extends GlWindow {
 
   @Override
   public void onGlContextInitialized() throws IOException {
-    Collection<ResearchPaper> papers = FosDataParser.parseData(10).getAllPapers();
+    Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     bubbles = Bubbles.toBubbles(papers);
     for (Bubble bubble : bubbles) {
       bubble.setX((float)Math.random());
