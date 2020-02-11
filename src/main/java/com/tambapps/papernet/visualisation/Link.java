@@ -9,7 +9,7 @@ import org.joml.Matrix4f;
 import java.io.IOException;
 
 @AllArgsConstructor
-public class Link {
+public class Link extends AbstractDrawable {
 
   private final Bubble b1;
   private final Bubble b2;
@@ -36,7 +36,8 @@ public class Link {
     curve.setY2(b2.getY());
   }
 
-  public void draw(Matrix4f projection) {
+  @Override
+  public void doDraw(Matrix4f projection) {
     curveShader.bind(projection);
     curve.draw();
   }
