@@ -1,8 +1,12 @@
 package com.tambapps.papernet.gl.shader;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +30,7 @@ import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glUniform1f;
 
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
@@ -59,6 +64,16 @@ public class Shader {
     uniformVariables.put(name, value);
   }
 
+  private void setProjection(Matrix4f value) {
+    int location = glGetUniformLocation(programm, "projection");
+    if (location == -1) {
+      return; // location doesn't exists
+    }
+    FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+    value.get(buffer);
+    glUniformMatrix4fv(location, false, buffer);
+  }
+
   private void setUniform(String name, float value) {
     int location = glGetUniformLocation(programm, name);
     if (location == -1) {
@@ -67,9 +82,10 @@ public class Shader {
     glUniform1f(location, value);
   }
 
-  public void bind() {
+  public void bind(Matrix4f projection) {
     glUseProgram(programm);
     uniformVariables.forEach(this::setUniform);
+    setProjection(projection);
   }
 
   private int createShader(int glShaderType, String filename) throws IOException {

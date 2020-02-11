@@ -21,8 +21,8 @@ public class Bubbles {
   private static Color START_COLOR = new Color(0, 0, 1);
   private static Color END_COLOR = new Color(1, 0, 0);
 
-  private static final float MIN_RADIUS = 0.05f;
-  private static final float MAX_RADIUS = 0.5f;
+  private static final float MIN_RADIUS = 4;
+  private static final float MAX_RADIUS = 50;
 
   private static final float MIN_LINK_WIDTH = 2; // curves can only be from 1 to 10
   private static final float MAX_LINK_WIDTH = 10;
@@ -105,7 +105,12 @@ public class Bubbles {
       for (String fos2 : occMap.keySet()) {
         float nbOcc = occMap.get(fos2);
         float width = MIN_LINK_WIDTH + toPercentage(nbOcc, minLinkOcc, maxLinkOcc) * (MAX_LINK_WIDTH - MIN_LINK_WIDTH);
-        Link link = Link.newLink(fosBubble.get(fos1), fosBubble.get(fos2), width);
+        Link link = null;
+        try {
+          link = Link.newLink(fosBubble.get(fos1), fosBubble.get(fos2), width);
+        } catch (IOException e) {
+          throw new RuntimeException("Couldn't create link", e);
+        }
         links.add(link);
       }
     }

@@ -1,5 +1,7 @@
 package com.tambapps.papernet.gl;
 
+import com.tambapps.papernet.gl.view.Camera;
+import org.joml.Matrix4f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -46,10 +48,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class GlWindow {
 
-  private static final int WINDOW_WIDTH = 720;
-  private static final int WINDOW_HEIGHT = 720;
+  public static final int WINDOW_WIDTH = 720;
+  public static final int WINDOW_HEIGHT = 720;
   // The window handle
   private long window;
+  private Camera camera;
 
   public void run() {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -61,6 +64,8 @@ public abstract class GlWindow {
     // creates the GLCapabilities instance and makes the OpenGL
     // bindings available for use.
     GL.createCapabilities();
+    camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+
     glEnable(GL_TEXTURE_2D);
     // Set the clear color
     glClearColor(.0f, 0.0f, 0.0f, 0.0f);
@@ -139,10 +144,11 @@ public abstract class GlWindow {
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
+    Matrix4f projection = camera.getProjection();
     while ( !glfwWindowShouldClose(window) ) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-      onDraw();
+      onDraw(projection);
       glfwSwapBuffers(window); // swap the color buffers
       // Poll for window events. The key callback above will only be
       // invoked during this call.
@@ -150,8 +156,10 @@ public abstract class GlWindow {
     }
   }
 
-  public abstract void onDraw();
+  public abstract void onDraw(Matrix4f projection);
   public abstract void onGlContextInitialized() throws IOException;
 
-
+  public Camera getCamera() {
+    return camera;
+  }
 }

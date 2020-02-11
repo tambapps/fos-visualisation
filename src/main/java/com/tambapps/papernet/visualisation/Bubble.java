@@ -4,6 +4,7 @@ import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Circle;
 import com.tambapps.papernet.gl.text.Text;
+import org.joml.Matrix4f;
 
 import java.io.IOException;
 
@@ -27,10 +28,14 @@ public class Bubble extends Circle {
   }
 
   public void draw() {
-    shader.bind();
+    throw new UnsupportedOperationException("You should used draw(Matrix4f)");
+  }
+
+  public void draw(Matrix4f projection) {
+    shader.bind(projection);
     super.draw();
-    textShader.bind();
-    glUseProgram(0);
+    textShader.bind(projection);
+  //  glUseProgram(0);
     // TODO draw text
    // Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
      // 0.2f, 40);

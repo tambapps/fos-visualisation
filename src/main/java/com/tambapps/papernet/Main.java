@@ -8,6 +8,7 @@ import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
 import com.tambapps.papernet.visualisation.Link;
+import org.joml.Matrix4f;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class Main extends GlWindow {
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
     for (Bubble bubble : bubbles) {
-      bubble.setX((float)Math.random() * 2 - 1);
-      bubble.setY((float)Math.random() * 2 - 1);
+      bubble.setX((float)Math.random() * WINDOW_WIDTH - (WINDOW_WIDTH >> 1));
+      bubble.setY((float)Math.random() * WINDOW_HEIGHT - (WINDOW_HEIGHT >> 1));
     }
     texture = Texture.newTexture("background.jpg");
     try {
@@ -43,12 +44,12 @@ public class Main extends GlWindow {
   }
 // TODO rewrite TextureLoader and test fonTTTZ
   @Override
-  public void onDraw() {
+  public void onDraw(Matrix4f projection) {
     texture.bind();
     texture.draw();
 
-    links.forEach(Link::updateNDraw);
-    bubbles.forEach(Bubble::draw);
+    links.forEach(l -> l.updateNDraw(projection));
+    bubbles.forEach(b -> b.draw(projection));
     //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
 
