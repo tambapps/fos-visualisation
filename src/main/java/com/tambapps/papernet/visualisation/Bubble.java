@@ -3,21 +3,19 @@ package com.tambapps.papernet.visualisation;
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Circle;
-import com.tambapps.papernet.gl.text.Text;
 import org.joml.Matrix4f;
 
 import java.io.IOException;
 
-import static org.lwjgl.opengl.GL20.glUseProgram;
+public class Bubble extends AbstractDrawable {
 
-public class Bubble extends Circle {
-
+  private Circle circle;
   private Shader shader;
   private Shader textShader;
   private String text;
 
   private Bubble(float radius, Shader shader, String text, Shader textShader) {
-    super(radius);
+    this.circle = new Circle(radius);
     this.shader = shader;
     this.text = text;
     this.textShader = textShader;
@@ -27,18 +25,35 @@ public class Bubble extends Circle {
     return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, ShaderFactory.rgbShader(1, 0, 0));
   }
 
-  public void draw() {
-    throw new UnsupportedOperationException("You should used draw(Matrix4f)");
-  }
-
-  public void draw(Matrix4f projection) {
+  @Override
+  public void doDraw(Matrix4f projection) {
     shader.bind(projection);
-    super.draw();
+    circle.draw();
     textShader.bind(projection);
   //  glUseProgram(0);
     // TODO draw text
    // Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
      // 0.2f, 40);
+  }
+
+  public float getRadius() {
+    return circle.getRadius();
+  }
+
+  public float getX() {
+    return circle.getX();
+  }
+
+  public float getY() {
+    return circle.getY();
+  }
+
+  public void setX(float x) {
+    circle.setX(x);
+  }
+
+  public void setY(float y) {
+    circle.setY(y);
   }
 
   public String getText() {
