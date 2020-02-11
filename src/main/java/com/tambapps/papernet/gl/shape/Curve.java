@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
 @NoArgsConstructor
 public class Curve {
 
-  private static final int NB_SEGMENTS = 20;
+  private static final int NB_SEGMENTS = 10;
 
   private final RectLine tempRectLine = new RectLine();
 

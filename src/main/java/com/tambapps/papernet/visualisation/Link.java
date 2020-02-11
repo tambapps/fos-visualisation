@@ -19,18 +19,16 @@ public class Link extends AbstractDrawable {
   public void update() {
     curve.setX1(b1.getX());
     curve.setY1(b1.getY());
-    // TODO set others correctly
 
-    curve.setCx1(b2.getX());
-    curve.setCy1(b2.getY());
+    float xOffset = b2.getX() - b1.getX();
+    float yOffset = b2.getY() - b1.getY();
 
+    // right up
+    curve.setCx1(b1.getX() + xOffset * 0.6f);
+    curve.setCy1(b1.getY() + yOffset * 0.2f);
 
-    curve.setCx2(b2.getX());
-    curve.setCy2(b2.getY());
-
-
-    curve.setX2(b2.getX());
-    curve.setY2(b2.getY());
+    curve.setCx2(b1.getX() + xOffset * 0.9f);
+    curve.setCy2(b1.getY() + yOffset * 0.4f);
 
     curve.setX2(b2.getX());
     curve.setY2(b2.getY());
