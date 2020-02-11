@@ -33,7 +33,7 @@ public class Bubbles {
       .reduce(0f, Float::sum);
   }
 
-  public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers, List<Curve> links) {
+  public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers, List<Link> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
@@ -76,7 +76,13 @@ public class Bubbles {
 
     // links
     Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
-    researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap)); // TODO fill links with this map
+    researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap));
+
+    Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
+      .stream()
+      .map(e -> createBubble(e.getKey(), e.getValue()))
+      .collect(Collectors.toMap(Bubble::getText, b -> b));
+
     float maxLinkOcc = connectedOccurenceMap.values()
       .stream()
       .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
@@ -85,22 +91,22 @@ public class Bubbles {
       .stream()
       .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
       .min().getAsInt();
-    fillLinks(links, connectedOccurenceMap, fosBubbleData, minLinkOcc, maxLinkOcc);
-
-    return fosBubbleData.entrySet()
+    fillLinks(links, connectedOccurenceMap, fosBubble, minLinkOcc, maxLinkOcc);
+    return fosBubble.values()
       .stream()
-      .map(e -> createBubble(e.getKey(), e.getValue()))
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
   }
 
-  private static void fillLinks(List<Curve> links, Map<String, Map<String, Integer>> connectedOccurenceMap,
-                                Map<String, BubbleData> fosBubbleData, float minLinkOcc, float maxLinkOcc) {
+  private static void fillLinks(List<Link> links, Map<String, Map<String, Integer>> connectedOccurenceMap,
+                                Map<String, Bubble> fosBubble, float minLinkOcc, float maxLinkOcc) {
     for (String fos1 : connectedOccurenceMap.keySet()) {
       Map<String, Integer> occMap = connectedOccurenceMap.get(fos1);
       for (String fos2 : occMap.keySet()) {
-        int nbOcc = occMap.get(fos2);
-
+        float nbOcc = occMap.get(fos2);
+        float width = MIN_LINK_WIDTH + toPercentage(nbOcc, minLinkOcc, maxLinkOcc) * (MAX_LINK_WIDTH - MIN_LINK_WIDTH);
+        Link link = Link.newLink(fosBubble.get(fos1), fosBubble.get(fos2), width);
+        links.add(link);
       }
     }
   }

@@ -4,29 +4,23 @@ import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
-import com.tambapps.papernet.gl.shape.Curve;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
+import com.tambapps.papernet.visualisation.Link;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.glFlush;
-
-// TODO UTILISER TEXTURE EN BACKGROUND
 public class Main extends GlWindow {
 
   private List<Bubble> bubbles;
-  private List<Curve> links;
+  private List<Link> links;
 
  // FontTT fontTT;
   private Texture texture;
-  private Curve curve = new Curve(-1, -1, 0.1f, 0.1f, 0.25f, 0.25f, 1, -1, 2);
 
   @Override
   public void onGlContextInitialized() throws IOException {
@@ -53,14 +47,12 @@ public class Main extends GlWindow {
     texture.bind();
     texture.draw();
 
-    links.forEach(Curve::draw);
+    links.forEach(Link::updateNDraw);
     bubbles.forEach(Bubble::draw);
-
-    curve.draw();
- //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
+    //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Main().run();
   }
 

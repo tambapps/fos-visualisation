@@ -24,6 +24,10 @@ public class Curve {
   float y2;
   float width;
 
+  public Curve(float width) {
+    this.width = width;
+  }
+
   public void draw() {
     GL11.glLineWidth(width);
     GL11.glBegin(GL11.GL_LINES);

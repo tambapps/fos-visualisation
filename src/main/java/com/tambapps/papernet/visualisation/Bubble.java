@@ -36,4 +36,7 @@ public class Bubble extends Circle {
      // 0.2f, 40);
   }
 
+  public String getText() {
+    return text;
+  }
 }
