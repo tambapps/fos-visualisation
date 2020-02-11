@@ -48,7 +48,8 @@ public class Main extends GlWindow {
     System.out.format("Finished loading data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Use the arrow keys to move on the screen");
     System.out.println("pressed left CTRL with up/down zoom/unzoom from the screen");
-    System.out.println("Use Z/S to modify the threshold of links that will be displayed");
+    System.out.println("Use E/D to modify the threshold of links that will be displayed");
+    System.out.println("Use S to shuffle the bubbles");
   }
 // TODO rewrite TextureLoader and test fonTTTZ OR create one texture for each FOS
   @Override
