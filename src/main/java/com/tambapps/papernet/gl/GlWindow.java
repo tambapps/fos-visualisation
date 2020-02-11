@@ -19,7 +19,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
@@ -179,6 +181,12 @@ public abstract class GlWindow implements InputListener {
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GL_TRUE) {
       onDownPressed();
+    }
+    if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) { // W is Z
+      onKeyPressed('z');
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GL_TRUE) {
+      onKeyPressed('s');
     }
   }
 

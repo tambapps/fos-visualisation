@@ -6,5 +6,6 @@ public interface InputListener {
   void onRightPressed();
   void onUpPressed();
   void onDownPressed();
+  void onKeyPressed(char c);
 
 }

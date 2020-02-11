@@ -19,6 +19,8 @@ import java.util.List;
 public class Main extends GlWindow {
 
   private static final int NAVIGATION_OFFSET = 8;
+  private static final float NAVIGATION_ZOOM_OFFSET = 0.1f;
+
   private static final Vector3f tempVec = new Vector3f();
   private List<Bubble> bubbles;
   private List<Link> links;
@@ -44,6 +46,8 @@ public class Main extends GlWindow {
       throw new IOException(e);
     }
     System.out.format("Finished loading objects (in %d s)", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.println("Use the arrow keys to move on the screen");
+    System.out.println("Use Z/S to zoom/dezoom from the screen");
   }
 // TODO rewrite TextureLoader and test fonTTTZ
   @Override
@@ -74,6 +78,17 @@ public class Main extends GlWindow {
   @Override
   public void onDownPressed() {
     camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
+  }
+
+  @Override
+  public void onKeyPressed(char c) {
+    switch (c) {
+      case 'z':
+        camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
+        break;
+      case 's':
+        camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+    }
   }
 
   public static void main(String[] args) {
