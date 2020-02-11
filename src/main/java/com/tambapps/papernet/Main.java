@@ -19,6 +19,7 @@ import java.util.List;
 public class Main extends GlWindow {
 
   private static final int NAVIGATION_OFFSET = 8;
+  private static final float LINK_THRESHOLD_OFFSET = 0.1f;
   private static final float NAVIGATION_ZOOM_OFFSET = 0.1f;
 
   private static final Vector3f tempVec = new Vector3f();
@@ -27,6 +28,7 @@ public class Main extends GlWindow {
 
  // FontTT fontTT;
   private Texture texture;
+  private float linkThresholdOffset = Bubbles.MIN_LINK_WIDTH;
 
   @Override
   public void onGlContextInitialized() throws IOException {
@@ -45,8 +47,9 @@ public class Main extends GlWindow {
     } catch (Exception e) {
       throw new IOException(e);
     }
-    System.out.format("Finished loading objects (in %d s)", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.format("Finished loading data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Use the arrow keys to move on the screen");
+    System.out.println("pressed left CTRL with up/down to modify the threshold of links");
     System.out.println("Use Z/S to zoom/dezoom from the screen");
   }
 // TODO rewrite TextureLoader and test fonTTTZ
@@ -78,6 +81,28 @@ public class Main extends GlWindow {
   @Override
   public void onDownPressed() {
     camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
+  }
+
+  @Override
+  public void onUpCtrlPressed() {
+    moveLinkThreshold(LINK_THRESHOLD_OFFSET);
+  }
+
+  @Override
+  public void onDownCtrlPressed() {
+    moveLinkThreshold(- LINK_THRESHOLD_OFFSET);
+  }
+
+  private void moveLinkThreshold(float offset) {
+    if (linkThresholdOffset <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
+    linkThresholdOffset >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
+      return;
+    }
+    linkThresholdOffset += offset;
+    for (Link l : links) {
+      l.setVisible(l.getWidth() >= linkThresholdOffset);
+    }
+    System.out.format("new link threshold: %f.1\n", linkThresholdOffset);
   }
 
   @Override

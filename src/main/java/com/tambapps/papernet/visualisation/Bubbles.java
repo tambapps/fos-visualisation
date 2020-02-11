@@ -21,11 +21,11 @@ public class Bubbles {
   private static Color START_COLOR = new Color(0, 0, 1);
   private static Color END_COLOR = new Color(1, 0, 0);
 
-  private static final float MIN_RADIUS = 4;
-  private static final float MAX_RADIUS = 50;
+  public static final float MIN_RADIUS = 4;
+  public static final float MAX_RADIUS = 50;
 
-  private static final float MIN_LINK_WIDTH = 2; // curves can only be from 1 to 10
-  private static final float MAX_LINK_WIDTH = 20;
+  public static final float MIN_LINK_WIDTH = 2; // curves can only be from 1 to 10
+  public static final float MAX_LINK_WIDTH = 20;
 
   private static float radiusScore(List<WeightedCitation> radiusScore) {
     return radiusScore.stream()
