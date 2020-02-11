@@ -38,8 +38,7 @@ public class Main extends GlWindow {
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
-    BubblesArranger.arrange(bubbles);
-    links.forEach(Link::update);
+    shuffle();
     texture = Texture.newTexture("background.jpg");
     try {
    //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
@@ -107,12 +106,22 @@ public class Main extends GlWindow {
   @Override
   public void onKeyPressed(char c) {
     switch (c) {
-      case 'z':
+      case 'e':
         moveLinkThreshold(LINK_THRESHOLD_OFFSET);
         break;
-      case 's':
+      case 'd':
         moveLinkThreshold(- LINK_THRESHOLD_OFFSET);
+        break;
+      case 's': // shuffle
+        shuffle();
+        break;
+
     }
+  }
+
+  private void shuffle() {
+    BubblesArranger.arrange(bubbles);
+    links.forEach(Link::update);
   }
 
   public static void main(String[] args) {

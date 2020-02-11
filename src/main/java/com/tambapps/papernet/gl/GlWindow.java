@@ -15,7 +15,9 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
@@ -191,11 +193,18 @@ public abstract class GlWindow implements InputListener {
         onDownPressed();
       }
     }
+    // TODO handle keyup to be able to handle click event triggered only onece
     if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) { // W is Z
       onKeyPressed('z');
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GL_TRUE) {
       onKeyPressed('s');
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GL_TRUE) {
+      onKeyPressed('e');
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GL_TRUE) {
+      onKeyPressed('d');
     }
   }
 
