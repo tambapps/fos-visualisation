@@ -2,6 +2,7 @@ package com.tambapps.papernet.gl.shape;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
@@ -11,6 +12,7 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RectLine {
 
   private static final Vector2f tempVec = new Vector2f();

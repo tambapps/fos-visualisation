@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lwjgl.opengl.GL11;
 
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 @Data
 @AllArgsConstructor
@@ -13,6 +13,8 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 public class Curve {
 
   private static final int NB_SEGMENTS = 20;
+
+  private final RectLine tempRectLine = new RectLine();
 
   float x1;
   float y1;
@@ -29,9 +31,7 @@ public class Curve {
   }
 
   public void draw() {
-    GL11.glLineWidth(width);
-    GL11.glBegin(GL11.GL_LINES);
- //   GL11.glEnable(GL11.GL_LINE_WIDTH);
+    GL11.glBegin(GL_QUADS);
 
     int segments  = NB_SEGMENTS;
 
@@ -63,20 +63,30 @@ public class Curve {
     float dddfy = tmp2y * pre5;
 
     while (segments-- > 0) {
-      glVertex3f(fx, fy, 0);
+      float x1 = fx;
+      float y1 = fy;
       fx += dfx;
       fy += dfy;
       dfx += ddfx;
       dfy += ddfy;
       ddfx += dddfx;
       ddfy += dddfy;
-      glVertex3f(fx, fy, 0);
+
+      float x2 = fx;
+      float y2 = fy;
+      drawRectLine(x1, y1, x2, y2);
     }
-    glVertex3f(fx, fy, 0);
-    glVertex3f(x2, y2, 0);
+    drawRectLine(fx, fy, x2, y2);
 
     GL11.glEnd();
- //   GL11.glDisable(GL11.GL_LINE_WIDTH);
   }
 
+  private void drawRectLine(float x1, float y1, float x2, float y2) {
+    tempRectLine.setX1(x1);
+    tempRectLine.setY1(y1);
+    tempRectLine.setX2(x2);
+    tempRectLine.setY2(y2);
+    tempRectLine.setWidth(width);
+    tempRectLine.draw();
+  }
 }
