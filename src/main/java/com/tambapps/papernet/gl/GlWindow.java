@@ -1,7 +1,9 @@
 package com.tambapps.papernet.gl;
 
+import com.tambapps.papernet.gl.inputlistener.InputListener;
 import com.tambapps.papernet.gl.view.Camera;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -13,7 +15,11 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
@@ -21,6 +27,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
@@ -40,19 +47,22 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class GlWindow {
+public abstract class GlWindow implements InputListener {
 
   public static final int WINDOW_WIDTH = 720;
   public static final int WINDOW_HEIGHT = 720;
+
+  private static final Vector3f tempVec = new Vector3f();
   // The window handle
   private long window;
-  private Camera camera;
+  protected final Camera camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
   public void run() {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -64,7 +74,6 @@ public abstract class GlWindow {
     // creates the GLCapabilities instance and makes the OpenGL
     // bindings available for use.
     GL.createCapabilities();
-    camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     glEnable(GL_TEXTURE_2D);
     // Set the clear color
@@ -144,22 +153,36 @@ public abstract class GlWindow {
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
-    Matrix4f projection = camera.getProjection();
     while ( !glfwWindowShouldClose(window) ) {
+      handleInput();
+      Matrix4f projection = camera.getProjection();
+      // Poll for window events. The key callback above will only be
+      // invoked during this call.
+      glfwPollEvents();
+
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
       onDraw(projection);
       glfwSwapBuffers(window); // swap the color buffers
-      // Poll for window events. The key callback above will only be
-      // invoked during this call.
-      glfwPollEvents();
+    }
+  }
+
+  private void handleInput() {
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GL_TRUE) { // BE CAREFUL IT IS QWERTY so A means Q
+      onLeftPressed();
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GL_TRUE) {
+      onUpPressed();
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GL_TRUE) {
+      onRightPressed();
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GL_TRUE) {
+      onDownPressed();
     }
   }
 
   public abstract void onDraw(Matrix4f projection);
   public abstract void onGlContextInitialized() throws IOException;
 
-  public Camera getCamera() {
-    return camera;
-  }
 }

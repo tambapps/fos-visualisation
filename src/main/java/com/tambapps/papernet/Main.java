@@ -9,6 +9,7 @@ import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
 import com.tambapps.papernet.visualisation.Link;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
 
 public class Main extends GlWindow {
 
+  private static final int NAVIGATION_OFFSET = 8;
+  private static final Vector3f tempVec = new Vector3f();
   private List<Bubble> bubbles;
   private List<Link> links;
 
@@ -51,6 +54,26 @@ public class Main extends GlWindow {
     links.forEach(l -> l.updateNDraw(projection));
     bubbles.forEach(b -> b.draw(projection));
     //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
+  }
+
+  @Override
+  public void onLeftPressed() {
+    camera.addPosition(tempVec.set(NAVIGATION_OFFSET, 0, 0));
+  }
+
+  @Override
+  public void onRightPressed() {
+    camera.addPosition(tempVec.set(- NAVIGATION_OFFSET, 0, 0));
+  }
+
+  @Override
+  public void onUpPressed() {
+    camera.addPosition(tempVec.set(0, - NAVIGATION_OFFSET, 0));
+  }
+
+  @Override
+  public void onDownPressed() {
+    camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
   }
 
   public static void main(String[] args) {
