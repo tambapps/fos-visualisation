@@ -31,11 +31,10 @@ public final class ResearchPaperDataParser {
   }
 
   public static ResearchPaperData parseData() throws IOException {
-    int maxFos = Optional.ofNullable(Properties.getInt("maxFos")).orElse(Integer.MAX_VALUE);
-    return parseData(maxFos);
+    return parseData(Integer.MAX_VALUE);
   }
 
-  public static ResearchPaperData parseData(int maxFos) throws IOException {
+  public static ResearchPaperData parseData(Integer maxArticles) throws IOException {
     Map<Integer, ResearchPaper> fosById = new HashMap<>();
     Map<Integer, List<ResearchPaper>> fosByYear = new HashMap<>();
     Map<String, Integer> fosOccurenceMap = new HashMap<>();
@@ -46,7 +45,7 @@ public final class ResearchPaperDataParser {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResearchPaperDataParser.class.getResourceAsStream("/data/dblp.v11.csv")))) {
       reader.lines()
         .skip(1)
-        .limit(maxFos)
+        .limit(maxArticles)
         .forEach((line) -> addPaperInMaps(fosById, fosByYear, line));
     }
     return new ResearchPaperData(fosById, fosByYear, fosOccurenceMap);

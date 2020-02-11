@@ -28,7 +28,7 @@ public class Main extends GlWindow {
 
   @Override
   public void onGlContextInitialized() throws IOException {
-    System.out.println("Finished loading...");
+    System.out.println("Started loading...");
     long startTime = System.currentTimeMillis();
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     links = new ArrayList<>();
