@@ -47,10 +47,10 @@ public class Main extends GlWindow {
     }
     System.out.format("Finished loading data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Use the arrow keys to move on the screen");
-    System.out.println("pressed left CTRL with up/down to modify the threshold of links");
-    System.out.println("Use Z/S to zoom/dezoom from the screen");
+    System.out.println("pressed left CTRL with up/down zoom/unzoom from the screen");
+    System.out.println("Use Z/S to modify the threshold of links that will be displayed");
   }
-// TODO rewrite TextureLoader and test fonTTTZ
+// TODO rewrite TextureLoader and test fonTTTZ OR create one texture for each FOS
   @Override
   public void onDraw(Matrix4f projection) {
     texture.bind();
@@ -83,12 +83,12 @@ public class Main extends GlWindow {
 
   @Override
   public void onUpCtrlPressed() {
-    moveLinkThreshold(LINK_THRESHOLD_OFFSET);
+    camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
   }
 
   @Override
   public void onDownCtrlPressed() {
-    moveLinkThreshold(- LINK_THRESHOLD_OFFSET);
+    camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
   }
 
   private void moveLinkThreshold(float offset) {
@@ -107,10 +107,10 @@ public class Main extends GlWindow {
   public void onKeyPressed(char c) {
     switch (c) {
       case 'z':
-        camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
+        moveLinkThreshold(LINK_THRESHOLD_OFFSET);
         break;
       case 's':
-        camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+        moveLinkThreshold(- LINK_THRESHOLD_OFFSET);
     }
   }
 
