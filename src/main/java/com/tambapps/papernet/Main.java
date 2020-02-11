@@ -39,6 +39,7 @@ public class Main extends GlWindow {
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
     BubblesArranger.arrange(bubbles);
+    links.forEach(Link::update);
     texture = Texture.newTexture("background.jpg");
     try {
    //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
@@ -56,7 +57,7 @@ public class Main extends GlWindow {
     texture.bind();
     texture.draw();
 
-    links.forEach(l -> l.updateNDraw(projection));
+    links.forEach(l -> l.draw(projection));
     bubbles.forEach(b -> b.draw(projection));
     //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
