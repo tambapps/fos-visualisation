@@ -7,6 +7,7 @@ import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.Bubble;
 import com.tambapps.papernet.visualisation.Bubbles;
+import com.tambapps.papernet.visualisation.BubblesArranger;
 import com.tambapps.papernet.visualisation.Link;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -37,10 +38,7 @@ public class Main extends GlWindow {
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
-    for (Bubble bubble : bubbles) {
-      bubble.setX((float)Math.random() * WINDOW_WIDTH - (WINDOW_WIDTH >> 1));
-      bubble.setY((float)Math.random() * WINDOW_HEIGHT - (WINDOW_HEIGHT >> 1));
-    }
+    BubblesArranger.arrange(bubbles);
     texture = Texture.newTexture("background.jpg");
     try {
    //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
