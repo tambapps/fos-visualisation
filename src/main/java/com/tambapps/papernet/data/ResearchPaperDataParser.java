@@ -9,22 +9,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public final class ResearchPaperDataParser {
 
   private ResearchPaperDataParser() {}
 
-  private static void addFosOccurenceEntry(Map<String, Integer> fosOccurenceMap, String line) {
+  private static void addFosOccurenceEntry(Map<String, Integer> fosOccurenceMap, String line, int minOcc) {
     int commaIndex = line.lastIndexOf(',');
     String fos = line.substring(0, commaIndex).replaceAll("\"", "");
-    fosOccurenceMap.put(fos, Integer.parseInt(line.substring(commaIndex + 1)));
+    int occ = Integer.parseInt(line.substring(commaIndex + 1));
+    if (occ >= minOcc) {
+      fosOccurenceMap.put(fos, occ);
+    }
   }
 
-  private static void addPaperInMaps(Map<Integer, ResearchPaper> fosById, Map<Integer, List<ResearchPaper>> fosByYear, String line) {
+  private static void addPaperInMaps(Map<Long, ResearchPaper> fosById, Map<Integer, List<ResearchPaper>> fosByYear, String line, Map<String, Integer> fosOccurenceMap) {
     String[] fields = FosParser.parseFields(line);
     ResearchPaper researchPaper = FosParser.parse(fields);
-    int id = FosParser.parseId(fields);
+    // filter FOS that aren't in forOccurenceMap (too low occ)
+    researchPaper.getFosWeights().entrySet()
+      .removeIf(e -> !fosOccurenceMap.containsKey(e.getKey()));
+
+    long id = FosParser.parseId(fields);
     fosByYear.computeIfAbsent(researchPaper.getYear(), k -> new ArrayList<>())
       .add(researchPaper);
     fosById.put(id, researchPaper);
@@ -35,18 +41,19 @@ public final class ResearchPaperDataParser {
   }
 
   public static ResearchPaperData parseData(Integer maxArticles) throws IOException {
-    Map<Integer, ResearchPaper> fosById = new HashMap<>();
+    Map<Long, ResearchPaper> fosById = new HashMap<>();
     Map<Integer, List<ResearchPaper>> fosByYear = new HashMap<>();
     Map<String, Integer> fosOccurenceMap = new HashMap<>();
+    final int minFosOcc = Properties.getIntOrDefault("minFosOcc", 0);
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResearchPaperDataParser.class.getResourceAsStream("/data/fos.csv")))) {
-      reader.lines().skip(1).forEach((line) -> addFosOccurenceEntry(fosOccurenceMap, line));
+      reader.lines().skip(1).forEach((line) -> addFosOccurenceEntry(fosOccurenceMap, line, minFosOcc));
     }
 
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResearchPaperDataParser.class.getResourceAsStream("/data/dblp.v11.csv")))) {
       reader.lines()
         .skip(1)
         .limit(maxArticles)
-        .forEach((line) -> addPaperInMaps(fosById, fosByYear, line));
+        .forEach((line) -> addPaperInMaps(fosById, fosByYear, line, fosOccurenceMap));
     }
     return new ResearchPaperData(fosById, fosByYear, fosOccurenceMap);
   }

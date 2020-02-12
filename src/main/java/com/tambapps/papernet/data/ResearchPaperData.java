@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 public class ResearchPaperData {
 
-  private final Map<Integer, ResearchPaper> paperById;
+  private final Map<Long, ResearchPaper> paperById;
   private final Map<Integer, List<ResearchPaper>> papersByYear;
   private final Map<String, Integer> fosOccurenceMap;
 

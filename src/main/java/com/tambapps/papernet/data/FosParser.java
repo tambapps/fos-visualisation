@@ -25,7 +25,7 @@ class FosParser {
     Map<String, Float> fosWeights = new HashMap<>();
     for (String entry : field.split(";")) {
       String[] entryFields = entry.trim().split(":");
-      fosWeights.put(entryFields[0], Float.parseFloat(entryFields[1]));
+      fosWeights.put(entryFields[0], Float.parseFloat(entryFields[entryFields.length - 1]));
     }
     return fosWeights;
   }
@@ -40,7 +40,8 @@ class FosParser {
       char c = line.charAt(i);
       i++;
       if (c == DOUBLE_QUOTE) {
-        if (inField) {
+        if (inField &&
+          (i == line.length() || line.charAt(i) == COMMA)) { // make sure this is the end of field
           fields[currentField++] = builder.toString();
           builder.setLength(0); // clear builder
         }
@@ -57,7 +58,7 @@ class FosParser {
     return fields;
   }
 
-  public static int parseId(String[] fields) {
-    return Integer.parseInt(fields[ID]);
+  public static long parseId(String[] fields) {
+    return Long.parseLong(fields[ID]);
   }
 }
