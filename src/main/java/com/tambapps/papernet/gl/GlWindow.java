@@ -162,6 +162,7 @@ public abstract class GlWindow implements InputListener {
   }
 
   private void update() {
+    float delta = 0.025f; // TODO handle better delta (use real time)
     inputHandler.update(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GL_TRUE);
     Iterator<Animation> animationIterator =  animations.iterator();
     while (animationIterator.hasNext()) {
@@ -169,11 +170,13 @@ public abstract class GlWindow implements InputListener {
       if (animation.isComplete()) {
         animationIterator.remove();
       } else {
-        // TODO handle better delta (use real time)
-        animation.act(0.025f);
+        animation.act(delta);
       }
     }
+    update(delta);
   }
+
+  public void update(float delta) { }
 
   public abstract void onDraw(Matrix4f projection);
   public abstract void onGlContextInitialized() throws IOException;
@@ -184,5 +187,13 @@ public abstract class GlWindow implements InputListener {
 
   protected void addAnimation(Animation animation) {
     this.animations.add(animation);
+  }
+
+  protected void clearAnimations() {
+    animations.clear();
+  }
+
+  protected boolean isOneAnimationRunning() {
+    return !animations.isEmpty();
   }
 }

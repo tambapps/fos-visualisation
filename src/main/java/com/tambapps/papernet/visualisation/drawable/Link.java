@@ -40,11 +40,6 @@ public class Link extends AbstractDrawable {
     curve.draw();
   }
 
-  public void updateNDraw(Matrix4f projection) {
-    update();
-    draw(projection);
-  }
-
   public static Link newLink(Bubble b1, Bubble b2, float width) throws IOException {
     return new Link(b1, b2, new Curve(width), ShaderFactory.rgbShader(0.5f, 0.5f, 0.5f));
   }

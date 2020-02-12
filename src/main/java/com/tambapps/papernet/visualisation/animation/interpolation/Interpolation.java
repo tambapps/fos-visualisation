@@ -8,8 +8,9 @@ public interface Interpolation {
     return f -> f;
   }
 
-  static Interpolation pow2() {
-    return f -> f * f;
+  // fast then slow
+  static Interpolation pow2Out() {
+    return f ->  (f -1) * (f - 1) * -1  + 1;
   }
 
 }
