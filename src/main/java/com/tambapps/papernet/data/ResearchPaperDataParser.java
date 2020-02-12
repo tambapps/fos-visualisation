@@ -29,6 +29,9 @@ public final class ResearchPaperDataParser {
     // filter FOS that aren't in forOccurenceMap (too low occ)
     researchPaper.getFosWeights().entrySet()
       .removeIf(e -> !fosOccurenceMap.containsKey(e.getKey()));
+    if (researchPaper.getFosWeights().isEmpty()) {
+      return; // if all fos of this paper aren't in fosOccurenceMap, we ignore it
+    }
 
     long id = FosParser.parseId(fields);
     fosByYear.computeIfAbsent(researchPaper.getYear(), k -> new ArrayList<>())
