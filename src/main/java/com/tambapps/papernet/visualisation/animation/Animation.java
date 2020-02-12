@@ -4,24 +4,24 @@ import com.tambapps.papernet.visualisation.animation.interpolation.Interpolation
 import lombok.Data;
 
 @Data
-abstract class Animation {
-  private float duration, time;
+public abstract class Animation {
+  private float duration, time; // in  sec
   private Interpolation interpolation;
   private boolean reverse, began, complete;
 
-  public Animation () {
+  public Animation() {
   }
 
-  public Animation (float duration) {
+  public Animation(float duration) {
     this.duration = duration;
   }
 
-  public Animation (float duration, Interpolation interpolation) {
+  public Animation(float duration, Interpolation interpolation) {
     this.duration = duration;
     this.interpolation = interpolation;
   }
 
-  public boolean act (float delta) {
+  public boolean act(float delta) {
     if (complete) return true;
     if (!began) {
       begin();
@@ -36,26 +36,25 @@ abstract class Animation {
     return complete;
   }
 
-  protected void begin () {
+  protected void begin() {
   }
 
-  protected void end () {
+  protected void end() {
   }
 
   abstract protected void update (float percent);
 
-
-  public void finish () {
+  public void finish() {
     time = duration;
   }
 
-  public void restart () {
+  public void restart() {
     time = 0;
     began = false;
     complete = false;
   }
 
-  public void reset () {
+  public void reset() {
     reverse = false;
     interpolation = null;
   }

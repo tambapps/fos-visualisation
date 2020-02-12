@@ -59,4 +59,10 @@ public class Bubble extends AbstractDrawable implements Movable {
   public String getText() {
     return text;
   }
+
+  @Override
+  public void setPosition(float x, float y) {
+    setX(x);
+    setY(y);
+  }
 }

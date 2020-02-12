@@ -3,8 +3,8 @@ package com.tambapps.papernet.gl;
 import com.tambapps.papernet.gl.inputlistener.InputHandler;
 import com.tambapps.papernet.gl.inputlistener.InputListener;
 import com.tambapps.papernet.gl.view.Camera;
+import com.tambapps.papernet.visualisation.animation.Animation;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -13,12 +13,13 @@ import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
@@ -57,11 +58,11 @@ public abstract class GlWindow implements InputListener {
   public static final int WINDOW_WIDTH = 720;
   public static final int WINDOW_HEIGHT = 720;
 
-  private static final Vector3f tempVec = new Vector3f();
   // The window handle
   private long window;
   protected final Camera camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
   private InputHandler inputHandler;
+  private final List<Animation> animations = new ArrayList<>();
 
   public void run() {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -154,9 +155,23 @@ public abstract class GlWindow implements InputListener {
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-      inputHandler.update(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GL_TRUE);
+      update();
       onDraw(projection);
       glfwSwapBuffers(window); // swap the color buffers
+    }
+  }
+
+  private void update() {
+    inputHandler.update(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GL_TRUE);
+    Iterator<Animation> animationIterator =  animations.iterator();
+    while (animationIterator.hasNext()) {
+      Animation animation = animationIterator.next();
+      if (animation.isComplete()) {
+        animationIterator.remove();
+      } else {
+        // TODO handle better delta (use real time)
+        animation.act(0.025f);
+      }
     }
   }
 
@@ -165,5 +180,9 @@ public abstract class GlWindow implements InputListener {
 
   protected void close() {
     glfwSetWindowShouldClose(window, true);
+  }
+
+  protected void addAnimation(Animation animation) {
+    this.animations.add(animation);
   }
 }
