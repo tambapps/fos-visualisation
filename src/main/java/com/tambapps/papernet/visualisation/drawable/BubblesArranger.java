@@ -1,4 +1,4 @@
-package com.tambapps.papernet.visualisation;
+package com.tambapps.papernet.visualisation.drawable;
 
 import java.util.ArrayList;
 import java.util.Collection;

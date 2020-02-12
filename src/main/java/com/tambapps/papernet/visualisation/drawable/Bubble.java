@@ -1,4 +1,4 @@
-package com.tambapps.papernet.visualisation;
+package com.tambapps.papernet.visualisation.drawable;
 
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;

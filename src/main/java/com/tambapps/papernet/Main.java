@@ -5,10 +5,10 @@ import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
 import com.tambapps.papernet.gl.texture.Texture;
-import com.tambapps.papernet.visualisation.Bubble;
-import com.tambapps.papernet.visualisation.Bubbles;
-import com.tambapps.papernet.visualisation.BubblesArranger;
-import com.tambapps.papernet.visualisation.Link;
+import com.tambapps.papernet.visualisation.drawable.Bubble;
+import com.tambapps.papernet.visualisation.drawable.Bubbles;
+import com.tambapps.papernet.visualisation.drawable.BubblesArranger;
+import com.tambapps.papernet.visualisation.drawable.Link;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

@@ -1,5 +1,6 @@
 package com.tambapps.papernet.visualisation;
 
+import com.tambapps.papernet.visualisation.drawable.Bubbles;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

@@ -2,8 +2,8 @@ package com.tambapps.papernet;
 
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
-import com.tambapps.papernet.visualisation.Bubble;
-import com.tambapps.papernet.visualisation.Bubbles;
+import com.tambapps.papernet.visualisation.drawable.Bubble;
+import com.tambapps.papernet.visualisation.drawable.Bubbles;
 import org.junit.Test;
 
 import java.io.IOException;
