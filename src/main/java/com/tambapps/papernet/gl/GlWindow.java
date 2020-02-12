@@ -55,7 +55,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class GlWindow implements InputListener {
 
-  public static final int WINDOW_WIDTH = 720;
+  public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 720;
 
   // The window handle
@@ -65,8 +65,6 @@ public abstract class GlWindow implements InputListener {
   private final List<Animation> animations = new ArrayList<>();
 
   public void run() {
-    System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
     init();
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -110,7 +108,7 @@ public abstract class GlWindow implements InputListener {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
     // Create the window
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Hello World!", NULL, NULL);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Research Paper FOS network", NULL, NULL);
     if ( window == NULL )
       throw new RuntimeException("Failed to create the GLFW window");
     glfwSetKeyCallback(window, inputHandler = new InputHandler(this));
