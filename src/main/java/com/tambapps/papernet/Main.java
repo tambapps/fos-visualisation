@@ -1,5 +1,6 @@
 package com.tambapps.papernet;
 
+import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main extends GlWindow {
 
@@ -31,11 +33,16 @@ public class Main extends GlWindow {
   private Texture texture;
   private float linkThresholdOffset = Bubbles.MIN_LINK_WIDTH;
 
+  private final Collection<ResearchPaper> papers;
+
+  public Main(Collection<ResearchPaper> papers) {
+    this.papers = papers;
+  }
+
   @Override
   public void onGlContextInitialized() throws IOException {
-    System.out.println("Started loading...");
+    System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
-    Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
     shuffle(false);
@@ -45,7 +52,7 @@ public class Main extends GlWindow {
     } catch (Exception e) {
       throw new IOException(e);
     }
-    System.out.format("Finished loading data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.format("Finished intialization of OpenGL (in %ds)\n\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Press the arrow keys to move on the screen");
     System.out.println("pressed CTRL with up/down zoom/unzoom from the screen");
     System.out.println("Use E/D to modify the threshold of links that will be displayed");
@@ -141,8 +148,25 @@ public class Main extends GlWindow {
     }
   }
 
-  public static void main(String[] args) {
-    new Main().run();
+  public static void main(String[] args) throws IOException {
+    System.out.println("Started loading...");
+    long startTime = System.currentTimeMillis();
+    ResearchPaperData data =  ResearchPaperDataParser.parseData();
+    System.out.format("Loaded all data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.println("Here is the number of research paper by year:");
+    data.getPapersByYear().forEach((key, value) ->
+      System.out.format("%d -> %d papers", key, value.size()).println());
+    System.out.println("Enter the year or 'all' for all papers");
+    Collection<ResearchPaper> papers;
+    try (Scanner scanner = new Scanner(System.in)) {
+      String s = scanner.nextLine();
+      if (s.equals("all")) {
+        papers = data.getAllPapers();
+      } else {
+        papers = data.getPapersByYear().getOrDefault(Integer.parseInt(s), List.of());
+      }
+      new Main(papers).run();
+    }
   }
 
 }
