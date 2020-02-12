@@ -59,7 +59,7 @@ public class Main extends GlWindow {
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("Use ESCAPE to exit");
   }
-// TODO rewrite TextureLoader and test fonTTTZ OR create one texture for each FOS
+  // TODO implement bubble search through user input
   @Override
   public void onDraw(Matrix4f projection) {
     texture.bind();
