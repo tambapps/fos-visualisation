@@ -46,10 +46,11 @@ public class Main extends GlWindow {
       throw new IOException(e);
     }
     System.out.format("Finished loading data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
-    System.out.println("Use the arrow keys to move on the screen");
-    System.out.println("pressed left CTRL with up/down zoom/unzoom from the screen");
+    System.out.println("Press the arrow keys to move on the screen");
+    System.out.println("pressed CTRL with up/down zoom/unzoom from the screen");
     System.out.println("Use E/D to modify the threshold of links that will be displayed");
     System.out.println("Use S to shuffle the bubbles");
+    System.out.println("Use ESCAPE to exit");
   }
 // TODO rewrite TextureLoader and test fonTTTZ OR create one texture for each FOS
   @Override
@@ -63,33 +64,36 @@ public class Main extends GlWindow {
   }
 
   @Override
-  public void onLeftPressed() {
+  public void onLeftPressed(boolean ctrlPressed) {
     camera.addPosition(tempVec.set(NAVIGATION_OFFSET, 0, 0));
   }
 
   @Override
-  public void onRightPressed() {
+  public void onRightPressed(boolean ctrlPressed) {
     camera.addPosition(tempVec.set(- NAVIGATION_OFFSET, 0, 0));
   }
 
   @Override
-  public void onUpPressed() {
-    camera.addPosition(tempVec.set(0, - NAVIGATION_OFFSET, 0));
+  public void onUpPressed(boolean ctrlPressed) {
+    if (ctrlPressed) {
+      camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
+    } else {
+      camera.addPosition(tempVec.set(0, - NAVIGATION_OFFSET, 0));
+    }
   }
 
   @Override
-  public void onDownPressed() {
-    camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
+  public void onEscapePressed() {
+    close();
   }
 
   @Override
-  public void onUpCtrlPressed() {
-    camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
-  }
-
-  @Override
-  public void onDownCtrlPressed() {
-    camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+  public void onDownPressed(boolean ctrlPressed) {
+    if (ctrlPressed) {
+      camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+    } else {
+      camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
+    }
   }
 
   private void moveLinkThreshold(float offset) {
@@ -105,7 +109,7 @@ public class Main extends GlWindow {
   }
 
   @Override
-  public void onKeyPressed(char c) {
+  public void onKeyClicked(char c) {
     switch (c) {
       case 'e':
         moveLinkThreshold(LINK_THRESHOLD_OFFSET);
