@@ -7,7 +7,7 @@ import org.joml.Matrix4f;
 
 import java.io.IOException;
 
-public class Bubble extends AbstractDrawable {
+public class Bubble extends AbstractDrawable implements Movable {
 
   private Circle circle;
   private Shader shader;
