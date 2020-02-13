@@ -389,7 +389,7 @@ public class FontTT {
     GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
     // draw a quad with to place the character onto
-    GL11.glBegin(GL11.GL_QUADS);
+    GL11.glBegin(GL11.GL_TRIANGLES);
     {
       GL11.glTexCoord2f(0, 0);
       GL11.glVertex2f(0 + x, 0 - y);

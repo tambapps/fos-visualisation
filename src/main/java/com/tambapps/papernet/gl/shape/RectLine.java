@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joml.Vector2f;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
@@ -28,7 +28,7 @@ public class RectLine {
     float width = this.width * 0.5f;
     float tx = t.x * width;
     float ty = t.y * width;
-    glBegin(GL_QUADS);
+    glBegin(GL_TRIANGLES);
 
 
     glVertex3f(x1 + tx, y1 + ty, 0);

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lwjgl.opengl.GL11;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 @Data
 @AllArgsConstructor
@@ -31,7 +31,7 @@ public class Curve {
   }
 
   public void draw() {
-    GL11.glBegin(GL_QUADS);
+    GL11.glBegin(GL_TRIANGLES);
 
     int segments  = NB_SEGMENTS;
 
