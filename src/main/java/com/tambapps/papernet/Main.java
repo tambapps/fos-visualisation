@@ -31,7 +31,7 @@ public class Main extends GlWindow {
 
  // FontTT fontTT;
   private Texture texture;
-  private float linkThresholdOffset = Bubbles.MIN_LINK_WIDTH;
+  private float linkThreshold = Bubbles.MIN_LINK_WIDTH;
 
   private final Collection<ResearchPaper> papers;
 
@@ -105,15 +105,15 @@ public class Main extends GlWindow {
   }
 
   private void moveLinkThreshold(float offset) {
-    if (linkThresholdOffset <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
-    linkThresholdOffset >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
+    if (linkThreshold <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
+    linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
       return;
     }
-    linkThresholdOffset += offset;
+    linkThreshold += offset;
     for (Link l : links) {
-      l.setVisible(l.getWidth() >= linkThresholdOffset);
+      l.setVisible(l.getWidth() >= linkThreshold);
     }
-    System.out.format("updated link threshold: %f.1\n", (linkThresholdOffset - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
+    System.out.format("updated link threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
   @Override
