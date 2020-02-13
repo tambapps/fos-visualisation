@@ -127,9 +127,8 @@ public class Main extends GlWindow {
       bubble.setVisible(bubble.getRadius() >= bubbleThreshold);
     }
     links.forEach(Link::update);
-    if (offset < 0) {
-      links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold)); // re update links visibility
-    }
+    links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold)); // re update links visibility
+
     System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
