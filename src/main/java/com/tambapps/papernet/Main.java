@@ -46,6 +46,7 @@ public class Main extends GlWindow {
     links = new ArrayList<>();
     bubbles = Bubbles.toBubbles(papers, links);
     shuffle(false);
+    moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
     try {
    //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
@@ -112,7 +113,7 @@ public class Main extends GlWindow {
     for (Link l : links) {
       l.setVisible(l.getWidth() >= linkThresholdOffset);
     }
-    System.out.format("new link threshold: %f.1\n", linkThresholdOffset);
+    System.out.format("updated link threshold: %f.1\n", (linkThresholdOffset - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
   @Override

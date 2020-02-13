@@ -23,8 +23,8 @@ public class Bubbles {
   public static final float MIN_RADIUS = 4;
   public static final float MAX_RADIUS = 50;
 
-  public static final float MIN_LINK_WIDTH = 2; // curves can only be from 1 to 10
-  public static final float MAX_LINK_WIDTH = 20;
+  public static final float MIN_LINK_WIDTH = 1;
+  public static final float MAX_LINK_WIDTH = 22;
 
   private static float radiusScore(List<WeightedCitation> radiusScore) {
     return radiusScore.stream()
