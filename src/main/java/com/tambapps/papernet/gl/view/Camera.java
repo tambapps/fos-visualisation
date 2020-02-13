@@ -5,15 +5,23 @@ import org.joml.Vector3f;
 
 public class Camera {
 
+  private final float width;
+  private final float height;
   private final Vector3f position;
   private Matrix4f projection;
   private float zoom = 1f;
 
 
   public Camera(float width, float height) {
+    this.width = width;
+    this.height = height;
     position = new Vector3f(0, 0, 0);
-    projection = new Matrix4f().setOrtho2D(- width / 2, width / 2,
-      - height / 2, height / 2);
+    update();
+  }
+
+  private void update() {
+    projection = new Matrix4f().setOrtho2D(zoom * - width / 2, zoom * width / 2,
+      zoom * - height / 2, zoom * height / 2);
   }
 
   public void setPosition(Vector3f position) {
@@ -21,26 +29,26 @@ public class Camera {
   }
 
   public void addPosition(Vector3f position) {
-    this.position.add(position);
-  }
-
-  public void setZoom(float zoom) {
-    this.zoom = zoom;
+    this.position.add(position.mul(zoom));
   }
 
   public Matrix4f getProjection() {
     Matrix4f target = new Matrix4f();
     Matrix4f pos = new Matrix4f().setTranslation(position);
     target = projection.mul(pos, target);
-    target.scale(zoom);
     return target;
   }
 
 
   public void zoomBy(float by) {
-    if (this.zoom <= 0 && by < 0 || this.zoom >= 5f && by > 0) {
+    if (this.zoom <= 0.1f && by < 0 || this.zoom >= 2f && by > 0) {
       return;
     }
     this.zoom += by;
+    update();
+  }
+
+  public float getZoom() {
+    return zoom;
   }
 }

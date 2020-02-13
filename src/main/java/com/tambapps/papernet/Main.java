@@ -23,7 +23,7 @@ public class Main extends GlWindow {
 
   private static final int NAVIGATION_OFFSET = 8;
   private static final float THRESHOLD_OFFSET = 0.1f;
-  private static final float NAVIGATION_ZOOM_OFFSET = 0.1f;
+  private static final float NAVIGATION_ZOOM_OFFSET = 0.0333333f;
 
   private static final Vector3f tempVec = new Vector3f();
   private List<Bubble> bubbles;
@@ -86,7 +86,7 @@ public class Main extends GlWindow {
   @Override
   public void onUpPressed(boolean ctrlPressed) {
     if (ctrlPressed) {
-      camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
+      camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
     } else {
       camera.addPosition(tempVec.set(0, - NAVIGATION_OFFSET, 0));
     }
@@ -100,7 +100,7 @@ public class Main extends GlWindow {
   @Override
   public void onDownPressed(boolean ctrlPressed) {
     if (ctrlPressed) {
-      camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+      camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
     } else {
       camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
     }
