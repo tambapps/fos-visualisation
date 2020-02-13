@@ -9,7 +9,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
@@ -23,7 +25,9 @@ public class InputHandler extends GLFWKeyCallback {
     Map.entry(GLFW_KEY_W, 'z'),
     Map.entry(GLFW_KEY_S, 's'),
     Map.entry(GLFW_KEY_E, 'e'),
-    Map.entry(GLFW_KEY_D, 'd')
+    Map.entry(GLFW_KEY_D, 'd'),
+    Map.entry(GLFW_KEY_R, 'r'),
+    Map.entry(GLFW_KEY_F, 'f')
   );
   private final InputListener inputListener;
   private boolean upPressed = false;

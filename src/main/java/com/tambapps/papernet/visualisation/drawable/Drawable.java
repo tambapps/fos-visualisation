@@ -8,4 +8,5 @@ public interface Drawable {
 
   void setVisible(boolean visible);
 
+  boolean isVisible();
 }

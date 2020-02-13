@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class Main extends GlWindow {
 
   private static final int NAVIGATION_OFFSET = 8;
-  private static final float LINK_THRESHOLD_OFFSET = 0.1f;
+  private static final float THRESHOLD_OFFSET = 0.1f;
   private static final float NAVIGATION_ZOOM_OFFSET = 0.1f;
 
   private static final Vector3f tempVec = new Vector3f();
@@ -32,6 +32,7 @@ public class Main extends GlWindow {
  // FontTT fontTT;
   private Texture texture;
   private float linkThreshold = Bubbles.MIN_LINK_WIDTH;
+  private float bubbleThreshold = Bubbles.MIN_RADIUS;
 
   private final Collection<ResearchPaper> papers;
 
@@ -57,6 +58,7 @@ public class Main extends GlWindow {
     System.out.println("Press the arrow keys to move on the screen");
     System.out.println("pressed CTRL with up/down zoom/unzoom from the screen");
     System.out.println("Use E/D to modify the threshold of links that will be displayed");
+    System.out.println("Use R/F to modify the threshold of bubbles that will be displayed");
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("Use ESCAPE to exit");
   }
@@ -106,24 +108,45 @@ public class Main extends GlWindow {
 
   private void moveLinkThreshold(float offset) {
     if (linkThreshold <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
-    linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
+      linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
       return;
     }
     linkThreshold += offset;
-    for (Link l : links) {
-      l.setVisible(l.getWidth() >= linkThreshold);
-    }
+    links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold));
+
     System.out.format("updated link threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
+  }
+
+  private void moveBubbleThreshold(float offset) {
+    if (bubbleThreshold <= Bubbles.MIN_RADIUS && offset < 0 ||
+      bubbleThreshold >= Bubbles.MAX_RADIUS && offset > 0) {
+      return;
+    }
+    bubbleThreshold += offset;
+    for (Bubble bubble : bubbles) {
+      bubble.setVisible(bubble.getRadius() >= bubbleThreshold);
+    }
+    links.forEach(Link::update);
+    if (offset < 0) {
+      links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold)); // re update links visibility
+    }
+    System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
   @Override
   public void onKeyClicked(char c) {
     switch (c) {
       case 'e':
-        moveLinkThreshold(LINK_THRESHOLD_OFFSET);
+        moveLinkThreshold(THRESHOLD_OFFSET);
         break;
       case 'd':
-        moveLinkThreshold(- LINK_THRESHOLD_OFFSET);
+        moveLinkThreshold(-THRESHOLD_OFFSET);
+        break;
+      case 'r':
+        moveBubbleThreshold(THRESHOLD_OFFSET);
+        break;
+      case 'f':
+        moveBubbleThreshold(-THRESHOLD_OFFSET);
         break;
       case 's': // shuffle
         shuffle(true);
@@ -161,7 +184,7 @@ public class Main extends GlWindow {
     Collection<ResearchPaper> papers;
     try (Scanner scanner = new Scanner(System.in)) {
       String s = scanner.nextLine();
-      if (s.equals("all")) {
+      if (s.equals("all") || s.isEmpty()) {
         papers = data.getAllPapers();
       } else {
         papers = data.getPapersByYear().getOrDefault(Integer.parseInt(s), List.of());

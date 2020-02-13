@@ -17,6 +17,10 @@ public class Link extends AbstractDrawable {
   private final Shader curveShader;
 
   public void update() {
+    setVisible(b1.isVisible() && b2.isVisible());
+    if (!isVisible()) {
+      return;
+    }
     curve.setX1(b1.getX());
     curve.setY1(b1.getY());
 
@@ -32,6 +36,14 @@ public class Link extends AbstractDrawable {
 
     curve.setX2(b2.getX());
     curve.setY2(b2.getY());
+  }
+
+  @Override
+  public void setVisible(boolean visible) {
+    if (!isVisible() && (!b1.isVisible() || !b2.isVisible())) {
+      return;
+    }
+    super.setVisible(visible);
   }
 
   @Override
