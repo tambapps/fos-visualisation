@@ -44,9 +44,10 @@ public class MouseInputHandler {
         return;
       }
       float x = ((float) xpos) - (GlWindow.WINDOW_WIDTH >> 1);
-      float y = ((float)ypos) - (GlWindow.WINDOW_HEIGHT >> 1);
+      float y = - (((float)ypos) - (GlWindow.WINDOW_HEIGHT >> 1));
       if (!touchedDown) {
         mouseListener.onTouchDown(x, y);
+        touchedDown = true;
       } else {
         mouseListener.onMouseDragged(x, y);
       }

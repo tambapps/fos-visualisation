@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main extends GlWindow {
@@ -28,6 +29,7 @@ public class Main extends GlWindow {
   private static final Vector3f tempVec = new Vector3f();
   private List<Bubble> bubbles;
   private List<Link> links;
+  private Bubble selectedBubble = null;
 
  // FontTT fontTT;
   private Texture texture;
@@ -60,6 +62,7 @@ public class Main extends GlWindow {
     System.out.println("Use E/D to modify the threshold of links that will be displayed");
     System.out.println("Use R/F to modify the threshold of bubbles that will be displayed");
     System.out.println("Use S to shuffle the bubbles");
+    System.out.println("You can also touch and drag a bubble to move it");
     System.out.println("Use ESCAPE to exit");
   }
   // TODO implement bubble search through user input
@@ -192,4 +195,31 @@ public class Main extends GlWindow {
     }
   }
 
+  private boolean intersect(Bubble bubble, float x, float y) {
+    return pow2(x - bubble.getX()) + pow2(y - bubble.getY())
+      < pow2(bubble.getRadius());
+  }
+
+  private float pow2(float x) {
+    return x * x;
+  }
+
+  // TODO handle it seems to have an offset in the collision
+  // TODO project with camera
+  @Override
+  public void onTouchDown(float x, float y) {
+    selectedBubble = bubbles.stream()
+      .filter(b -> intersect(b, x, y))
+      .findFirst().orElse(null);
+    System.out.println(selectedBubble);
+  }
+
+  @Override
+  public void onMouseDragged(float x, float y) {
+    if (selectedBubble == null) {
+      return;
+    }
+    selectedBubble.setPosition(x, y);
+    links.forEach(Link::updatePos);
+  }
 }
