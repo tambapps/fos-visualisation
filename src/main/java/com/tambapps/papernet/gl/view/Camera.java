@@ -50,6 +50,10 @@ public class Camera {
     update();
   }
 
+  public Vector3f getPosition() {
+    return position;
+  }
+
   public float getZoom() {
     return zoom;
   }

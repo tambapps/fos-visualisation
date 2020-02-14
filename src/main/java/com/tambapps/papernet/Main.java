@@ -197,7 +197,7 @@ public class Main extends GlWindow {
 
   private boolean intersect(Bubble bubble, float x, float y) {
     return pow2(x - bubble.getX()) + pow2(y - bubble.getY())
-      < pow2(bubble.getRadius());
+      < pow2(bubble.getRadius() * 1.2f); // 1.2f for better detection
   }
 
   private float pow2(float x) {
@@ -207,9 +207,16 @@ public class Main extends GlWindow {
   // TODO handle it seems to have an offset in the collision
   @Override
   public void onTouchDown(float x, float y) {
+    Vector3f projectPoint = projectPoint(x, y);
     selectedBubble = bubbles.stream()
-      .filter(b -> intersect(b, x * camera.getZoom(), y * camera.getZoom()))
+      .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
       .findFirst().orElse(null);
+  }
+
+  private Vector3f projectPoint(float x, float y) {
+    float zoom = camera.getZoom();
+    Vector3f cameraPos = camera.getPosition();
+    return tempVec.set((x - cameraPos.x) * zoom, (y - cameraPos.y) * zoom, 0);
   }
 
   @Override
@@ -217,7 +224,8 @@ public class Main extends GlWindow {
     if (selectedBubble == null) {
       return;
     }
-    selectedBubble.setPosition(x * camera.getZoom(), y * camera.getZoom());
+    Vector3f projectPoint = projectPoint(x, y);
+    selectedBubble.setPosition(projectPoint.x, projectPoint.y);
     links.forEach(Link::updatePos);
   }
 }
