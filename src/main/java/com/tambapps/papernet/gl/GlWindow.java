@@ -1,7 +1,7 @@
 package com.tambapps.papernet.gl;
 
-import com.tambapps.papernet.gl.inputlistener.InputHandler;
-import com.tambapps.papernet.gl.inputlistener.InputListener;
+import com.tambapps.papernet.gl.input.InputHandler;
+import com.tambapps.papernet.gl.input.InputListener;
 import com.tambapps.papernet.gl.view.Camera;
 import com.tambapps.papernet.visualisation.animation.Animation;
 import org.joml.Matrix4f;

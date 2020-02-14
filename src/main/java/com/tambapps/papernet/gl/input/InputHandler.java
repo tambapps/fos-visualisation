@@ -1,4 +1,4 @@
-package com.tambapps.papernet.gl.inputlistener;
+package com.tambapps.papernet.gl.input;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 
