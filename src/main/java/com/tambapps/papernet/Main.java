@@ -205,13 +205,11 @@ public class Main extends GlWindow {
   }
 
   // TODO handle it seems to have an offset in the collision
-  // TODO project with camera
   @Override
   public void onTouchDown(float x, float y) {
     selectedBubble = bubbles.stream()
-      .filter(b -> intersect(b, x, y))
+      .filter(b -> intersect(b, x * camera.getZoom(), y * camera.getZoom()))
       .findFirst().orElse(null);
-    System.out.println(selectedBubble);
   }
 
   @Override
@@ -219,7 +217,7 @@ public class Main extends GlWindow {
     if (selectedBubble == null) {
       return;
     }
-    selectedBubble.setPosition(x, y);
+    selectedBubble.setPosition(x * camera.getZoom(), y * camera.getZoom());
     links.forEach(Link::updatePos);
   }
 }

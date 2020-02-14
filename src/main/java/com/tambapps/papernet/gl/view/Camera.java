@@ -1,6 +1,8 @@
 package com.tambapps.papernet.gl.view;
 
+import com.tambapps.papernet.gl.GlWindow;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Camera {
@@ -51,4 +53,5 @@ public class Camera {
   public float getZoom() {
     return zoom;
   }
+
 }
