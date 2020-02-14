@@ -182,7 +182,7 @@ public class Main extends GlWindow {
     System.out.println("Enter the year or 'all' for all papers");
     Collection<ResearchPaper> papers;
     try (Scanner scanner = new Scanner(System.in)) {
-      String s = scanner.nextLine();
+      String s =  args.length > 0 ? args[0] : scanner.nextLine();
       if (s.equals("all") || s.isEmpty()) {
         papers = data.getAllPapers();
       } else {
