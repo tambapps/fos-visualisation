@@ -2,10 +2,11 @@ package com.tambapps.papernet.gl;
 
 import com.tambapps.papernet.gl.input.InputHandler;
 import com.tambapps.papernet.gl.input.InputListener;
+import com.tambapps.papernet.gl.input.MouseInputHandler;
+import com.tambapps.papernet.gl.input.MouseListener;
 import com.tambapps.papernet.gl.view.Camera;
 import com.tambapps.papernet.visualisation.animation.Animation;
 import org.joml.Matrix4f;
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -53,7 +54,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public abstract class GlWindow implements InputListener {
+public abstract class GlWindow implements InputListener, MouseListener {
 
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 720;
@@ -62,6 +63,7 @@ public abstract class GlWindow implements InputListener {
   private long window;
   protected final Camera camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
   private InputHandler inputHandler;
+  private MouseInputHandler mouseInputHandler;
   private final List<Animation> animations = new ArrayList<>();
 
   public void run() {
@@ -112,6 +114,8 @@ public abstract class GlWindow implements InputListener {
     if ( window == NULL )
       throw new RuntimeException("Failed to create the GLFW window");
     glfwSetKeyCallback(window, inputHandler = new InputHandler(this));
+    mouseInputHandler = new MouseInputHandler(this);
+    mouseInputHandler.addInput(window);
 
     // Get the thread stack and push a new frame
     try ( MemoryStack stack = stackPush() ) {
@@ -194,4 +198,5 @@ public abstract class GlWindow implements InputListener {
   protected boolean isOneAnimationRunning() {
     return !animations.isEmpty();
   }
+
 }
