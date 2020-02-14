@@ -15,7 +15,7 @@ public class RandomTest {
   @Test
   public void randomTest() throws IOException {
     Collection<ResearchPaper> papers = ResearchPaperDataParser.parseData(10).getAllPapers();
-    List<Bubble> bubbles = Bubbles.toBubbles(papers, null);
-    System.out.println(bubbles);
+    //List<Bubble> bubbles = Bubbles.toBubbles(papers, null);
+    //System.out.println(bubbles);
   }
 }

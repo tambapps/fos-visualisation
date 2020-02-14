@@ -19,7 +19,10 @@ import org.joml.Vector3f;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main extends GlWindow {
@@ -31,7 +34,7 @@ public class Main extends GlWindow {
   private static final float NAVIGATION_ZOOM_OFFSET = 0.0333333f;
 
   private static final Vector3f tempVec = new Vector3f();
-  private List<Bubble> bubbles;
+  private Map<String, Bubble> fosBubbles = new HashMap<>();
   private List<Link> links;
   private Bubble selectedBubble = null;
   private Color selectedBubbleColor = null;
@@ -52,7 +55,7 @@ public class Main extends GlWindow {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
     links = new ArrayList<>();
-    bubbles = Bubbles.toBubbles(papers, links);
+    fosBubbles = Bubbles.toBubbles(fosBubbles, papers, links);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
@@ -77,7 +80,10 @@ public class Main extends GlWindow {
     texture.draw();
 
     links.forEach(l -> l.draw(projection));
-    bubbles.forEach(b -> b.draw(projection));
+    fosBubbles.values()
+      .stream()
+    .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
+    .forEach(b -> b.draw(projection));
     //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
 
@@ -131,7 +137,7 @@ public class Main extends GlWindow {
       return;
     }
     bubbleThreshold += offset;
-    for (Bubble bubble : bubbles) {
+    for (Bubble bubble : fosBubbles.values()) {
       bubble.setVisible(bubble.getRadius() >= bubbleThreshold);
     }
     links.forEach(Link::update);
@@ -172,9 +178,9 @@ public class Main extends GlWindow {
   private void shuffle(boolean withAnimation) {
     if (withAnimation) {
       clearAnimations();
-      BubblesArranger.arrangeWithAnimation(bubbles, this::addAnimation);
+      BubblesArranger.arrangeWithAnimation(fosBubbles.values(), this::addAnimation);
     } else {
-      BubblesArranger.arrange(bubbles);
+      BubblesArranger.arrange(fosBubbles.values());
       links.forEach(Link::updatePos);
     }
   }
@@ -212,7 +218,7 @@ public class Main extends GlWindow {
   @Override
   public void onTouchDown(float x, float y) {
     Vector3f projectPoint = projectPoint(x, y);
-    selectedBubble = bubbles.stream()
+    selectedBubble = fosBubbles.values().stream()
       .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
       .findFirst().orElse(null);
     if (selectedBubble != null) {

@@ -4,6 +4,7 @@ import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
 import com.tambapps.papernet.gl.shader.Color;
+import com.tambapps.papernet.gl.shader.ShaderUtils;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
@@ -33,7 +34,7 @@ public class Bubbles {
       .reduce(0f, Float::sum);
   }
 
-  public static List<Bubble> toBubbles(Collection<ResearchPaper> researchPapers, List<Link> links) {
+  public static Map<String, Bubble> toBubbles(Map<String, Bubble> fosBubbles, Collection<ResearchPaper> researchPapers, List<Link> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
@@ -80,7 +81,7 @@ public class Bubbles {
 
     Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
       .stream()
-      .map(e -> createBubble(e.getKey(), e.getValue()))
+      .map(e -> createBubble(fosBubbles, e.getKey(), e.getValue()))
       .collect(Collectors.toMap(Bubble::getText, b -> b));
 
     float maxLinkOcc = connectedOccurenceMap.values()
@@ -91,11 +92,14 @@ public class Bubbles {
       .stream()
       .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
       .min().getAsInt();
+
+    links.clear(); // TODO create link pool
     fillLinks(links, connectedOccurenceMap, fosBubble, minLinkOcc, maxLinkOcc);
-    return fosBubble.values()
-      .stream()
-      .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
-      .collect(Collectors.toList());
+    return fosBubble;
+   // fosBubble.values()
+     // .stream()
+      //.sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
+      //.collect(Collectors.toMap(Bubble::getText, b -> b));
   }
 
   private static void fillLinks(List<Link> links, Map<String, Map<String, Integer>> connectedOccurenceMap,
@@ -129,7 +133,12 @@ public class Bubbles {
     }
   }
 
-  private static Bubble createBubble(String fos, BubbleData data) {
+  private static Bubble createBubble(Map<String, Bubble> fosBubbles, String fos, BubbleData data) {
+    Bubble b = fosBubbles.get(fos);
+    if (b != null) {
+      ShaderUtils.setColor(b.getShader(), data.r, data.g, data.b);
+      return b;
+    }
     try {
       return Bubble.newBubble(fos, data.r, data.g, data.b, data.radius);
     } catch (IOException e) {
