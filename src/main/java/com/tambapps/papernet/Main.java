@@ -6,8 +6,7 @@ import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
 import com.tambapps.papernet.gl.shader.Color;
-import com.tambapps.papernet.gl.shader.Shader;
-import com.tambapps.papernet.gl.shader.ShaderUtils;
+import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
@@ -222,9 +221,9 @@ public class Main extends GlWindow {
       .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
       .findFirst().orElse(null);
     if (selectedBubble != null) {
-      Shader shader = selectedBubble.getShader();
-      selectedBubbleColor = ShaderUtils.getColor(shader);
-      ShaderUtils.setColor(shader, SELECTED_COLOR);
+      ColorShader shader = selectedBubble.getShader();
+      selectedBubbleColor = shader.getColor();
+      shader.setColor(SELECTED_COLOR);
     }
   }
 
@@ -239,7 +238,7 @@ public class Main extends GlWindow {
     if (selectedBubble == null) {
       return;
     }
-    ShaderUtils.setColor(selectedBubble.getShader(), selectedBubbleColor);
+    selectedBubble.getShader().setColor(selectedBubbleColor);
   }
 
   @Override

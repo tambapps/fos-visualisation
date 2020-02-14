@@ -5,9 +5,9 @@ import java.io.IOException;
 public class ShaderFactory {
 
 
-  public static Shader rgbShader(float r, float g, float b) throws IOException {
-    Shader shader = new Shader("shader");
-    ShaderUtils.setColor(shader, r, g, b);
+  public static ColorShader rgbShader(float r, float g, float b) throws IOException {
+    ColorShader shader = new ColorShader("shader");
+    shader.setColor(r, g, b);
     return shader;
   }
 }

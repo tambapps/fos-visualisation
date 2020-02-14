@@ -4,13 +4,10 @@ import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
 import com.tambapps.papernet.gl.shader.Color;
-import com.tambapps.papernet.gl.shader.ShaderUtils;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +133,7 @@ public class Bubbles {
   private static Bubble createBubble(Map<String, Bubble> fosBubbles, String fos, BubbleData data) {
     Bubble b = fosBubbles.get(fos);
     if (b != null) {
-      ShaderUtils.setColor(b.getShader(), data.r, data.g, data.b);
+      b.getShader().setColor(data.r, data.g, data.b);
       return b;
     }
     try {

@@ -1,5 +1,6 @@
 package com.tambapps.papernet.visualisation.drawable;
 
+import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Circle;
@@ -10,11 +11,11 @@ import java.io.IOException;
 public class Bubble extends AbstractDrawable implements Movable {
 
   private Circle circle;
-  private Shader shader;
+  private ColorShader shader;
   private Shader textShader;
   private String text;
 
-  private Bubble(float radius, Shader shader, String text, Shader textShader) {
+  private Bubble(float radius, ColorShader shader, String text, Shader textShader) {
     this.circle = new Circle(radius);
     this.shader = shader;
     this.text = text;
@@ -66,7 +67,7 @@ public class Bubble extends AbstractDrawable implements Movable {
     setY(y);
   }
 
-  public Shader getShader() {
+  public ColorShader getShader() {
     return shader;
   }
 }

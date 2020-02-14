@@ -1,6 +1,6 @@
 package com.tambapps.papernet.visualisation.drawable;
 
-import com.tambapps.papernet.gl.shader.Shader;
+import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Curve;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ public class Link extends AbstractDrawable {
   private final Bubble b1;
   private final Bubble b2;
   private final Curve curve;
-  private final Shader curveShader;
+  private final ColorShader curveShader;
 
   public void update() {
     setVisible(b1.isVisible() && b2.isVisible());
