@@ -9,10 +9,12 @@ import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 
 public class MouseInputHandler {
 
-  private boolean clicked = false;
-  private boolean touchedDown = false;
   private static final int GL_ACTION_TOUCH_DOWN  = 1;
   private static final int GL_ACTION_TOUCH_UP  = 0;
+
+  private boolean clicked = false;
+  private float x;
+  private float y;
 
   private final MouseListener mouseListener;
 
@@ -25,14 +27,18 @@ public class MouseInputHandler {
     glfwSetCursorPosCallback(window, new CursorCallBack());
   }
 
-
   private class ClickCallBack extends GLFWMouseButtonCallback {
     @Override
     public void invoke(long window, int button, int action, int mods) {
-      clicked = action == GL_ACTION_TOUCH_DOWN;
-      if (action == GL_ACTION_TOUCH_UP) {
-        touchedDown = false;
-        mouseListener.onTouchUp();
+      switch (action) {
+        case GL_ACTION_TOUCH_DOWN:
+          clicked = true;
+          mouseListener.onTouchDown(x, y);
+          break;
+        case GL_ACTION_TOUCH_UP:
+          clicked = false;
+          mouseListener.onTouchUp();
+          break;
       }
     }
   }
@@ -41,17 +47,12 @@ public class MouseInputHandler {
 
     @Override
     public void invoke(long window, double xpos, double ypos) {
+      x = ((float) xpos) - (GlWindow.WINDOW_WIDTH >> 1);
+      y = - (((float)ypos) - (GlWindow.WINDOW_HEIGHT >> 1));
       if (!clicked) {
         return;
       }
-      float x = ((float) xpos) - (GlWindow.WINDOW_WIDTH >> 1);
-      float y = - (((float)ypos) - (GlWindow.WINDOW_HEIGHT >> 1));
-      if (!touchedDown) {
-        mouseListener.onTouchDown(x, y);
-        touchedDown = true;
-      } else {
-        mouseListener.onMouseDragged(x, y);
-      }
+      mouseListener.onMouseDragged(x, y);
     }
   }
 }
