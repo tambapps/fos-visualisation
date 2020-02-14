@@ -201,15 +201,14 @@ public class Main extends GlWindow {
   }
 
   private boolean intersect(Bubble bubble, float x, float y) {
-    return pow2(x - bubble.getX()) + pow2(y - bubble.getY())
-      < pow2(bubble.getRadius() * 1.5f); // 1.2f for better detection
+    return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // - 10 is for the app bar TODO there is still an offset
+      < pow2(bubble.getRadius());
   }
 
   private float pow2(float x) {
     return x * x;
   }
 
-  // TODO handle it seems to have an offset in the collision
   @Override
   public void onTouchDown(float x, float y) {
     Vector3f projectPoint = projectPoint(x, y);
