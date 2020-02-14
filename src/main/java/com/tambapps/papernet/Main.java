@@ -167,7 +167,7 @@ public class Main extends GlWindow {
       BubblesArranger.arrangeWithAnimation(bubbles, this::addAnimation);
     } else {
       BubblesArranger.arrange(bubbles);
-      links.forEach(Link::update);
+      links.forEach(Link::updatePos);
     }
   }
 

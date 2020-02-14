@@ -21,6 +21,9 @@ public class Link extends AbstractDrawable {
     if (!isVisible()) {
       return;
     }
+    updatePos();
+  }
+  public void updatePos() {
     curve.setX1(b1.getX());
     curve.setY1(b1.getY());
 
