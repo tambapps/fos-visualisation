@@ -157,7 +157,7 @@ public class Main extends GlWindow {
   @Override
   public void update(float delta) {
     if (isOneAnimationRunning()) {
-      links.forEach(Link::update);
+      links.forEach(Link::updatePos);
     }
   }
 
