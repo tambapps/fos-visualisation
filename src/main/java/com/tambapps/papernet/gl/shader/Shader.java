@@ -105,4 +105,8 @@ public class Shader {
       return reader.lines().collect(Collectors.joining("\n"));
     }
   }
+
+  public <T> T getUniformVariable(String key) {
+    return (T) uniformVariables.get(key);
+  }
 }

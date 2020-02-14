@@ -5,6 +5,9 @@ import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
+import com.tambapps.papernet.gl.shader.Color;
+import com.tambapps.papernet.gl.shader.Shader;
+import com.tambapps.papernet.gl.shader.ShaderUtils;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
@@ -17,10 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main extends GlWindow {
+
+  private static final Color SELECTED_COLOR = new Color(0, 1, 0);
 
   private static final int NAVIGATION_OFFSET = 8;
   private static final float THRESHOLD_OFFSET = 0.1f;
@@ -30,6 +34,7 @@ public class Main extends GlWindow {
   private List<Bubble> bubbles;
   private List<Link> links;
   private Bubble selectedBubble = null;
+  private Color selectedBubbleColor = null;
 
  // FontTT fontTT;
   private Texture texture;
@@ -197,7 +202,7 @@ public class Main extends GlWindow {
 
   private boolean intersect(Bubble bubble, float x, float y) {
     return pow2(x - bubble.getX()) + pow2(y - bubble.getY())
-      < pow2(bubble.getRadius() * 1.2f); // 1.2f for better detection
+      < pow2(bubble.getRadius() * 1.5f); // 1.2f for better detection
   }
 
   private float pow2(float x) {
@@ -211,12 +216,25 @@ public class Main extends GlWindow {
     selectedBubble = bubbles.stream()
       .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
       .findFirst().orElse(null);
+    if (selectedBubble != null) {
+      Shader shader = selectedBubble.getShader();
+      selectedBubbleColor = ShaderUtils.getColor(shader);
+      ShaderUtils.setColor(shader, SELECTED_COLOR);
+    }
   }
 
   private Vector3f projectPoint(float x, float y) {
     float zoom = camera.getZoom();
     Vector3f cameraPos = camera.getPosition();
     return tempVec.set((x - cameraPos.x) * zoom, (y - cameraPos.y) * zoom, 0);
+  }
+
+  @Override
+  public void onTouchUp() {
+    if (selectedBubble == null) {
+      return;
+    }
+    ShaderUtils.setColor(selectedBubble.getShader(), selectedBubbleColor);
   }
 
   @Override

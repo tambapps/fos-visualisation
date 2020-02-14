@@ -3,6 +3,7 @@ package com.tambapps.papernet.visualisation.drawable;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
+import com.tambapps.papernet.gl.shader.Color;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
@@ -163,10 +164,4 @@ public class Bubbles {
     private float b;
   }
 
-  @Value
-  private static class Color {
-    private float r;
-    private float g;
-    private float b;
-  }
 }

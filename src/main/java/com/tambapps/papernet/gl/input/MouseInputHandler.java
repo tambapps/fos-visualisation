@@ -32,6 +32,7 @@ public class MouseInputHandler {
       clicked = action == GL_ACTION_TOUCH_DOWN;
       if (action == GL_ACTION_TOUCH_UP) {
         touchedDown = false;
+        mouseListener.onTouchUp();
       }
     }
   }

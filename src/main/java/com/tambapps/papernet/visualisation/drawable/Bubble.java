@@ -65,4 +65,8 @@ public class Bubble extends AbstractDrawable implements Movable {
     setX(x);
     setY(y);
   }
+
+  public Shader getShader() {
+    return shader;
+  }
 }
