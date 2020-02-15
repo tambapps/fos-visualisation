@@ -96,9 +96,9 @@ public class FosNet {
 
   public void shuffle(boolean withAnimation, Consumer<Animation> animationConsumer) {
     if (withAnimation) {
-      BubblesArranger.arrangeWithAnimation(fosBubbles.values(), animationConsumer);
+      BubblesArranger.arrangeWithAnimation(currentBubbles, animationConsumer);
     } else {
-      BubblesArranger.arrange(fosBubbles.values());
+      BubblesArranger.arrange(currentBubbles);
       links.forEach(Link::updatePos);
     }
   }
