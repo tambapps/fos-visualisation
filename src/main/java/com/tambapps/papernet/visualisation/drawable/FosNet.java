@@ -43,14 +43,6 @@ public class FosNet {
       .collect(Collectors.toList());
   }
 
-  public List<Bubble> getCurrentBubbles() {
-    return currentBubbles;
-  }
-
-  public void setSelectedBubble(Bubble selectedBubble) {
-    this.selectedBubble = selectedBubble;
-  }
-
   public Bubble getSelectedBubble() {
     return selectedBubble;
   }
@@ -105,4 +97,7 @@ public class FosNet {
     return x * x;
   }
 
+  public int getYear() {
+    return year;
+  }
 }
