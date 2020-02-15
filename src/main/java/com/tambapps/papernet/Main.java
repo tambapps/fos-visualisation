@@ -64,16 +64,18 @@ public class Main extends GlWindow {
     } catch (Exception e) {
       throw new IOException(e);
     }
-    System.out.format("Finished intialization of OpenGL (in %ds)\n\n", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.format("Finished initialization of OpenGL (in %ds)\n\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Press the arrow keys to move on the screen");
-    System.out.println("pressed CTRL with up/down zoom/unzoom from the screen");
-    System.out.println("Use E/D to modify the threshold of links that will be displayed");
-    System.out.println("Use R/F to modify the threshold of bubbles that will be displayed");
+    System.out.println("pressed 'z' with up/down to zoom/unzoom from the screen");
+    System.out.println("pressed 'l' with up/down to modify the threshold of links that will be displayed");
+    System.out.println("pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
+    System.out.println("pressed 'y' with up/down to move through the years");
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("You can also touch and drag a bubble to move it");
     System.out.println("Use ESCAPE to exit");
   }
-  // TODO implement bubble search through user input
+
+  // TODO implement bubble search through user input?
   @Override
   public void onDraw(Matrix4f projection) {
     //texture.bind();
