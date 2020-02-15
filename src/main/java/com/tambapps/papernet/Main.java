@@ -4,7 +4,6 @@ import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.gl.GlWindow;
 
-import com.tambapps.papernet.gl.input.InputHandler;
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
@@ -38,8 +37,8 @@ public class Main extends GlWindow {
   private final int initialYear;
   private final FosNet fosNet;
   private Color selectedBubbleColor = null;
- // FontTT fontTT;
-  private Texture texture;
+
+  private Texture background;
   private float linkThreshold = Bubbles.MIN_LINK_WIDTH;
   private float bubbleThreshold = Bubbles.MIN_RADIUS;
 
@@ -58,7 +57,7 @@ public class Main extends GlWindow {
     fosNet.loadYear(initialYear, this::addAnimation, bubbleThreshold, linkThreshold);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
-    texture = Texture.newTexture("background.jpg");
+    background = Texture.newTexture("background.png");
     try {
    //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
     } catch (Exception e) {
@@ -78,8 +77,8 @@ public class Main extends GlWindow {
   // TODO implement bubble search through user input?
   @Override
   public void onDraw(Matrix4f projection) {
-    //texture.bind();
-//    texture.draw();
+    background.bind();
+    background.draw();
     glEnable(GL_BLEND);
     fosNet.draw(projection);
     glDisable(GL_BLEND);
