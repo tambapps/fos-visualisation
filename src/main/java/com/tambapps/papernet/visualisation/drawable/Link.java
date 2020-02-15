@@ -67,7 +67,7 @@ public class Link extends AbstractDrawable {
     return curveShader.getAlpha();
   }
 
-  public static Link newLink(Bubble b1, Bubble b2, float width) throws IOException {
+  public static Link newLink(Bubble b1, Bubble b2, float width) {
     return new Link(b1, b2, new Curve(width), ShaderFactory.linksShader());
   }
 

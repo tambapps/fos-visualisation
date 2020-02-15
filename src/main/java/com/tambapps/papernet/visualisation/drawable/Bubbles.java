@@ -3,6 +3,7 @@ package com.tambapps.papernet.visualisation.drawable;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.WeightedCitation;
+import com.tambapps.papernet.gl.pool.LinkPool;
 import com.tambapps.papernet.gl.shader.Color;
 import lombok.AllArgsConstructor;
 
@@ -105,13 +106,7 @@ public class Bubbles {
       for (String fos2 : occMap.keySet()) {
         float nbOcc = occMap.get(fos2);
         float width = MIN_LINK_WIDTH + toPercentage(nbOcc, minLinkOcc, maxLinkOcc) * (MAX_LINK_WIDTH - MIN_LINK_WIDTH);
-        Link link = null;
-        try {
-          link = Link.newLink(fosBubble.get(fos1), fosBubble.get(fos2), width);
-        } catch (IOException e) {
-          throw new RuntimeException("Couldn't create link", e);
-        }
-        links.add(link);
+        links.add(LinkPool.get(fosBubble.get(fos1), fosBubble.get(fos2), width));
       }
     }
   }

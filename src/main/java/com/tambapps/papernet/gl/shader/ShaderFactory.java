@@ -8,11 +8,12 @@ public class ShaderFactory {
 
   private static ColorShader linkShader;
 
-  public static ColorShader linksShader() throws IOException {
-    if (linkShader == null) {
-      linkShader = rgbaShader(0.5f, 0.5f, 0.5f, Link.MAX_ALPHA);
-    }
+  public static ColorShader linksShader() {
     return linkShader;
+  }
+
+  public static void setLinkShader(ColorShader linkShader) {
+    ShaderFactory.linkShader = linkShader;
   }
 
   public static ColorShader rgbaShader(float r, float g, float b, float a) throws IOException {

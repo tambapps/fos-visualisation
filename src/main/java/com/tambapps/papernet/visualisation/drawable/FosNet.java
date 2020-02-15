@@ -2,6 +2,7 @@ package com.tambapps.papernet.visualisation.drawable;
 
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
+import com.tambapps.papernet.gl.pool.LinkPool;
 import com.tambapps.papernet.gl.view.Camera;
 import com.tambapps.papernet.visualisation.animation.AlphaAnimation;
 import com.tambapps.papernet.visualisation.animation.Animation;
@@ -39,7 +40,8 @@ public class FosNet {
   public void loadYear(int year, Consumer<Animation> animationConsumer, float bubblesThreshold, float linkThreshold) {
     this.year = year;
     Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
-    links.clear(); // TODO create link pool
+    links.forEach(LinkPool::free);
+    links.clear();
     Map<String, Bubble> newFosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
     removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
     List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);

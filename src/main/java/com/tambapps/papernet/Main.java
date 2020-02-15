@@ -7,11 +7,13 @@ import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.input.InputHandler;
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
+import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
+import com.tambapps.papernet.visualisation.drawable.Link;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -51,6 +53,8 @@ public class Main extends GlWindow {
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
+    ShaderFactory.setLinkShader(ShaderFactory.rgbaShader(0.5f, 0.5f, 0.5f, Link.MAX_ALPHA));
+
     fosNet.loadYear(initialYear, this::addAnimation, bubbleThreshold, linkThreshold);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
