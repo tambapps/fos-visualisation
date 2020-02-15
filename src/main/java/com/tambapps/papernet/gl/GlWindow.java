@@ -222,7 +222,7 @@ public abstract class GlWindow implements InputListener, MouseListener {
     Iterator<Animation> animationIterator =  animations.iterator();
     while (animationIterator.hasNext()) {
       Animation animation = animationIterator.next();
-      animation.act(1f);
+      animation.finish();
       animationIterator.remove();
     }
   }

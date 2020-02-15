@@ -50,6 +50,8 @@ public abstract class Animation {
 
   public void finish() {
     time = duration;
+    update(reverse ? 0 : 1);
+    end();
   }
 
   public void restart() {
