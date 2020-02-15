@@ -4,6 +4,7 @@ import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.gl.GlWindow;
 
+import com.tambapps.papernet.gl.input.InputHandler;
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.text.Text;
@@ -83,38 +84,46 @@ public class Main extends GlWindow {
   }
 
   @Override
-  public void onLeftPressed(boolean ctrlPressed) {
+  public void onLeftPressed(Character pressedCharacter) {
     camera.addPosition(tempVec.set(NAVIGATION_OFFSET, 0, 0));
   }
 
   @Override
-  public void onRightPressed(boolean ctrlPressed) {
+  public void onRightPressed(Character pressedCharacter) {
     camera.addPosition(tempVec.set(- NAVIGATION_OFFSET, 0, 0));
   }
 
   @Override
-  public void onUpPressed(boolean ctrlPressed) {
-    if (ctrlPressed) {
-      camera.zoomBy(- NAVIGATION_ZOOM_OFFSET);
+  public void onUpPressed(Character pressedCharacter) {
+    upDownPressed(pressedCharacter, 1f);
+  }
+
+  private void upDownPressed(Character pressedCharacter, float factor) {
+    if (pressedCharacter == null) {
+      camera.addPosition(tempVec.set(0, -factor * NAVIGATION_OFFSET, 0));
     } else {
-      camera.addPosition(tempVec.set(0, - NAVIGATION_OFFSET, 0));
+      switch (pressedCharacter) {
+        case 'z':
+          camera.zoomBy(-factor * NAVIGATION_ZOOM_OFFSET);
+          break;
+        case 'l':
+          moveLinkThreshold(factor * THRESHOLD_OFFSET);
+          break;
+        case 'b':
+          moveBubbleThreshold(factor * THRESHOLD_OFFSET);
+          break;
+      }
     }
+  }
+  @Override
+  public void onDownPressed(Character pressedCharacter) {
+    upDownPressed(pressedCharacter, -1f);
   }
 
   @Override
   public void onEscapePressed() {
     close();
   }
-
-  @Override
-  public void onDownPressed(boolean ctrlPressed) {
-    if (ctrlPressed) {
-      camera.zoomBy(NAVIGATION_ZOOM_OFFSET);
-    } else {
-      camera.addPosition(tempVec.set(0, NAVIGATION_OFFSET, 0));
-    }
-  }
-
   private void moveLinkThreshold(float offset) {
     if (linkThreshold <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
       linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
@@ -138,18 +147,6 @@ public class Main extends GlWindow {
   @Override
   public void onKeyClicked(char c) {
     switch (c) {
-      case 'e':
-        moveLinkThreshold(THRESHOLD_OFFSET);
-        break;
-      case 'd':
-        moveLinkThreshold(-THRESHOLD_OFFSET);
-        break;
-      case 'r':
-        moveBubbleThreshold(THRESHOLD_OFFSET);
-        break;
-      case 'f':
-        moveBubbleThreshold(-THRESHOLD_OFFSET);
-        break;
       case 's': // shuffle
         shuffle(true);
         break;

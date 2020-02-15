@@ -20,7 +20,11 @@ import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
@@ -170,7 +174,17 @@ public abstract class GlWindow implements InputListener, MouseListener {
 
   private void update() {
     float delta = 0.025f; // TODO handle better delta (use real time)
-    inputHandler.update(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GL_TRUE);
+    Character pressedCharacter = null; // z, l, b and ctrl are pressable
+    if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) { // z
+      pressedCharacter = 'z';
+    } else if (glfwGetKey(window, GLFW_KEY_L) == GL_TRUE) { // z
+      pressedCharacter = 'l';
+    } else if (glfwGetKey(window, GLFW_KEY_B) == GL_TRUE) { // z
+      pressedCharacter = 'b';
+    }  else if (glfwGetKey(window, GLFW_KEY_Y) == GL_TRUE) { // z
+      pressedCharacter = 'y';
+    }
+    inputHandler.update(pressedCharacter);
     Iterator<Animation> animationIterator =  animations.iterator();
     while (animationIterator.hasNext()) {
       Animation animation = animationIterator.next();

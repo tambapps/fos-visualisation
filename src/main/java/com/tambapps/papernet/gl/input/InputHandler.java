@@ -20,7 +20,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class InputHandler extends GLFWKeyCallback {
 
-  // TODO OOOO CREATE ANIMATION WHEN SHUFFLING BUBBLES AND INTERPOLATE MOVMENT WITH A SQUARED FUNCTION
   private final Map<Integer, Character> KEY_CHARACTER_MAP = Map.ofEntries(
     Map.entry(GLFW_KEY_W, 'z'),
     Map.entry(GLFW_KEY_S, 's'),
@@ -81,18 +80,18 @@ public class InputHandler extends GLFWKeyCallback {
     }
   }
 
-  public void update(boolean ctrlPressed) {
+  public void update(Character pressedCharacter) {
     if (upPressed) {
-      inputListener.onUpPressed(ctrlPressed);
+      inputListener.onUpPressed(pressedCharacter);
     }
     if (downPressed) {
-      inputListener.onDownPressed(ctrlPressed);
+      inputListener.onDownPressed(pressedCharacter);
     }
     if (leftPressed) {
-      inputListener.onLeftPressed(ctrlPressed);
+      inputListener.onLeftPressed(pressedCharacter);
     }
     if (rightPressed) {
-      inputListener.onRightPressed(ctrlPressed);
+      inputListener.onRightPressed(pressedCharacter);
     }
   }
 

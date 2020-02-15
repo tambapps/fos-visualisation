@@ -109,7 +109,7 @@ public class FosNet {
 
   public void draw(Matrix4f projection) {
     links.forEach(l -> l.draw(projection));
-    currentBubbles.forEach(b -> b.doDraw(projection));
+    currentBubbles.forEach(b -> b.draw(projection));
     removedBubbles.forEach(l -> l.draw(projection));
     if (!removedBubbles.isEmpty() && removedBubbles.get(0).getAlpha() <= 0) {
       removedBubbles.clear();
