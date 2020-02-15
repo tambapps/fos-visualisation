@@ -132,6 +132,7 @@ public class Main extends GlWindow {
     } else {
       year += offset;
     }
+    finishAnimations();
     fosNet.loadYear(year, this::addAnimation, bubbleThreshold, linkThreshold);
   }
 

@@ -78,6 +78,10 @@ public class Bubble extends AbstractDrawable implements Movable {
     return shader.getAlpha();
   }
 
+  public void setRadius(float radius) {
+    circle.setRadius(radius);
+  }
+
   public ColorShader getShader() {
     return shader;
   }

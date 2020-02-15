@@ -79,7 +79,7 @@ public class Bubbles {
 
     Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
       .stream()
-      .map(e -> createBubble(cachedFosBubbles, e.getKey(), e.getValue()))
+      .map(e -> getBubble(cachedFosBubbles, e.getKey(), e.getValue()))
       .collect(Collectors.toMap(Bubble::getText, b -> b));
 
     float maxLinkOcc = connectedOccurenceMap.values()
@@ -124,10 +124,11 @@ public class Bubbles {
     }
   }
 
-  private static Bubble createBubble(Map<String, Bubble> fosBubbles, String fos, BubbleData data) {
+  private static Bubble getBubble(Map<String, Bubble> fosBubbles, String fos, BubbleData data) {
     Bubble b = fosBubbles.get(fos);
     if (b != null) {
       b.getShader().setColor(data.r, data.g, data.b);
+      b.setRadius(data.radius);
       return b;
     }
     try {
