@@ -58,11 +58,9 @@ public class Main extends GlWindow {
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     background = Texture.newTexture("background.png");
-    try {
-   //   fontTT = new FontTT(Font.createFont(Font.TRUETYPE_FONT, new File("/home/nelson/workspace/graphisme-visualisation-openGL/kenvector_future.ttf")), 16, 0);
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
+    background.setWidth(1f);
+    background.setHeight(1f);
+
     System.out.format("Finished initialization of OpenGL (in %ds)\n\n", (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Press the arrow keys to move on the screen");
     System.out.println("pressed 'z' with up/down to zoom/unzoom from the screen");

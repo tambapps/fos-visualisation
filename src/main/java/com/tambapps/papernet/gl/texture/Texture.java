@@ -1,17 +1,13 @@
 package com.tambapps.papernet.gl.texture;
 
-
 import de.matthiasmann.twl.utils.PNGDecoder;
-import lombok.Value;
+import lombok.Data;
 import org.lwjgl.BufferUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_BYTE;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
@@ -29,27 +25,33 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-@Value
+@Data
 public class Texture {
 
   private static final int BPP = 4; // RGBA
-  private int id;
-  private int width;
-  private int height;
 
+  private final int id;
+  private float width;
+  private float height;
+  private float x;
+  private float y;
+
+  public Texture(int id, float width, float height) {
+    this.id = id;
+    this.width = width;
+    this.height = height;
+  }
 
   public void bind() {
     glBindTexture(GL_TEXTURE_2D, id);
   }
 
   public static Texture newTexture(String path) throws IOException {
-
     int width;
     int height;
     ByteBuffer buffer;
@@ -85,16 +87,16 @@ public class Texture {
     glUseProgram(0); // penser a reset le shader quand drawing quelquechose
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
-    glVertex2f(-1f, 1f);
+    glVertex2f(x - width, y + -height);
 
     glTexCoord2f(1, 0);
-    glVertex2f(1f, 1f);
+    glVertex2f(x + width, y - height);
 
     glTexCoord2f(1, 1);
-    glVertex2f(1f, -1f);
+    glVertex2f(x + width, y + height);
 
     glTexCoord2f(0, 1);
-    glVertex2f(-1f, -1f);
+    glVertex2f(x - width, y + height);
     glEnd();
   }
 }
