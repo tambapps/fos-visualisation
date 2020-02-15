@@ -10,12 +10,14 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_H;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class InputHandler extends GLFWKeyCallback {
@@ -26,8 +28,10 @@ public class InputHandler extends GLFWKeyCallback {
     Map.entry(GLFW_KEY_E, 'e'),
     Map.entry(GLFW_KEY_D, 'd'),
     Map.entry(GLFW_KEY_R, 'r'),
-    Map.entry(GLFW_KEY_F, 'f')
-  );
+    Map.entry(GLFW_KEY_F, 'f'),
+    Map.entry(GLFW_KEY_Y, 'y'),
+    Map.entry(GLFW_KEY_H, 'h')
+    );
   private final InputListener inputListener;
   private boolean upPressed = false;
   private boolean downPressed = false;

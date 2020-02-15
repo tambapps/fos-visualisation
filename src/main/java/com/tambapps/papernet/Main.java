@@ -69,7 +69,7 @@ public class Main extends GlWindow {
     System.out.println("pressed 'z' with up/down to zoom/unzoom from the screen");
     System.out.println("pressed 'l' with up/down to modify the threshold of links that will be displayed");
     System.out.println("pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
-    System.out.println("pressed 'y' with up/down to move through the years");
+    System.out.println("click y/h to move through the years");
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("You can also touch and drag a bubble to move it");
     System.out.println("Use ESCAPE to exit");
@@ -118,8 +118,6 @@ public class Main extends GlWindow {
         case 'b':
           moveBubbleThreshold(factor * THRESHOLD_OFFSET);
           break;
-        case 'y':
-          moveYear((int) factor);
       }
     }
   }
@@ -172,6 +170,12 @@ public class Main extends GlWindow {
     switch (c) {
       case 's': // shuffle
         shuffle(true);
+        break;
+      case 'y':
+        moveYear(1);
+        break;
+      case 'h':
+        moveYear(-1);
         break;
 
     }
