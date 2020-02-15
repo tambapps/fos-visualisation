@@ -51,7 +51,7 @@ public class Main extends GlWindow {
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
-    fosNet.loadYear(initialYear, this::addAnimation);
+    fosNet.loadYear(initialYear, this::addAnimation, bubbleThreshold, linkThreshold);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
@@ -112,9 +112,25 @@ public class Main extends GlWindow {
         case 'b':
           moveBubbleThreshold(factor * THRESHOLD_OFFSET);
           break;
+        case 'y':
+          moveYear((int) factor);
       }
     }
   }
+
+  private void moveYear(int offset) {
+    int year = fosNet.getYear();
+    if (year == 1957 && offset < 0 || year == 2019 && offset > 0) {
+      return;
+    }
+    if (year == FosNet.ALL_YEARS) {
+      year = 2019;
+    } else {
+      year += offset;
+    }
+    fosNet.loadYear(year, this::addAnimation, bubbleThreshold, linkThreshold);
+  }
+
   @Override
   public void onDownPressed(Character pressedCharacter) {
     upDownPressed(pressedCharacter, -1f);

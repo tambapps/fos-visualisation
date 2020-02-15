@@ -30,11 +30,11 @@ public class FosNetTest extends GlTest {
 
   @Test
   public void setYearTest() {
-    fosNet.loadYear(2000, EMPTY_CONSUMER);
+    fosNet.loadYear(2000, EMPTY_CONSUMER, 0, 0);
     List<Bubble> yearBubbles = List.copyOf(fosNet.getBubbles());
     assertFalse(yearBubbles.isEmpty());
-    fosNet.loadYear(0, EMPTY_CONSUMER);
-    fosNet.loadYear(2000, EMPTY_CONSUMER);
+    fosNet.loadYear(0, EMPTY_CONSUMER, 0, 0);
+    fosNet.loadYear(2000, EMPTY_CONSUMER, 0, 0);
     assertEquals(yearBubbles, fosNet.getBubbles());
   }
 }

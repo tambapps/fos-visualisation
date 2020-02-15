@@ -36,24 +36,13 @@ public class FosNet {
     this.data = data;
   }
 
-  public void loadYear(int year, Consumer<Animation> animationConsumer) {
+  public void loadYear(int year, Consumer<Animation> animationConsumer, float bubblesThreshold, float linkThreshold) {
     this.year = year;
     Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
     links.clear(); // TODO create link pool
     Map<String, Bubble> newFosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
     removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
-    removedBubbles.stream()
-      .map(this::hideAnimation)
-      .forEach(animationConsumer);
-
     List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);
-    addedBubbles.stream()
-      .map(this::showAnimation)
-      .forEach(animationConsumer);
-
-    this.links.stream()
-      .map(this::showAnimation)
-      .forEach(animationConsumer);
 
     this.fosBubbles = newFosBubbles;
     cachedBubbles.putAll(this.fosBubbles);
@@ -61,6 +50,23 @@ public class FosNet {
       .stream()
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
+    setLinksThreshold(linkThreshold);
+    setBubblesThreshold(bubblesThreshold, linkThreshold);
+
+    addedBubbles.stream()
+      .filter(Drawable::isVisible)
+      .map(this::showAnimation)
+      .forEach(animationConsumer);
+
+    removedBubbles.stream()
+      .filter(Drawable::isVisible)
+      .map(this::hideAnimation)
+      .forEach(animationConsumer);
+
+    this.links.stream()
+      .filter(Drawable::isVisible)
+      .map(this::showAnimation)
+      .forEach(animationConsumer);
   }
 
   private AlphaAnimation hideAnimation(Drawable drawable) {
