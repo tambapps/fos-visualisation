@@ -3,6 +3,7 @@ package com.tambapps.papernet.visualisation.drawable;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.gl.view.Camera;
+import com.tambapps.papernet.visualisation.animation.AlphaAnimation;
 import com.tambapps.papernet.visualisation.animation.Animation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -13,19 +14,20 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class FosNet {
 
   public static final int ALL_YEARS = -1;
+  public static final float ALPHA_ANIMATION_DURATION = 1.5f;
 
   private final ResearchPaperData data;
   private int year;
   private Map<String, Bubble> cachedBubbles = new HashMap<>();
   private Map<String, Bubble> fosBubbles = new HashMap<>();
   private List<Bubble> currentBubbles;
+  private List<Bubble> removedBubbles;
   private final List<Link> links = new ArrayList<>();
 
   private Bubble selectedBubble = null;
@@ -34,14 +36,24 @@ public class FosNet {
     this.data = data;
   }
 
-  public void loadYear(int year, boolean animate) {
+  public void loadYear(int year, Consumer<Animation> animationConsumer) {
     this.year = year;
     Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
     links.clear(); // TODO create link pool
-    Map<String, Bubble> newFosBubbles = fosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
-    List<Bubble> removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
+    Map<String, Bubble> newFosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
+    removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
+    removedBubbles.stream()
+      .map(this::hideAnimation)
+      .forEach(animationConsumer);
+
     List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);
-    removedBubbles.forEach(b -> b.setVisible(false));
+    addedBubbles.stream()
+      .map(this::showAnimation)
+      .forEach(animationConsumer);
+
+    this.links.stream()
+      .map(this::showAnimation)
+      .forEach(animationConsumer);
 
     this.fosBubbles = newFosBubbles;
     cachedBubbles.putAll(this.fosBubbles);
@@ -49,6 +61,14 @@ public class FosNet {
       .stream()
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
       .collect(Collectors.toList());
+  }
+
+  private AlphaAnimation hideAnimation(Drawable drawable) {
+    return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION, true, () -> drawable.setVisible(false));
+  }
+
+  private AlphaAnimation showAnimation(Drawable drawable) {
+    return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION);
   }
 
   private List<Bubble> findAddedBubbles(Map<String, Bubble> fosBubbles, Map<String, Bubble> newFosBubbles) {
@@ -90,6 +110,10 @@ public class FosNet {
   public void draw(Matrix4f projection) {
     links.forEach(l -> l.draw(projection));
     currentBubbles.forEach(b -> b.doDraw(projection));
+    removedBubbles.forEach(l -> l.draw(projection));
+    if (!removedBubbles.isEmpty() && removedBubbles.get(0).getAlpha() <= 0) {
+      removedBubbles.clear();
+    }
   }
 
   public void setLinksThreshold(float threshold) {

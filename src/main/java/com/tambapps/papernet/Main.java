@@ -2,28 +2,25 @@ package com.tambapps.papernet;
 
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
-import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.gl.GlWindow;
 
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
+import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
-import com.tambapps.papernet.visualisation.drawable.BubblesArranger;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
-import com.tambapps.papernet.visualisation.drawable.Link;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
+
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Main extends GlWindow {
 
@@ -53,7 +50,7 @@ public class Main extends GlWindow {
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
-    fosNet.loadYear(initialYear, false);
+    fosNet.loadYear(initialYear, this::addAnimation);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
@@ -74,11 +71,15 @@ public class Main extends GlWindow {
   // TODO implement bubble search through user input
   @Override
   public void onDraw(Matrix4f projection) {
-    texture.bind();
-    texture.draw();
-
+    //texture.bind();
+//    texture.draw();
+    glEnable(GL_BLEND);
     fosNet.draw(projection);
-    //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
+    glDisable(GL_BLEND);
+
+    glUseProgram(0);
+    int year = fosNet.getYear();
+    Text.drawString(year == FosNet.ALL_YEARS ? "All years" : String.valueOf(year), -7.25f, 6.75f, 0.5f, 10);
   }
 
   @Override

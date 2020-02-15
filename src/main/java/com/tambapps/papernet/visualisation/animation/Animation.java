@@ -8,6 +8,7 @@ public abstract class Animation {
   private float duration, time; // in  sec
   private Interpolation interpolation;
   private boolean reverse, began, complete;
+  private Runnable onEnd;
 
   public Animation() {
   }
@@ -40,6 +41,9 @@ public abstract class Animation {
   }
 
   protected void end() {
+    if (onEnd != null) {
+      onEnd.run();
+    }
   }
 
   abstract protected void update (float percent);

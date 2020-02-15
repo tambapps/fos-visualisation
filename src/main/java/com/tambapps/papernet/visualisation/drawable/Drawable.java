@@ -9,4 +9,8 @@ public interface Drawable {
   void setVisible(boolean visible);
 
   boolean isVisible();
+
+  void setAlpha(float alpha);
+
+  float getAlpha();
 }

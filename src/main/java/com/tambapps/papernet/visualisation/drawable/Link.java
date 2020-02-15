@@ -11,6 +11,8 @@ import java.io.IOException;
 @AllArgsConstructor
 public class Link extends AbstractDrawable {
 
+  public static final float MAX_ALPHA = 0.6f;
+
   private final Bubble b1;
   private final Bubble b2;
   private final Curve curve;
@@ -55,8 +57,18 @@ public class Link extends AbstractDrawable {
     curve.draw();
   }
 
+  @Override
+  public void setAlpha(float alpha) {
+    curveShader.setAlpha(alpha * MAX_ALPHA);
+  }
+
+  @Override
+  public float getAlpha() {
+    return curveShader.getAlpha();
+  }
+
   public static Link newLink(Bubble b1, Bubble b2, float width) throws IOException {
-    return new Link(b1, b2, new Curve(width), ShaderFactory.rgbShader(0.5f, 0.5f, 0.5f));
+    return new Link(b1, b2, new Curve(width), ShaderFactory.rgbaShader(0.5f, 0.5f, 0.5f, Link.MAX_ALPHA));
   }
 
   public float getWidth() {

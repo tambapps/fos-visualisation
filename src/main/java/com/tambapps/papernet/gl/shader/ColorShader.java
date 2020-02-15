@@ -19,7 +19,7 @@ public class ColorShader extends Shader {
   }
 
   public void setColor(float r, float g, float b) {
-    setColor(r, g, b, 1f);
+    setColor(r, g, b, getAlpha());
   }
 
   public void setColor(float r, float g, float b, float a) {
@@ -35,5 +35,13 @@ public class ColorShader extends Shader {
     float b = getUniformVariable(BLUE);
     float a = getUniformVariable(ALPHA);
     return new Color(r, g, b, a);
+  }
+
+  public void setAlpha(float alpha) {
+    setUniformVariable(ALPHA, alpha);
+  }
+
+  public float getAlpha() {
+    return getUniformVariable(ALPHA);
   }
 }

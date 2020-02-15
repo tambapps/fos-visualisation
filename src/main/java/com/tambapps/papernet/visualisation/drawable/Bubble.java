@@ -68,6 +68,16 @@ public class Bubble extends AbstractDrawable implements Movable {
     setY(y);
   }
 
+  @Override
+  public void setAlpha(float alpha) {
+    shader.setAlpha(alpha);
+  }
+
+  @Override
+  public float getAlpha() {
+    return shader.getAlpha();
+  }
+
   public ColorShader getShader() {
     return shader;
   }
