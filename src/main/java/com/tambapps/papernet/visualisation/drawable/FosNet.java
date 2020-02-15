@@ -3,9 +3,11 @@ package com.tambapps.papernet.visualisation.drawable;
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.gl.pool.LinkPool;
+import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.view.Camera;
 import com.tambapps.papernet.visualisation.animation.AlphaAnimation;
 import com.tambapps.papernet.visualisation.animation.Animation;
+import com.tambapps.papernet.visualisation.animation.ShaderAlphaAnimation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -65,10 +67,7 @@ public class FosNet {
       .map(this::hideAnimation)
       .forEach(animationConsumer);
 
-    this.links.stream()
-      .filter(Drawable::isVisible)
-      .map(this::showAnimation)
-      .forEach(animationConsumer);
+    animationConsumer.accept(new ShaderAlphaAnimation(ShaderFactory.linksShader(), ALPHA_ANIMATION_DURATION, Link.MAX_ALPHA));
   }
 
   private AlphaAnimation hideAnimation(Drawable drawable) {
