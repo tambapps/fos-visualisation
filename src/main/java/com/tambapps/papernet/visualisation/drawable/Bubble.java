@@ -7,6 +7,7 @@ import com.tambapps.papernet.gl.shape.Circle;
 import org.joml.Matrix4f;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Bubble extends AbstractDrawable implements Movable {
 
@@ -69,5 +70,18 @@ public class Bubble extends AbstractDrawable implements Movable {
 
   public ColorShader getShader() {
     return shader;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Bubble bubble = (Bubble) o;
+    return Objects.equals(text, bubble.text);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(text);
   }
 }

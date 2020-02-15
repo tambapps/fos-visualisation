@@ -31,7 +31,7 @@ public class Bubbles {
       .reduce(0f, Float::sum);
   }
 
-  public static Map<String, Bubble> toBubbles(Map<String, Bubble> fosBubbles, Collection<ResearchPaper> researchPapers, List<Link> links) {
+  public static Map<String, Bubble> toBubbles(Map<String, Bubble> cachedFosBubbles, Collection<ResearchPaper> researchPapers, List<Link> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
@@ -78,19 +78,18 @@ public class Bubbles {
 
     Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
       .stream()
-      .map(e -> createBubble(fosBubbles, e.getKey(), e.getValue()))
+      .map(e -> createBubble(cachedFosBubbles, e.getKey(), e.getValue()))
       .collect(Collectors.toMap(Bubble::getText, b -> b));
 
     float maxLinkOcc = connectedOccurenceMap.values()
       .stream()
       .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
-      .max().getAsInt();
+      .max().orElse(0);
     float minLinkOcc = connectedOccurenceMap.values()
       .stream()
       .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
-      .min().getAsInt();
+      .min().orElse(0);
 
-    links.clear(); // TODO create link pool
     fillLinks(links, connectedOccurenceMap, fosBubble, minLinkOcc, maxLinkOcc);
     return fosBubble;
    // fosBubble.values()

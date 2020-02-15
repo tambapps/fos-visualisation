@@ -23,6 +23,7 @@ public class FosNet {
 
   private final ResearchPaperData data;
   private int year;
+  private Map<String, Bubble> cachedBubbles = new HashMap<>();
   private Map<String, Bubble> fosBubbles = new HashMap<>();
   private List<Bubble> currentBubbles;
   private final List<Link> links = new ArrayList<>();
@@ -33,13 +34,34 @@ public class FosNet {
     this.data = data;
   }
 
-  public void loadYear(int year) {
+  public void loadYear(int year, boolean animate) {
     this.year = year;
     Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
-    fosBubbles = Bubbles.toBubbles(fosBubbles, papers, links);
+    links.clear(); // TODO create link pool
+    Map<String, Bubble> newFosBubbles = fosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
+    List<Bubble> removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
+    List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);
+    removedBubbles.forEach(b -> b.setVisible(false));
+
+    this.fosBubbles = newFosBubbles;
+    cachedBubbles.putAll(this.fosBubbles);
     currentBubbles = fosBubbles.values()
       .stream()
       .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
+      .collect(Collectors.toList());
+  }
+
+  private List<Bubble> findAddedBubbles(Map<String, Bubble> fosBubbles, Map<String, Bubble> newFosBubbles) {
+    Collection<Bubble> oldBubbles = fosBubbles.values();
+    return newFosBubbles.values().stream()
+      .filter(b -> !oldBubbles.contains(b))
+      .collect(Collectors.toList());
+  }
+
+  private List<Bubble> findRemovedBubbles(Map<String, Bubble> fosBubbles, Map<String, Bubble> newFosBubbles) {
+    Collection<Bubble> newBubbles = newFosBubbles.values();
+    return fosBubbles.values().stream()
+      .filter(b -> !newBubbles.contains(b))
       .collect(Collectors.toList());
   }
 
@@ -99,5 +121,9 @@ public class FosNet {
 
   public int getYear() {
     return year;
+  }
+
+  public List<Bubble> getBubbles() {
+    return currentBubbles;
   }
 }

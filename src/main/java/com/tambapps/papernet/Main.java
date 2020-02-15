@@ -53,7 +53,7 @@ public class Main extends GlWindow {
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
-    fosNet.loadYear(initialYear);
+    fosNet.loadYear(initialYear, false);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
