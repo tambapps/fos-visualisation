@@ -36,7 +36,9 @@ public class BubblesArranger {
   }
 
   public static void arrange(Collection<Bubble> bubbles) {
-    List<Bubble> arrangedBubbles = new ArrayList<>();
+    arrange(bubbles, new ArrayList<>());
+  }
+    public static void arrange(Collection<Bubble> bubbles, List<Bubble> arrangedBubbles) {
     for (Bubble bubble : bubbles) {
       while (true) {
         bubble.setX((float)Math.random() * WINDOW_WIDTH - (WINDOW_WIDTH >> 1));

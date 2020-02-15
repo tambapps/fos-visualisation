@@ -67,7 +67,15 @@ public class FosNet {
       .map(this::hideAnimation)
       .forEach(animationConsumer);
 
+    arrangeNewBubbles(currentBubbles, addedBubbles);
     animationConsumer.accept(new ShaderAlphaAnimation(ShaderFactory.linksShader(), ALPHA_ANIMATION_DURATION, Link.MAX_ALPHA));
+  }
+
+  private void arrangeNewBubbles(List<Bubble> currentBubbles, List<Bubble> addedBubbles) {
+    List<Bubble> notAddedBubbles = currentBubbles.stream()
+      .filter(b -> !addedBubbles.contains(b))
+      .collect(Collectors.toList());
+    BubblesArranger.arrange(addedBubbles, notAddedBubbles);
   }
 
   private AlphaAnimation hideAnimation(Drawable drawable) {

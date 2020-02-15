@@ -13,10 +13,10 @@ public class Link extends AbstractDrawable {
 
   public static final float MAX_ALPHA = 0.6f;
 
-  private final Bubble b1;
-  private final Bubble b2;
-  private final Curve curve;
-  private final ColorShader curveShader;
+  private Bubble b1;
+  private Bubble b2;
+  private Curve curve;
+  private ColorShader curveShader;
 
   public void update() {
     setVisible(b1.isVisible() && b2.isVisible());
@@ -69,6 +69,12 @@ public class Link extends AbstractDrawable {
 
   public static Link newLink(Bubble b1, Bubble b2, float width) {
     return new Link(b1, b2, new Curve(width), ShaderFactory.linksShader());
+  }
+
+  public void init(Bubble b1, Bubble b2, float width) {
+    this.b1 = b1;
+    this.b2 = b2;
+    this.curve.setWidth(width);
   }
 
   public float getWidth() {

@@ -14,7 +14,9 @@ public class LinkPool {
     if (FREE_LINKS.isEmpty()) {
       return Link.newLink(b1, b2, width);
     }
-    return FREE_LINKS.remove();
+    Link link = FREE_LINKS.remove();
+    link.init(b1, b2, width);
+    return link;
   }
 
   public static void free(Link link) {
