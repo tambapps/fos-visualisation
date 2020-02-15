@@ -1,6 +1,8 @@
 target/
 *.log
 
+fos_images/
+
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
