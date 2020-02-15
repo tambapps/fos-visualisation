@@ -1,8 +1,10 @@
 package com.tambapps.papernet.gl.shader;
 
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 @Value
+@AllArgsConstructor
 public class Color {
   private float r;
   private float g;

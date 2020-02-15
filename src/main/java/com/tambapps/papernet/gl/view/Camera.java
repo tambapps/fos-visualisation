@@ -1,11 +1,11 @@
 package com.tambapps.papernet.gl.view;
 
-import com.tambapps.papernet.gl.GlWindow;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Camera {
+
+  private static final Vector3f tempVec = new Vector3f();
 
   private final float width;
   private final float height;
@@ -56,6 +56,12 @@ public class Camera {
 
   public float getZoom() {
     return zoom;
+  }
+
+  public Vector3f projectPoint(float x, float y) {
+    float zoom = getZoom();
+    Vector3f cameraPos = getPosition();
+    return tempVec.set((x - cameraPos.x) * zoom, (y - cameraPos.y) * zoom, 0);
   }
 
 }

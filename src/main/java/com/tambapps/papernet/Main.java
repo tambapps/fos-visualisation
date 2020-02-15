@@ -11,6 +11,7 @@ import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
 import com.tambapps.papernet.visualisation.drawable.BubblesArranger;
+import com.tambapps.papernet.visualisation.drawable.FosNet;
 import com.tambapps.papernet.visualisation.drawable.Link;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -33,28 +34,26 @@ public class Main extends GlWindow {
   private static final float NAVIGATION_ZOOM_OFFSET = 0.0333333f;
 
   private static final Vector3f tempVec = new Vector3f();
-  private Map<String, Bubble> fosBubbles = new HashMap<>();
-  private List<Link> links;
-  private Bubble selectedBubble = null;
-  private Color selectedBubbleColor = null;
 
+  private final int initialYear;
+  private final FosNet fosNet;
+  private Color selectedBubbleColor = null;
  // FontTT fontTT;
   private Texture texture;
   private float linkThreshold = Bubbles.MIN_LINK_WIDTH;
   private float bubbleThreshold = Bubbles.MIN_RADIUS;
 
-  private final Collection<ResearchPaper> papers;
 
-  public Main(Collection<ResearchPaper> papers) {
-    this.papers = papers;
+  public Main(ResearchPaperData data, int year) {
+    this.fosNet = new FosNet(data);
+    this.initialYear = year;
   }
 
   @Override
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
     long startTime = System.currentTimeMillis();
-    links = new ArrayList<>();
-    fosBubbles = Bubbles.toBubbles(fosBubbles, papers, links);
+    fosNet.loadYear(initialYear);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
     texture = Texture.newTexture("background.jpg");
@@ -78,11 +77,7 @@ public class Main extends GlWindow {
     texture.bind();
     texture.draw();
 
-    links.forEach(l -> l.draw(projection));
-    fosBubbles.values()
-      .stream()
-    .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
-    .forEach(b -> b.draw(projection));
+    fosNet.draw(projection);
     //   fontTT.drawText("caca", 0.1f, 0, 0, 0, Color.white, 0, 0, 0, false);
   }
 
@@ -125,8 +120,7 @@ public class Main extends GlWindow {
       return;
     }
     linkThreshold += offset;
-    links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold));
-
+    fosNet.setLinksThreshold(linkThreshold);
     System.out.format("updated link threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
@@ -136,12 +130,7 @@ public class Main extends GlWindow {
       return;
     }
     bubbleThreshold += offset;
-    for (Bubble bubble : fosBubbles.values()) {
-      bubble.setVisible(bubble.getRadius() >= bubbleThreshold);
-    }
-    links.forEach(Link::update);
-    links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold)); // re update links visibility
-
+    fosNet.setBubblesThreshold(bubbleThreshold, linkThreshold);
     System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
   }
 
@@ -170,17 +159,16 @@ public class Main extends GlWindow {
   @Override
   public void update(float delta) {
     if (isOneAnimationRunning()) {
-      links.forEach(Link::updatePos);
+      fosNet.updateLinksPos();
     }
   }
 
   private void shuffle(boolean withAnimation) {
     if (withAnimation) {
       clearAnimations();
-      BubblesArranger.arrangeWithAnimation(fosBubbles.values(), this::addAnimation);
-    } else {
-      BubblesArranger.arrange(fosBubbles.values());
-      links.forEach(Link::updatePos);
+      fosNet.shuffle(true, this::addAnimation);
+    }  else {
+      fosNet.shuffle();
     }
   }
 
@@ -193,33 +181,21 @@ public class Main extends GlWindow {
     data.getPapersByYear().forEach((key, value) ->
       System.out.format("%d -> %d papers", key, value.size()).println());
     System.out.println("Enter the year or 'all' for all papers");
-    Collection<ResearchPaper> papers;
     try (Scanner scanner = new Scanner(System.in)) {
+      int year;
       String s =  args.length > 0 ? args[0] : scanner.nextLine();
       if (s.equals("all") || s.isEmpty()) {
-        papers = data.getAllPapers();
+        year = FosNet.ALL_YEARS;
       } else {
-        papers = data.getPapersByYear().getOrDefault(Integer.parseInt(s), List.of());
+        year = Integer.parseInt(s);
       }
-      new Main(papers).run();
+      new Main(data, year).run();
     }
-  }
-
-  private boolean intersect(Bubble bubble, float x, float y) {
-    return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // - 10 is for the app bar TODO there is still an offset
-      < pow2(bubble.getRadius());
-  }
-
-  private float pow2(float x) {
-    return x * x;
   }
 
   @Override
   public void onTouchDown(float x, float y) {
-    Vector3f projectPoint = projectPoint(x, y);
-    selectedBubble = fosBubbles.values().stream()
-      .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
-      .findFirst().orElse(null);
+    Bubble selectedBubble = fosNet.select(camera, x, y);
     if (selectedBubble != null) {
       ColorShader shader = selectedBubble.getShader();
       selectedBubbleColor = shader.getColor();
@@ -227,14 +203,9 @@ public class Main extends GlWindow {
     }
   }
 
-  private Vector3f projectPoint(float x, float y) {
-    float zoom = camera.getZoom();
-    Vector3f cameraPos = camera.getPosition();
-    return tempVec.set((x - cameraPos.x) * zoom, (y - cameraPos.y) * zoom, 0);
-  }
-
   @Override
   public void onTouchUp() {
+    Bubble selectedBubble = fosNet.getSelectedBubble();
     if (selectedBubble == null) {
       return;
     }
@@ -243,11 +214,12 @@ public class Main extends GlWindow {
 
   @Override
   public void onMouseDragged(float x, float y) {
+    Bubble selectedBubble = fosNet.getSelectedBubble();
     if (selectedBubble == null) {
       return;
     }
-    Vector3f projectPoint = projectPoint(x, y);
+    Vector3f projectPoint = camera.projectPoint(x, y);
     selectedBubble.setPosition(projectPoint.x, projectPoint.y);
-    links.forEach(Link::updatePos);
+    fosNet.updateLinksPos();
   }
 }

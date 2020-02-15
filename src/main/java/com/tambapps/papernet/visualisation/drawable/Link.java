@@ -50,7 +50,7 @@ public class Link extends AbstractDrawable {
   }
 
   @Override
-  public void doDraw(Matrix4f projection) {
+  protected void doDraw(Matrix4f projection) {
     curveShader.bind(projection);
     curve.draw();
   }

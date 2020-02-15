@@ -27,7 +27,7 @@ public class Bubble extends AbstractDrawable implements Movable {
   }
 
   @Override
-  public void doDraw(Matrix4f projection) {
+  protected void doDraw(Matrix4f projection) {
     shader.bind(projection);
     circle.draw();
     textShader.bind(projection);

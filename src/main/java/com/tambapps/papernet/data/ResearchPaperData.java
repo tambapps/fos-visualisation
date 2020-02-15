@@ -53,4 +53,8 @@ public class ResearchPaperData {
     }
     return fosWeightedCitations;
   }
+
+  public List<ResearchPaper> getAllByYear(int year) {
+    return papersByYear.getOrDefault(year, List.of());
+  }
 }
