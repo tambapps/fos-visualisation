@@ -99,4 +99,10 @@ public class Texture {
     glVertex2f(x - width, y + height);
     glEnd();
   }
+
+  public void setHeightKeepRatio(float height) {
+    float width = height * this.width / this.height;
+    setHeight(height);
+    setWidth(width);
+  }
 }
