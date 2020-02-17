@@ -2,6 +2,8 @@ package com.tambapps.papernet.gl.texture;
 
 
 import de.matthiasmann.twl.utils.PNGDecoder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import org.lwjgl.BufferUtils;
 
@@ -35,13 +37,14 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-@Value
+@Data
+@AllArgsConstructor
 public class Texture {
 
   private static final int BPP = 4; // RGBA
   private int id;
-  private int width;
-  private int height;
+  private float width;
+  private float height;
 
 
   public void bind() {
@@ -82,7 +85,7 @@ public class Texture {
   }
 
   public void draw() {
-    glUseProgram(0); // penser a reset le shader quand drawing quelquechose
+//    glUseProgram(0); // penser a reset le shader quand drawing quelquechose
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
     glVertex2f(-1f, 1f);
@@ -96,5 +99,41 @@ public class Texture {
     glTexCoord2f(0, 1);
     glVertex2f(-1f, -1f);
     glEnd();
+  }
+
+  public static Texture fromBufferedImage(BufferedImage image) {
+    int width = image.getWidth() ;
+    int height = image.getHeight();
+
+    int[] pixels = new int[width * height];
+    image.getRGB(0, 0, width, height, pixels, 0, width);
+
+    ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4); // 4 because RGBA
+
+    for(int y = 0; y < height; ++y) {
+      for(int x = 0; x < width; ++x) {
+        int pixel = pixels[x + y * width];
+        buffer.put((byte) ((pixel >> 16) & 0xFF));
+        buffer.put((byte) ((pixel >> 8) & 0xFF));
+        buffer.put((byte) (pixel & 0xFF));
+        buffer.put((byte) ((pixel >> 24) & 0xFF));
+      }
+    }
+
+    buffer.flip();
+
+    int id = glGenTextures();
+    //bind the texture
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+    return new Texture(id, width, height);
   }
 }
