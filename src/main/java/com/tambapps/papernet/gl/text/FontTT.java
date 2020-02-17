@@ -1,21 +1,20 @@
 package com.tambapps.papernet.gl.text;
 
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import com.tambapps.papernet.gl.texture.Texture;
 //import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+
+import javax.imageio.ImageIO;
 
 /**
  * @author Jeremy Adams (elias4444)
@@ -216,7 +215,22 @@ public class FontTT {
   }
 
   private Texture getTexture(String temptexname, BufferedImage fontImage) throws IOException {
-    return null;
+
+    int w = 64;
+    int h = 64;
+
+    BufferedImage newImage = new BufferedImage(fontImage.getWidth()+2*w, fontImage.getHeight()+ 2*h,
+        fontImage.getType());
+
+    Graphics g = newImage.getGraphics();
+
+    g.setColor(Color.white);
+    g.fillRect(0,0,fontImage.getWidth()+2*w,fontImage.getHeight()+ 2*h);
+    g.drawImage(fontImage, w, h, null);
+    g.dispose();
+
+
+    return Texture.fromBufferedImage(newImage);
   }
 
   /*
@@ -385,8 +399,10 @@ public class FontTT {
     // Bind the texture
     texture.bind();
 
+    //texture.setWidth(imgwidth);
+    //texture.draw();
     // translate to the right location
-    GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+//    GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
     // draw a quad with to place the character onto
     GL11.glBegin(GL11.GL_TRIANGLES);
