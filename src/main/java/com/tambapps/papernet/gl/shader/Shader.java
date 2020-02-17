@@ -30,13 +30,14 @@ import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glUniform1f;
 
+import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
 public class Shader {
 
-  private final Map<String, Float> uniformVariables = new HashMap<>();
+  private final Map<String, Number> uniformVariables = new HashMap<>();
   private int programm;
   private int vs; // vertex shader id
   private int fs; // fragment shader id
@@ -64,6 +65,10 @@ public class Shader {
     uniformVariables.put(name, value);
   }
 
+  public void setUniformVariable(String name, int value) {
+    uniformVariables.put(name, value);
+  }
+
   private void setProjection(Matrix4f value) {
     int location = glGetUniformLocation(programm, "projection");
     if (location == -1) {
@@ -74,12 +79,16 @@ public class Shader {
     glUniformMatrix4fv(location, false, buffer);
   }
 
-  private void setUniform(String name, float value) {
+  private void setUniform(String name, Number value) {
     int location = glGetUniformLocation(programm, name);
     if (location == -1) {
       return; // location doesn't exists
     }
-    glUniform1f(location, value);
+    if (value instanceof Float) {
+      glUniform1f(location, value.floatValue());
+    } else if (value instanceof Integer) {
+      glUniform1i(location, value.intValue());
+    }
   }
 
   public void bind(Matrix4f projection) {
@@ -94,7 +103,7 @@ public class Shader {
     glCompileShader(shader);
     // check if error on shader
     if (glGetShaderi(shader, GL_COMPILE_STATUS) != 1) {
-      throw new IOException("Couldn't compile shader: " + glGetShaderInfoLog(shader));
+      throw new IOException("Couldn't compile shader '" + filename + "': " + glGetShaderInfoLog(shader));
     }
     return shader;
   }
