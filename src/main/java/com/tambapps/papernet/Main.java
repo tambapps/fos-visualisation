@@ -142,6 +142,7 @@ public class Main extends GlWindow {
   public void onEscapePressed() {
     close();
   }
+
   private void moveLinkThreshold(float offset) {
     if (linkThreshold <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
       linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
@@ -222,6 +223,7 @@ public class Main extends GlWindow {
       ColorShader shader = selectedBubble.getShader();
       selectedBubbleColor = shader.getColor();
       shader.setColor(SELECTED_COLOR);
+      System.out.format("%s selected", selectedBubble.getText().toUpperCase()).println();
     }
   }
 
