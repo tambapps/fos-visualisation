@@ -21,6 +21,7 @@ In this project, I only used the year (to display data by year), n_citations and
 This csv lists all the FOSs and their number of occurrence. Since there are 18901 FOS, I filtered them to keep only the ones that have at least 100 occurences.
 When I encounter a filtered FOS in the `dblp.v11.csv` file, I simply ignore it.
 
+
 ## Visualisation (not finished yet)
 ![screenshot](https://raw.githubusercontent.com/tambapps/fos-visualisation/master/screenshots/screen1.png "Screenshot")
 
@@ -57,3 +58,21 @@ You can change the current year displayed by clicking on `y` (+1) or `h` (-1).
 When you change a year, we compute the bubbles added, and the one removed to add/remove them with an animation. 
 
 All bubbles that still remains in the new year stays in the same place, so that you don't get confused each time you change year.
+
+
+## How to run
+The LWjgl (and OpenGL) configuration is by a generated pom.xml. You can find this tool [here](https://www.lwjgl.org/customize).
+
+I used the dependencies for Linux x64.
+
+This project uses Java 11. Before going next, make sure your JAVA_HOME is set to your java 11 path.
+Once your pom is well configured and you use Java 11,  run
+
+```bash
+mvn install
+```
+This will build the jar, and then run
+
+```bash
+java -jar target/papernet-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
