@@ -39,6 +39,7 @@ public class Main extends GlWindow {
   private final FosNet fosNet;
   private Color selectedBubbleColor = null;
 
+  private boolean showFoss = true;
   private Texture background;
   private float linkThreshold = BubblesNLink.MIN_LINK_WIDTH;
   private float bubbleThreshold = BubblesNLink.MIN_RADIUS;
@@ -67,6 +68,7 @@ public class Main extends GlWindow {
     System.out.println("pressed 'z' with up/down to zoom/unzoom from the screen");
     System.out.println("pressed 'l' with up/down to modify the threshold of links that will be displayed");
     System.out.println("pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
+    System.out.println("click t to show/hide FOSs");
     System.out.println("click y/h to move through the years");
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("You can also touch and drag a bubble to move it");
@@ -82,7 +84,9 @@ public class Main extends GlWindow {
     fosNet.draw(projection);
 
     glUseProgram(0);
-    FosTextDrawer.drawFosTexts(fosNet.getBubbles(), camera.getPosition(), camera.getZoom());
+    if (showFoss) {
+      FosTextDrawer.drawFosTexts(fosNet.getBubbles(), camera.getPosition(), camera.getZoom());
+    }
     glDisable(GL_BLEND);
 
     int year = fosNet.getYear();
@@ -177,6 +181,9 @@ public class Main extends GlWindow {
         break;
       case 'h':
         moveYear(-1);
+        break;
+      case 't':
+        showFoss = !showFoss;
         break;
 
     }
