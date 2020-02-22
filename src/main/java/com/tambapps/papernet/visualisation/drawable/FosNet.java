@@ -144,14 +144,14 @@ public class FosNet {
   public Bubble select(Camera camera, float x, float y) {
     Vector3f projectPoint = camera.projectPoint(x, y);
     selectedBubble = currentBubbles.stream()
-      .filter(b -> intersect(b, projectPoint.x, projectPoint.y))
+      .filter(b -> intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
       .findFirst().orElse(null);
     return selectedBubble;
   }
 
-  private boolean intersect(Bubble bubble, float x, float y) {
-    return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // - 10 is for the app bar TODO there is still an offset
-      < pow2(bubble.getRadius());
+  private boolean intersect(Bubble bubble, float x, float y, float zoom) {
+    return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // little offset?
+      < pow2(bubble.getRadius() / zoom);
   }
 
   private float pow2(float x) {
