@@ -6,6 +6,7 @@ import com.tambapps.papernet.gl.GlWindow;
 
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
+import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.gl.texture.Texture;
@@ -43,6 +44,7 @@ public class Main extends GlWindow {
   private Texture background;
   private float linkThreshold = BubblesNLink.MIN_LINK_WIDTH;
   private float bubbleThreshold = BubblesNLink.MIN_RADIUS;
+  private Shader yearShader;
 
 
   public Main(ResearchPaperData data, int year) {
@@ -59,6 +61,7 @@ public class Main extends GlWindow {
     fosNet.loadYear(initialYear, this::addAnimation, bubbleThreshold, linkThreshold);
     shuffle(false);
     moveLinkThreshold(0); // to update links visibility
+    yearShader = ShaderFactory.rgbShader(0, 1f, 0);
     background = Texture.newTexture("background.png");
     background.setWidth(1f);
     background.setHeight(1f);
@@ -90,7 +93,9 @@ public class Main extends GlWindow {
     glDisable(GL_BLEND);
 
     int year = fosNet.getYear();
+    yearShader.bind(UNPROJECTED_VIEW);
     Text.drawString(year == FosNet.ALL_YEARS ? "All years" : String.valueOf(year), -7.25f, 6.75f, 0.5f, 10);
+    glUseProgram(0);
   }
 
   @Override
