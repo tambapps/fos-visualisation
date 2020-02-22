@@ -44,7 +44,7 @@ public class FosNet {
     Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
     links.forEach(LinkPool::free);
     links.clear();
-    Map<String, Bubble> newFosBubbles = Bubbles.toBubbles(cachedBubbles, papers, links);
+    Map<String, Bubble> newFosBubbles = BubblesNLink.generate(cachedBubbles, papers, links);
     removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
     List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);
 

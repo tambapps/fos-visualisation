@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static com.tambapps.papernet.util.MathUtils.percentageMapping;
 import static com.tambapps.papernet.util.MathUtils.toPercentage;
 
-public class Bubbles {
+public class BubblesNLink {
 
   private static Color START_COLOR = new Color(0, 0, 1);
   private static Color END_COLOR = new Color(1, 0, 0);
@@ -35,7 +35,7 @@ public class Bubbles {
       .reduce(0f, Float::sum);
   }
 
-  public static Map<String, Bubble> toBubbles(Map<String, Bubble> cachedFosBubbles, Collection<ResearchPaper> researchPapers, List<Link> links) {
+  public static Map<String, Bubble> generate(Map<String, Bubble> cachedFosBubbles, Collection<ResearchPaper> researchPapers, List<Link> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations = ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
       .stream()
@@ -72,7 +72,7 @@ public class Bubbles {
     float finalMaxCitations = maxCitations;
     Map<String, BubbleData> fosBubbleData = fosWeightedCitations.entrySet()
       .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> Bubbles.toBubbleData(
+      .collect(Collectors.toMap(Map.Entry::getKey, e -> BubblesNLink.toBubbleData(
         radiusScore.get(e.getKey()), finalMinScore, finalMaxScore,
         citations.get(e.getKey()), finalMinCitations, finalMaxCitations)));
 

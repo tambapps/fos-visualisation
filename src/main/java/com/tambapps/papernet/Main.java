@@ -10,7 +10,7 @@ import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.visualisation.drawable.Bubble;
-import com.tambapps.papernet.visualisation.drawable.Bubbles;
+import com.tambapps.papernet.visualisation.drawable.BubblesNLink;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
 import com.tambapps.papernet.visualisation.drawable.Link;
 import com.tambapps.papernet.visualisation.text.drawer.FosTextDrawer;
@@ -40,8 +40,8 @@ public class Main extends GlWindow {
   private Color selectedBubbleColor = null;
 
   private Texture background;
-  private float linkThreshold = Bubbles.MIN_LINK_WIDTH;
-  private float bubbleThreshold = Bubbles.MIN_RADIUS;
+  private float linkThreshold = BubblesNLink.MIN_LINK_WIDTH;
+  private float bubbleThreshold = BubblesNLink.MIN_RADIUS;
 
 
   public Main(ResearchPaperData data, int year) {
@@ -147,23 +147,23 @@ public class Main extends GlWindow {
   }
 
   private void moveLinkThreshold(float offset) {
-    if (linkThreshold <= Bubbles.MIN_LINK_WIDTH && offset < 0 ||
-      linkThreshold >= Bubbles.MAX_LINK_WIDTH && offset > 0) {
+    if (linkThreshold <= BubblesNLink.MIN_LINK_WIDTH && offset < 0 ||
+      linkThreshold >= BubblesNLink.MAX_LINK_WIDTH && offset > 0) {
       return;
     }
     linkThreshold += offset;
     fosNet.setLinksThreshold(linkThreshold);
-    System.out.format("updated link threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
+    System.out.format("updated link threshold: %f.1\n", (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH - BubblesNLink.MIN_LINK_WIDTH));
   }
 
   private void moveBubbleThreshold(float offset) {
-    if (bubbleThreshold <= Bubbles.MIN_RADIUS && offset < 0 ||
-      bubbleThreshold >= Bubbles.MAX_RADIUS && offset > 0) {
+    if (bubbleThreshold <= BubblesNLink.MIN_RADIUS && offset < 0 ||
+      bubbleThreshold >= BubblesNLink.MAX_RADIUS && offset > 0) {
       return;
     }
     bubbleThreshold += offset;
     fosNet.setBubblesThreshold(bubbleThreshold, linkThreshold);
-    System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - Bubbles.MIN_LINK_WIDTH) / (Bubbles.MAX_LINK_WIDTH - Bubbles.MIN_LINK_WIDTH));
+    System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH - BubblesNLink.MIN_LINK_WIDTH));
   }
 
   @Override
