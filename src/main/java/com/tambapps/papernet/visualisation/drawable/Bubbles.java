@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.tambapps.papernet.util.MathUtils.percentageMapping;
+import static com.tambapps.papernet.util.MathUtils.toPercentage;
+
 public class Bubbles {
 
   private static Color START_COLOR = new Color(0, 0, 1);
@@ -105,7 +108,7 @@ public class Bubbles {
       Map<String, Integer> occMap = connectedOccurenceMap.get(fos1);
       for (String fos2 : occMap.keySet()) {
         float nbOcc = occMap.get(fos2);
-        float width = MIN_LINK_WIDTH + toPercentage(nbOcc, minLinkOcc, maxLinkOcc) * (MAX_LINK_WIDTH - MIN_LINK_WIDTH);
+        float width = percentageMapping(nbOcc, minLinkOcc, maxLinkOcc, MIN_LINK_WIDTH, MAX_LINK_WIDTH);
         links.add(LinkPool.get(fosBubble.get(fos1), fosBubble.get(fos2), width));
       }
     }
@@ -138,12 +141,8 @@ public class Bubbles {
     }
   }
 
-  static public float toPercentage(float value, float min, float max) {
-    return (value - min) / (max - min);
-  }
-
   private static BubbleData toBubbleData(float radiusScore,float minRadiusScore, float maxRadiusScore, float citations, float minCitations, float maxCitations) {
-    float radius = MIN_RADIUS + toPercentage(radiusScore, minRadiusScore, maxRadiusScore) * (MAX_RADIUS - MIN_RADIUS);
+    float radius = percentageMapping(radiusScore, minRadiusScore, maxRadiusScore, MIN_RADIUS, MAX_RADIUS);
     float citationPercentage = toPercentage(citations, minCitations, maxCitations);
     float r = getColorField(Color::getR, START_COLOR, END_COLOR, citationPercentage);
     float g = getColorField(Color::getG, START_COLOR, END_COLOR, citationPercentage);
