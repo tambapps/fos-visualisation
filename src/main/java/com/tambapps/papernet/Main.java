@@ -13,6 +13,7 @@ import com.tambapps.papernet.visualisation.drawable.Bubble;
 import com.tambapps.papernet.visualisation.drawable.Bubbles;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
 import com.tambapps.papernet.visualisation.drawable.Link;
+import com.tambapps.papernet.visualisation.text.drawer.FosTextDrawer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -79,9 +80,11 @@ public class Main extends GlWindow {
     background.draw();
     glEnable(GL_BLEND);
     fosNet.draw(projection);
-    glDisable(GL_BLEND);
 
     glUseProgram(0);
+    FosTextDrawer.drawFosTexts(fosNet.getBubbles(), camera.getPosition(), camera.getZoom());
+    glDisable(GL_BLEND);
+
     int year = fosNet.getYear();
     Text.drawString(year == FosNet.ALL_YEARS ? "All years" : String.valueOf(year), -7.25f, 6.75f, 0.5f, 10);
   }
