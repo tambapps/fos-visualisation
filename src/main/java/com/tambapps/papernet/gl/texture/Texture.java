@@ -57,16 +57,16 @@ public class Texture {
 //    glUseProgram(0); // penser a reset le shader quand drawing quelquechose
     glBegin(GL_QUADS);
     glTexCoord2f(0, 0);
-    glVertex2f(x - width, y + -height);
+    glVertex2f(x - width, y + height);
 
     glTexCoord2f(1, 0);
-    glVertex2f(x + width, y - height);
-
-    glTexCoord2f(1, 1);
     glVertex2f(x + width, y + height);
 
+    glTexCoord2f(1, 1);
+    glVertex2f(x + width, y - height);
+
     glTexCoord2f(0, 1);
-    glVertex2f(x - width, y + height);
+    glVertex2f(x - width, y - height);
     glEnd();
   }
 
@@ -76,6 +76,10 @@ public class Texture {
     setWidth(width);
   }
 
+  public void setPosition(float x, float y) {
+    setX(x);
+    setY(y);
+  }
   public static Texture fromBufferedImage(BufferedImage image) {
     int width = image.getWidth() ;
     int height = image.getHeight();
