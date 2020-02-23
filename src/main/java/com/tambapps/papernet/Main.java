@@ -79,7 +79,6 @@ public class Main extends GlWindow {
     System.out.println("Use ESCAPE to exit");
   }
 
-  // TODO implement bubble search through user input?
   @Override
   public void onDraw(Matrix4f projection) {
     background.bind();
@@ -244,7 +243,7 @@ public class Main extends GlWindow {
       ColorShader shader = selectedBubble.getShader();
       selectedBubbleColor = shader.getColor();
       shader.setColor(SELECTED_COLOR);
-      System.out.format("%s selected", selectedBubble.getText().toUpperCase()).println();
+      System.out.format("%s selected", selectedBubble.getFos().toUpperCase()).println();
     }
   }
 

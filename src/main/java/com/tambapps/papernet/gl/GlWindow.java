@@ -173,7 +173,7 @@ public abstract class GlWindow implements InputListener, MouseListener {
   }
 
   private void update() {
-    float delta = 0.025f; // TODO handle better delta (use real time)
+    float delta = 0.025f; // fake time lol
     Character pressedCharacter = null; // z, l, b and ctrl are pressable
     if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) { // z
       pressedCharacter = 'z';

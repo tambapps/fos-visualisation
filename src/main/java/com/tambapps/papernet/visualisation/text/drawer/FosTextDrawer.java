@@ -24,7 +24,7 @@ public class FosTextDrawer {
   }
 
   private static void drawFos(Bubble bubble, Vector3f position, float zoomInv) {
-    String fos = bubble.getText();
+    String fos = bubble.getFos();
     Texture texture = FosTextTextureFactory.getTextureFor(fos);
     float percentage = MathUtils.toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
     float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * 0.02f);

@@ -1,7 +1,6 @@
 package com.tambapps.papernet.visualisation.drawable;
 
 import com.tambapps.papernet.gl.shader.ColorShader;
-import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.shape.Circle;
 import org.joml.Matrix4f;
@@ -13,29 +12,22 @@ public class Bubble extends AbstractDrawable implements Movable {
 
   private Circle circle;
   private ColorShader shader;
-  private Shader textShader;
-  private String text;
+  private String fos;
 
-  private Bubble(float radius, ColorShader shader, String text, Shader textShader) {
+  private Bubble(float radius, ColorShader shader, String fos) {
     this.circle = new Circle(radius);
     this.shader = shader;
-    this.text = text;
-    this.textShader = textShader;
+    this.fos = fos;
   }
 
   public static Bubble newBubble(String text, float r, float g, float b, float radius) throws IOException {
-    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, ShaderFactory.rgbShader(1, 0, 0));
+    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text);
   }
 
   @Override
   protected void doDraw(Matrix4f projection) {
     shader.bind(projection);
     circle.draw();
-    textShader.bind(projection);
-  //  glUseProgram(0);
-    // TODO draw text
-   // Text.drawString(text, circle.getX() - circle.getRadius() / 2, circle.getY() - circle.getRadius() / 2,
-     // 0.2f, 40);
   }
 
   public float getRadius() {
@@ -58,8 +50,8 @@ public class Bubble extends AbstractDrawable implements Movable {
     circle.setY(y);
   }
 
-  public String getText() {
-    return text;
+  public String getFos() {
+    return fos;
   }
 
   @Override
@@ -91,11 +83,11 @@ public class Bubble extends AbstractDrawable implements Movable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Bubble bubble = (Bubble) o;
-    return Objects.equals(text, bubble.text);
+    return Objects.equals(fos, bubble.fos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(text);
+    return Objects.hash(fos);
   }
 }

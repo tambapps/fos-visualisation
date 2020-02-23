@@ -83,7 +83,7 @@ public class BubblesNLink {
     Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
       .stream()
       .map(e -> getBubble(cachedFosBubbles, e.getKey(), e.getValue()))
-      .collect(Collectors.toMap(Bubble::getText, b -> b));
+      .collect(Collectors.toMap(Bubble::getFos, b -> b));
 
     float maxLinkOcc = connectedOccurenceMap.values()
       .stream()
