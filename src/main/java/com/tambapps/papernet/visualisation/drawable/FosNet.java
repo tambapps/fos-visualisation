@@ -2,6 +2,7 @@ package com.tambapps.papernet.visualisation.drawable;
 
 import com.tambapps.papernet.data.ResearchPaper;
 import com.tambapps.papernet.data.ResearchPaperData;
+import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.pool.LinkPool;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.view.Camera;
@@ -29,7 +30,7 @@ public class FosNet {
 
   public static final int ALL_YEARS = -1;
   public static final float ALPHA_ANIMATION_DURATION = 1.5f;
-  private static final float EXPAND_TIGHTEN_LENGTH = 30f;
+  private static final float EXPAND_TIGHTEN_LENGTH = 40f;
 
   private final ResearchPaperData data;
   private int year;
@@ -175,8 +176,10 @@ public class FosNet {
   private void stretch(Consumer<Animation> animationConsumer, BinaryOperator<Float> operator) {
     Vector2f tempVec = new Vector2f();
     for (Bubble bubble : getBubbles()) {
+      tempVec = tempVec.set(bubble.getX(), bubble.getY());
+      float length = tempVec.length();
       tempVec = tempVec.set(bubble.getX(), bubble.getY())
-        .normalize(EXPAND_TIGHTEN_LENGTH);
+        .normalize(EXPAND_TIGHTEN_LENGTH * length / GlWindow.WINDOW_HEIGHT);
       animationConsumer.accept(
         new MoveAnimation(bubble, operator.apply(bubble.getX(), tempVec.x), operator.apply(bubble.getY(), tempVec.y),
           1f, Interpolation.pow2Out()));
