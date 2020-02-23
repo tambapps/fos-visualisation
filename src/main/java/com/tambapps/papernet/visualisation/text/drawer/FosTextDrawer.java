@@ -27,7 +27,7 @@ public class FosTextDrawer {
     String fos = bubble.getText();
     Texture texture = FosTextTextureFactory.getTextureFor(fos);
     float percentage = MathUtils.toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
-    float height = nbLines(fos) * zoomInv * ( MIN_TEXT_HEIGHT + percentage * percentage * 0.02f);
+    float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * 0.02f);
     texture.setHeightKeepRatio(height);
     texture.setPosition(zoomInv * (bubble.getX() + position.x) / HALF_WIDTH,
       zoomInv * (bubble.getY() + position.y) / HALF_HEIGHT);
@@ -36,6 +36,6 @@ public class FosTextDrawer {
   }
 
   private static int nbLines(String fos) {
-    return 1 + (int) fos.chars().filter(c -> c == '\n').count();
+    return 1 + (int) fos.chars().filter(c -> c == ' ').count() / 2; // text generation script generate a new line every two spaces
   }
 }
