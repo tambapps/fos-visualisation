@@ -3,6 +3,7 @@ package com.tambapps.papernet.util;
 public class MathUtils {
 
   public static float toPercentage(float value, float min, float max) {
+    if (min >= max) return 0;
     return (value - min) / (max - min);
   }
 
