@@ -73,6 +73,7 @@ public class Main extends GlWindow {
     System.out.println("pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
     System.out.println("click t to show/hide FOSs");
     System.out.println("click y/h to move through the years");
+    System.out.println("click e/d to expand/tighten the graph");
     System.out.println("Use S to shuffle the bubbles");
     System.out.println("You can also touch and drag a bubble to move it");
     System.out.println("Use ESCAPE to exit");
@@ -190,7 +191,12 @@ public class Main extends GlWindow {
       case 't':
         showFoss = !showFoss;
         break;
-
+      case 'e':
+        fosNet.stretch(this::addAnimation);
+        break;
+      case 'd':
+        fosNet.tighten(this::addAnimation);
+        break;
     }
   }
 
