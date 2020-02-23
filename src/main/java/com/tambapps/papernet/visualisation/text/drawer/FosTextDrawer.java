@@ -18,9 +18,9 @@ public class FosTextDrawer {
 
   public static void drawFosTexts(Collection<Bubble> bubbles, Vector3f position, float zoom) {
     float zoomInverse = 1 / zoom;
-    for (Bubble bubble : bubbles) {
-      drawFos(bubble, position, zoomInverse);
-    }
+    bubbles.stream()
+      .filter(Bubble::isVisible)
+      .forEach(bubble -> drawFos(bubble, position, zoomInverse));
   }
 
   private static void drawFos(Bubble bubble, Vector3f position, float zoomInv) {
