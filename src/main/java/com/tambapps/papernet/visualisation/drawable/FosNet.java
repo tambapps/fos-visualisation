@@ -149,7 +149,7 @@ public class FosNet {
   public Bubble select(Camera camera, float x, float y) {
     Vector3f projectPoint = camera.projectPoint(x, y);
     selectedBubble = currentBubbles.stream()
-      .filter(b -> intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
+      .filter(b -> b.isVisible() && intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
       .findFirst().orElse(null);
     return selectedBubble;
   }
