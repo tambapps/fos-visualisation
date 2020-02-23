@@ -10,6 +10,7 @@ import com.tambapps.papernet.visualisation.animation.Animation;
 import com.tambapps.papernet.visualisation.animation.MoveAnimation;
 import com.tambapps.papernet.visualisation.animation.ShaderAlphaAnimation;
 import com.tambapps.papernet.visualisation.animation.interpolation.Interpolation;
+import com.tambapps.papernet.visualisation.drawable.arranger.BubblesArranger;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

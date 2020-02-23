@@ -1,8 +1,9 @@
-package com.tambapps.papernet.visualisation.drawable;
+package com.tambapps.papernet.visualisation.drawable.arranger;
 
 import com.tambapps.papernet.visualisation.animation.Animation;
 import com.tambapps.papernet.visualisation.animation.MoveAnimation;
 import com.tambapps.papernet.visualisation.animation.interpolation.Interpolation;
+import com.tambapps.papernet.visualisation.drawable.Bubble;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -38,11 +39,15 @@ public class BubblesArranger {
   public static void arrange(Collection<Bubble> bubbles) {
     arrange(bubbles, new ArrayList<>());
   }
-    public static void arrange(Collection<Bubble> bubbles, List<Bubble> arrangedBubbles) {
+
+  public static void arrange(Collection<Bubble> bubbles, List<Bubble> arrangedBubbles) {
+    PositionArranger positionArranger = new PositionArranger();
     for (Bubble bubble : bubbles) {
+      positionArranger.init();
       while (true) {
-        bubble.setX((float)Math.random() * WINDOW_WIDTH - (WINDOW_WIDTH >> 1));
-        bubble.setY((float)Math.random() * WINDOW_HEIGHT - (WINDOW_HEIGHT >> 1));
+        Vector3f position = positionArranger.arrange(bubble, tempVec);
+        bubble.setX(position.x);
+        bubble.setY(position.y);
         if (!overlaps(bubble, arrangedBubbles)) {
           arrangedBubbles.add(bubble);
           break;
@@ -58,13 +63,11 @@ public class BubblesArranger {
 
   public static void arrangeWithAnimation(Collection<Bubble> bubbles, Consumer<Animation> animationConsumer) {
     List<Vector3f> arrangedBubblePositions = new ArrayList<>(); // x, y, radius
+    PositionArranger positionArranger = new PositionArranger();
     for (Bubble bubble : bubbles) {
+      positionArranger.init();
       while (true) {
-        Vector3f endPosition = tempVec.set(
-          (float)Math.random() * WINDOW_WIDTH - (WINDOW_WIDTH >> 1),
-          (float)Math.random() * WINDOW_HEIGHT - (WINDOW_HEIGHT >> 1),
-          bubble.getRadius()
-        );
+        Vector3f endPosition = positionArranger.arrange(bubble, tempVec);
         if (!overlaps(endPosition, arrangedBubblePositions)) {
           animationConsumer.accept(new MoveAnimation(bubble, endPosition.x, endPosition.y, 1f, Interpolation.linear()));
           arrangedBubblePositions.add(new Vector3f(endPosition));
