@@ -24,13 +24,18 @@ public class FosTextDrawer {
   }
 
   private static void drawFos(Bubble bubble, Vector3f position, float zoomInv) {
-    Texture texture = FosTextTextureFactory.getTextureFor(bubble.getText());
+    String fos = bubble.getText();
+    Texture texture = FosTextTextureFactory.getTextureFor(fos);
     float percentage = MathUtils.toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
-
-    texture.setHeightKeepRatio(zoomInv * ( MIN_TEXT_HEIGHT + percentage * percentage * 0.02f));
+    float height = nbLines(fos) * zoomInv * ( MIN_TEXT_HEIGHT + percentage * percentage * 0.02f);
+    texture.setHeightKeepRatio(height);
     texture.setPosition(zoomInv * (bubble.getX() + position.x) / HALF_WIDTH,
       zoomInv * (bubble.getY() + position.y) / HALF_HEIGHT);
     texture.bind();
     texture.draw();
+  }
+
+  private static int nbLines(String fos) {
+    return 1 + (int) fos.chars().filter(c -> c == '\n').count();
   }
 }
