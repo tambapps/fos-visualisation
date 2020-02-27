@@ -70,24 +70,9 @@ The LWJGL (and OpenGL) configuration is by a generated pom.xml. You can find thi
 
 I used the dependencies for Linux x64.
 
-### Resources
-Before generating the jar, you'll need to create some resources before. Since displaying text in
-OpenGL is difficult enough, I decided to generate an image for each FOS, that will be loaded at runtime.
-I created a Groovy script that reads all the FOS in fos.csv and generate an image in a
-`fos_images/` folder. 
-
-Run (in the `text_generation/` folder)
-```shell script
-groovy FosImageGenerator.groovy
-```
-Then copy the generated folder `fos_images/` into 
-`src/main/resources/textures`. 
-The path of this folder will be
-`src/main/resources/textures/fos_images/`
-
 ### Jar Generation and Running
 This project uses Java 11. Before going next, make sure your JAVA_HOME is set to your java 11 path.
-Once your pom is well configured and you use Java 11,  run
+Once your pom is well configured and you use Java 11, run
 
 ```bash
 mvn install
