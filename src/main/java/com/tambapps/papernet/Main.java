@@ -243,7 +243,7 @@ public class Main extends GlWindow {
       ColorShader shader = selectedBubble.getShader();
       selectedBubbleColor = shader.getColor();
       shader.setColor(SELECTED_COLOR);
-      System.out.format("%s selected", selectedBubble.getFos().toUpperCase()).println();
+      System.out.format("%s has been a FOS in %d papers and has been, in %d quoted papers", selectedBubble.getFos().toUpperCase(), selectedBubble.getNbOcc(), selectedBubble.getNCitations()).println();
     }
   }
 

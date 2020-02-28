@@ -6,6 +6,7 @@ import com.tambapps.papernet.data.WeightedCitation;
 import com.tambapps.papernet.gl.pool.LinkPool;
 import com.tambapps.papernet.gl.shader.Color;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -74,7 +75,7 @@ public class BubblesNLink {
       .stream()
       .collect(Collectors.toMap(Map.Entry::getKey, e -> BubblesNLink.toBubbleData(
         radiusScore.get(e.getKey()), finalMinScore, finalMaxScore,
-        citations.get(e.getKey()), finalMinCitations, finalMaxCitations)));
+        citations.get(e.getKey()), finalMinCitations, finalMaxCitations, fosWeightedCitations.get(e.getKey()).size())));
 
     // links
     Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
@@ -132,22 +133,24 @@ public class BubblesNLink {
     if (b != null) {
       b.getShader().setColor(data.r, data.g, data.b);
       b.setRadius(data.radius);
+      b.setNCitations(data.citations);
+      b.setNbOcc(data.nbOcc);
       return b;
     }
     try {
-      return Bubble.newBubble(fos, data.r, data.g, data.b, data.radius);
+      return Bubble.newBubble(fos, data.r, data.g, data.b, data.radius, data.nbOcc, data.citations);
     } catch (IOException e) {
       throw new RuntimeException("Couldn't create bubble", e);
     }
   }
 
-  private static BubbleData toBubbleData(float radiusScore,float minRadiusScore, float maxRadiusScore, float citations, float minCitations, float maxCitations) {
+  private static BubbleData toBubbleData(float radiusScore,float minRadiusScore, float maxRadiusScore, float citations, float minCitations, float maxCitations, int nbOcc) {
     float radius = percentageMapping(radiusScore, minRadiusScore, maxRadiusScore, MIN_RADIUS, MAX_RADIUS);
     float citationPercentage = toPercentage(citations, minCitations, maxCitations);
     float r = getColorField(Color::getR, START_COLOR, END_COLOR, citationPercentage);
     float g = getColorField(Color::getG, START_COLOR, END_COLOR, citationPercentage);
     float b = getColorField(Color::getB, START_COLOR, END_COLOR, citationPercentage);
-    return new BubbleData(radius, r, g, b);
+    return new BubbleData(radius, r, g, b, (int) citations, nbOcc);
   }
 
   private static float getColorField(Function<Color, Float> fieldExtractor, Color start, Color end, float percentage) {
@@ -157,11 +160,14 @@ public class BubblesNLink {
   }
 
   @AllArgsConstructor
+  @Value
   private static class BubbleData {
     private float radius;
     private float r;
     private float g;
     private float b;
+    private int nbOcc;
+    private int citations;
   }
 
 }

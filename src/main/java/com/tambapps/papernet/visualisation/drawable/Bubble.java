@@ -13,15 +13,19 @@ public class Bubble extends AbstractDrawable implements Movable {
   private Circle circle;
   private ColorShader shader;
   private String fos;
+  private int nbOcc; // will be displayed on bubble click
+  private int nCitations; // will be displayed on bubble click
 
-  private Bubble(float radius, ColorShader shader, String fos) {
+  private Bubble(float radius, ColorShader shader, String fos, int nbOcc, int nCitations) {
     this.circle = new Circle(radius);
     this.shader = shader;
     this.fos = fos;
+    this.nbOcc = nbOcc;
+    this.nCitations = nCitations;
   }
 
-  public static Bubble newBubble(String text, float r, float g, float b, float radius) throws IOException {
-    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text);
+  public static Bubble newBubble(String text, float r, float g, float b, float radius, int nbOcc, int nCitations) throws IOException {
+    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, nbOcc, nCitations);
   }
 
   @Override
@@ -72,6 +76,22 @@ public class Bubble extends AbstractDrawable implements Movable {
 
   public void setRadius(float radius) {
     circle.setRadius(radius);
+  }
+
+  public void setNCitations(int nCitations) {
+    this.nCitations = nCitations;
+  }
+
+  public int getNCitations() {
+    return nCitations;
+  }
+
+  public void setNbOcc(int nbOcc) {
+    this.nbOcc = nbOcc;
+  }
+
+  public int getNbOcc() {
+    return nbOcc;
   }
 
   public ColorShader getShader() {
