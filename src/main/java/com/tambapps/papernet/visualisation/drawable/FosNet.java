@@ -30,7 +30,7 @@ public class FosNet {
 
   public static final int ALL_YEARS = -1;
   public static final float ALPHA_ANIMATION_DURATION = 1.5f;
-  private static final float EXPAND_TIGHTEN_LENGTH = 40f;
+  private static final float EXPAND_TIGHTEN_LENGTH = 150f;
 
   private final ResearchPaperData data;
   private int year;
@@ -166,14 +166,14 @@ public class FosNet {
   }
 
   public void stretch(Consumer<Animation> animationConsumer) {
-    stretch(animationConsumer, (Float::sum));
+    stretchOrTighten(animationConsumer, (Float::sum));
   }
 
   public void tighten(Consumer<Animation> animationConsumer) {
-    stretch(animationConsumer, (f1, f2) -> f1 - f2);
+    stretchOrTighten(animationConsumer, (f1, f2) -> f1 - f2);
   }
 
-  private void stretch(Consumer<Animation> animationConsumer, BinaryOperator<Float> operator) {
+  private void stretchOrTighten(Consumer<Animation> animationConsumer, BinaryOperator<Float> operator) {
     Vector2f tempVec = new Vector2f();
     for (Bubble bubble : getBubbles()) {
       tempVec = tempVec.set(bubble.getX(), bubble.getY());
