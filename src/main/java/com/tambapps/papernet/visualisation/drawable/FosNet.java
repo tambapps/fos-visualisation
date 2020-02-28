@@ -33,22 +33,23 @@ public class FosNet {
   private static final float EXPAND_TIGHTEN_LENGTH = 150f;
 
   private final ResearchPaperData data;
+  private final List<Link> links = new ArrayList<>();
   private int year;
   private Map<String, Bubble> cachedBubbles = new HashMap<>();
   private Map<String, Bubble> fosBubbles = new HashMap<>();
   private List<Bubble> currentBubbles;
   private List<Bubble> removedBubbles;
-  private final List<Link> links = new ArrayList<>();
-
   private Bubble selectedBubble = null;
 
   public FosNet(ResearchPaperData data) {
     this.data = data;
   }
 
-  public void loadYear(int year, Consumer<Animation> animationConsumer, float bubblesThreshold, float linkThreshold) {
+  public void loadYear(int year, Consumer<Animation> animationConsumer, float bubblesThreshold,
+      float linkThreshold) {
     this.year = year;
-    Collection<ResearchPaper> papers = year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
+    Collection<ResearchPaper> papers =
+        year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
     links.forEach(LinkPool::free);
     links.clear();
     Map<String, Bubble> newFosBubbles = BubblesNLink.generate(cachedBubbles, papers, links);
@@ -58,53 +59,59 @@ public class FosNet {
     this.fosBubbles = newFosBubbles;
     cachedBubbles.putAll(this.fosBubbles);
     currentBubbles = fosBubbles.values()
-      .stream()
-      .sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
-      .collect(Collectors.toList());
+        .stream()
+        .sorted(Comparator.comparing(Bubble::getRadius)
+            .reversed()) // in decroissant order to draw big bubbles first
+        .collect(Collectors.toList());
     setLinksThreshold(linkThreshold);
     setBubblesThreshold(bubblesThreshold, linkThreshold);
 
     addedBubbles.stream()
-      .filter(Drawable::isVisible)
-      .map(this::showAnimation)
-      .forEach(animationConsumer);
+        .filter(Drawable::isVisible)
+        .map(this::showAnimation)
+        .forEach(animationConsumer);
 
     removedBubbles.stream()
-      .filter(Drawable::isVisible)
-      .map(this::hideAnimation)
-      .forEach(animationConsumer);
+        .filter(Drawable::isVisible)
+        .map(this::hideAnimation)
+        .forEach(animationConsumer);
 
     arrangeNewBubbles(currentBubbles, addedBubbles);
-    animationConsumer.accept(new ShaderAlphaAnimation(ShaderFactory.linksShader(), ALPHA_ANIMATION_DURATION, Link.MAX_ALPHA));
+    animationConsumer.accept(
+        new ShaderAlphaAnimation(ShaderFactory.linksShader(), ALPHA_ANIMATION_DURATION,
+            Link.MAX_ALPHA));
   }
 
   private void arrangeNewBubbles(List<Bubble> currentBubbles, List<Bubble> addedBubbles) {
     List<Bubble> notAddedBubbles = currentBubbles.stream()
-      .filter(b -> !addedBubbles.contains(b))
-      .collect(Collectors.toList());
+        .filter(b -> !addedBubbles.contains(b))
+        .collect(Collectors.toList());
     BubblesArranger.arrange(addedBubbles, notAddedBubbles);
   }
 
   private AlphaAnimation hideAnimation(Drawable drawable) {
-    return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION, true, () -> drawable.setVisible(false));
+    return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION, true,
+        () -> drawable.setVisible(false));
   }
 
   private AlphaAnimation showAnimation(Drawable drawable) {
     return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION);
   }
 
-  private List<Bubble> findAddedBubbles(Map<String, Bubble> fosBubbles, Map<String, Bubble> newFosBubbles) {
+  private List<Bubble> findAddedBubbles(Map<String, Bubble> fosBubbles,
+      Map<String, Bubble> newFosBubbles) {
     Collection<Bubble> oldBubbles = fosBubbles.values();
     return newFosBubbles.values().stream()
-      .filter(b -> !oldBubbles.contains(b))
-      .collect(Collectors.toList());
+        .filter(b -> !oldBubbles.contains(b))
+        .collect(Collectors.toList());
   }
 
-  private List<Bubble> findRemovedBubbles(Map<String, Bubble> fosBubbles, Map<String, Bubble> newFosBubbles) {
+  private List<Bubble> findRemovedBubbles(Map<String, Bubble> fosBubbles,
+      Map<String, Bubble> newFosBubbles) {
     Collection<Bubble> newBubbles = newFosBubbles.values();
     return fosBubbles.values().stream()
-      .filter(b -> !newBubbles.contains(b))
-      .collect(Collectors.toList());
+        .filter(b -> !newBubbles.contains(b))
+        .collect(Collectors.toList());
   }
 
   public Bubble getSelectedBubble() {
@@ -151,14 +158,15 @@ public class FosNet {
   public Bubble select(Camera camera, float x, float y) {
     Vector3f projectPoint = camera.projectPoint(x, y);
     selectedBubble = currentBubbles.stream()
-      .filter(b -> b.isVisible() && intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
-      .findFirst().orElse(null);
+        .filter(
+            b -> b.isVisible() && intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
+        .findFirst().orElse(null);
     return selectedBubble;
   }
 
   private boolean intersect(Bubble bubble, float x, float y, float zoom) {
     return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // little offset?
-      < pow2(bubble.getRadius() / zoom);
+        < pow2(bubble.getRadius() / zoom);
   }
 
   private float pow2(float x) {
@@ -173,16 +181,18 @@ public class FosNet {
     stretchOrTighten(animationConsumer, (f1, f2) -> f1 - f2);
   }
 
-  private void stretchOrTighten(Consumer<Animation> animationConsumer, BinaryOperator<Float> operator) {
+  private void stretchOrTighten(Consumer<Animation> animationConsumer,
+      BinaryOperator<Float> operator) {
     Vector2f tempVec = new Vector2f();
     for (Bubble bubble : getBubbles()) {
       tempVec = tempVec.set(bubble.getX(), bubble.getY());
       float length = tempVec.length();
       tempVec = tempVec.set(bubble.getX(), bubble.getY())
-        .normalize(EXPAND_TIGHTEN_LENGTH * length / GlWindow.WINDOW_HEIGHT);
+          .normalize(EXPAND_TIGHTEN_LENGTH * length / GlWindow.WINDOW_HEIGHT);
       animationConsumer.accept(
-        new MoveAnimation(bubble, operator.apply(bubble.getX(), tempVec.x), operator.apply(bubble.getY(), tempVec.y),
-          1f, Interpolation.POW2_FAST_THEN_SLOW));
+          new MoveAnimation(bubble, operator.apply(bubble.getX(), tempVec.x),
+              operator.apply(bubble.getY(), tempVec.y),
+              1f, Interpolation.POW2_FAST_THEN_SLOW));
     }
   }
 

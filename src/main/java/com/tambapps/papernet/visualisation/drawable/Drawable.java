@@ -6,11 +6,11 @@ public interface Drawable {
 
   void draw(Matrix4f projection);
 
-  void setVisible(boolean visible);
-
   boolean isVisible();
 
-  void setAlpha(float alpha);
+  void setVisible(boolean visible);
 
   float getAlpha();
+
+  void setAlpha(float alpha);
 }

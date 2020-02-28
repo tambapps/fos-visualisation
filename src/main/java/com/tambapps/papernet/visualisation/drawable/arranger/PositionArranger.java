@@ -1,10 +1,10 @@
 package com.tambapps.papernet.visualisation.drawable.arranger;
 
-import com.tambapps.papernet.visualisation.drawable.Bubble;
-import org.joml.Vector3f;
-
 import static com.tambapps.papernet.gl.GlWindow.WINDOW_HEIGHT;
 import static com.tambapps.papernet.gl.GlWindow.WINDOW_WIDTH;
+
+import com.tambapps.papernet.visualisation.drawable.Bubble;
+import org.joml.Vector3f;
 
 class PositionArranger {
 
@@ -30,11 +30,11 @@ class PositionArranger {
   }
 
   float randomX() {
-    return (float)Math.random() * boundX  - (boundX >> 1);
+    return (float) Math.random() * boundX - (boundX >> 1);
   }
 
   float randomY() {
-    return (float)Math.random() * WINDOW_HEIGHT  - (WINDOW_HEIGHT >> 1);
+    return (float) Math.random() * WINDOW_HEIGHT - (WINDOW_HEIGHT >> 1);
   }
 
   public int getTries() {

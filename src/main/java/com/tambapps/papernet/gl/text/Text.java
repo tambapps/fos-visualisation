@@ -16,7 +16,7 @@ public class Text {
     boolean space = false;
     int charNum = 1, spaceNum = 0;
     for (char c : s.toLowerCase().toCharArray()) {
-      switch(c){
+      switch (c) {
         case ' ':
           space = true;
           break;
@@ -332,10 +332,10 @@ public class Text {
           GL11.glVertex2f(scale * (startX), scale * (y + 0.8f));
           break;
       }
-      if(!space){
+      if (!space) {
         startX += scale * 5;
         charNum++;
-      }else{
+      } else {
         startX += scale * 3;
         spaceNum++;
       }

@@ -6,8 +6,6 @@ import com.tambapps.papernet.gl.shape.Curve;
 import lombok.AllArgsConstructor;
 import org.joml.Matrix4f;
 
-import java.io.IOException;
-
 @AllArgsConstructor
 public class Link extends AbstractDrawable {
 
@@ -18,6 +16,10 @@ public class Link extends AbstractDrawable {
   private Curve curve;
   private ColorShader curveShader;
 
+  public static Link newLink(Bubble b1, Bubble b2, float width) {
+    return new Link(b1, b2, new Curve(width), ShaderFactory.linksShader());
+  }
+
   public void update() {
     setVisible(b1.isVisible() && b2.isVisible());
     if (!isVisible()) {
@@ -25,6 +27,7 @@ public class Link extends AbstractDrawable {
     }
     updatePos();
   }
+
   public void updatePos() {
     curve.setX1(b1.getX());
     curve.setY1(b1.getY());
@@ -58,17 +61,13 @@ public class Link extends AbstractDrawable {
   }
 
   @Override
-  public void setAlpha(float alpha) {
-    curveShader.setAlpha(alpha * MAX_ALPHA);
-  }
-
-  @Override
   public float getAlpha() {
     return curveShader.getAlpha();
   }
 
-  public static Link newLink(Bubble b1, Bubble b2, float width) {
-    return new Link(b1, b2, new Curve(width), ShaderFactory.linksShader());
+  @Override
+  public void setAlpha(float alpha) {
+    curveShader.setAlpha(alpha * MAX_ALPHA);
   }
 
   public void init(Bubble b1, Bubble b2, float width) {

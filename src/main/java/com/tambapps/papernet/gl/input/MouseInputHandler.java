@@ -1,22 +1,20 @@
 package com.tambapps.papernet.gl.input;
 
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+
 import com.tambapps.papernet.gl.GlWindow;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
-
 public class MouseInputHandler {
 
-  private static final int GL_ACTION_TOUCH_DOWN  = 1;
-  private static final int GL_ACTION_TOUCH_UP  = 0;
-
+  private static final int GL_ACTION_TOUCH_DOWN = 1;
+  private static final int GL_ACTION_TOUCH_UP = 0;
+  private final MouseListener mouseListener;
   private boolean clicked = false;
   private float x;
   private float y;
-
-  private final MouseListener mouseListener;
 
   public MouseInputHandler(MouseListener mouseListener) {
     this.mouseListener = mouseListener;
@@ -43,12 +41,13 @@ public class MouseInputHandler {
     }
   }
 
+
   private class CursorCallBack extends GLFWCursorPosCallback {
 
     @Override
     public void invoke(long window, double xpos, double ypos) {
       x = ((float) xpos) - (GlWindow.WINDOW_WIDTH >> 1);
-      y = - (((float)ypos) - (GlWindow.WINDOW_HEIGHT >> 1));
+      y = -(((float) ypos) - (GlWindow.WINDOW_HEIGHT >> 1));
       if (!clicked) {
         return;
       }

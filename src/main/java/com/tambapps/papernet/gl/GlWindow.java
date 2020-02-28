@@ -1,28 +1,9 @@
 package com.tambapps.papernet.gl;
 
-import com.tambapps.papernet.gl.input.InputHandler;
-import com.tambapps.papernet.gl.input.InputListener;
-import com.tambapps.papernet.gl.input.MouseInputHandler;
-import com.tambapps.papernet.gl.input.MouseListener;
-import com.tambapps.papernet.gl.view.Camera;
-import com.tambapps.papernet.visualisation.animation.Animation;
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
-
-import java.io.IOException;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
@@ -61,18 +42,35 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.tambapps.papernet.gl.input.InputHandler;
+import com.tambapps.papernet.gl.input.InputListener;
+import com.tambapps.papernet.gl.input.MouseInputHandler;
+import com.tambapps.papernet.gl.input.MouseListener;
+import com.tambapps.papernet.gl.view.Camera;
+import com.tambapps.papernet.visualisation.animation.Animation;
+import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+
+import java.io.IOException;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public abstract class GlWindow implements InputListener, MouseListener {
 
-  protected static final Matrix4f UNPROJECTED_VIEW = new Matrix4f();
   public static final int WINDOW_WIDTH = 1000;
   public static final int WINDOW_HEIGHT = 720;
-
+  protected static final Matrix4f UNPROJECTED_VIEW = new Matrix4f();
+  protected final Camera camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+  private final List<Animation> animations = new ArrayList<>();
   // The window handle
   private long window;
-  protected final Camera camera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
   private InputHandler inputHandler;
   private MouseInputHandler mouseInputHandler;
-  private final List<Animation> animations = new ArrayList<>();
 
   public void run() {
     init();
@@ -110,8 +108,9 @@ public abstract class GlWindow implements InputListener, MouseListener {
     GLFWErrorCallback.createPrint(System.err).set();
 
     // Initialize GLFW. Most GLFW functions will not work before doing this.
-    if ( !glfwInit() )
+    if (!glfwInit()) {
       throw new IllegalStateException("Unable to initialize GLFW");
+    }
 
     // Configure GLFW
     glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -119,15 +118,17 @@ public abstract class GlWindow implements InputListener, MouseListener {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
     // Create the window
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Research Paper FOS network", NULL, NULL);
-    if ( window == NULL )
+    window =
+        glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Research Paper FOS network", NULL, NULL);
+    if (window == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
+    }
     glfwSetKeyCallback(window, inputHandler = new InputHandler(this));
     mouseInputHandler = new MouseInputHandler(this);
     mouseInputHandler.addInput(window);
 
     // Get the thread stack and push a new frame
-    try ( MemoryStack stack = stackPush() ) {
+    try (MemoryStack stack = stackPush()) {
       IntBuffer pWidth = stack.mallocInt(1); // int*
       IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -139,9 +140,9 @@ public abstract class GlWindow implements InputListener, MouseListener {
 
       // Center the window
       glfwSetWindowPos(
-        window,
-        (vidmode.width() - pWidth.get(0)) / 2,
-        (vidmode.height() - pHeight.get(0)) / 2
+          window,
+          (vidmode.width() - pWidth.get(0)) / 2,
+          (vidmode.height() - pHeight.get(0)) / 2
       );
     } // the stack frame is popped automatically
 
@@ -158,7 +159,7 @@ public abstract class GlWindow implements InputListener, MouseListener {
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
-    while ( !glfwWindowShouldClose(window) ) {
+    while (!glfwWindowShouldClose(window)) {
       Matrix4f projection = camera.getProjection();
       // Poll for window events. The key callback above will only be
       // invoked during this call.
@@ -181,11 +182,11 @@ public abstract class GlWindow implements InputListener, MouseListener {
       pressedCharacter = 'l';
     } else if (glfwGetKey(window, GLFW_KEY_B) == GL_TRUE) { // z
       pressedCharacter = 'b';
-    }  else if (glfwGetKey(window, GLFW_KEY_Y) == GL_TRUE) { // z
+    } else if (glfwGetKey(window, GLFW_KEY_Y) == GL_TRUE) { // z
       pressedCharacter = 'y';
     }
     inputHandler.update(pressedCharacter);
-    Iterator<Animation> animationIterator =  animations.iterator();
+    Iterator<Animation> animationIterator = animations.iterator();
     while (animationIterator.hasNext()) {
       Animation animation = animationIterator.next();
       if (animation.isComplete()) {
@@ -197,9 +198,11 @@ public abstract class GlWindow implements InputListener, MouseListener {
     update(delta);
   }
 
-  public void update(float delta) { }
+  public void update(float delta) {
+  }
 
   public abstract void onDraw(Matrix4f projection);
+
   public abstract void onGlContextInitialized() throws IOException;
 
   protected void close() {
@@ -219,7 +222,7 @@ public abstract class GlWindow implements InputListener, MouseListener {
   }
 
   public void finishAnimations() {
-    Iterator<Animation> animationIterator =  animations.iterator();
+    Iterator<Animation> animationIterator = animations.iterator();
     while (animationIterator.hasNext()) {
       Animation animation = animationIterator.next();
       animation.finish();

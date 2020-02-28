@@ -1,11 +1,11 @@
 package com.tambapps.papernet.gl.shape;
 
-import lombok.Data;
-
 import static org.lwjgl.opengl.GL11.GL_POLYGON;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import lombok.Data;
 
 @Data
 public class Circle {

@@ -20,18 +20,20 @@ public class FosTextDrawer {
   public static void drawFosTexts(Collection<Bubble> bubbles, Vector3f cameraPosition, float zoom) {
     float zoomInverse = 1 / zoom;
     bubbles.stream()
-      .filter(Bubble::isVisible)
-      .forEach(bubble -> drawFos(bubble, cameraPosition, zoomInverse));
+        .filter(Bubble::isVisible)
+        .forEach(bubble -> drawFos(bubble, cameraPosition, zoomInverse));
   }
 
   private static void drawFos(Bubble bubble, Vector3f cameraPosition, float zoomInv) {
     String fos = bubble.getFos();
     Texture texture = FosTextTextureFactory.getTextureFor(fos);
-    float percentage = MathUtils.toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
-    float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * (MAX_TEXT_HEIGHT - MIN_TEXT_HEIGHT));
+    float percentage = MathUtils
+        .toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
+    float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * (MAX_TEXT_HEIGHT
+        - MIN_TEXT_HEIGHT));
     texture.setHeightKeepRatio(height);
     texture.setPosition(zoomInv * (bubble.getX() + cameraPosition.x) / HALF_WIDTH,
-      zoomInv * (bubble.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
+        zoomInv * (bubble.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
     texture.bind();
     texture.draw();
   }

@@ -4,18 +4,14 @@ import java.io.IOException;
 
 public class ColorShader extends Shader {
 
-  private static final String RED = "red";
   public static final String GREEN = "green";
   public static final String BLUE = "blue";
   public static final String ALPHA = "alpha";
+  private static final String RED = "red";
 
   public ColorShader(String filename) throws IOException {
     super(filename);
     setUniformVariable(ALPHA, 1f);
-  }
-
-  public void setColor(Color color) {
-    setColor(color.getR(), color.getG(), color.getB(), color.getA());
   }
 
   public void setColor(float r, float g, float b) {
@@ -37,11 +33,15 @@ public class ColorShader extends Shader {
     return new Color(r, g, b, a);
   }
 
-  public void setAlpha(float alpha) {
-    setUniformVariable(ALPHA, alpha);
+  public void setColor(Color color) {
+    setColor(color.getR(), color.getG(), color.getB(), color.getA());
   }
 
   public float getAlpha() {
     return getUniformVariable(ALPHA);
+  }
+
+  public void setAlpha(float alpha) {
+    setUniformVariable(ALPHA, alpha);
   }
 }

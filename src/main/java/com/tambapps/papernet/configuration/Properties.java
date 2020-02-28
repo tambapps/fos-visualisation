@@ -27,7 +27,7 @@ public class Properties {
     return Integer.parseInt(number);
   }
 
-  public  static Integer getIntOrDefault(String key, int defaultValue) {
+  public static Integer getIntOrDefault(String key, int defaultValue) {
     if (!PROPERTIES.containsKey(key)) {
       return defaultValue;
     }

@@ -12,7 +12,7 @@ public class Color {
   private float a;
 
   public Color(float r, float g, float b) {
-    this(r, g, b ,1f);
+    this(r, g, b, 1f);
   }
 
 }

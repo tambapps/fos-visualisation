@@ -11,7 +11,8 @@ public class MoveAnimation extends Animation {
   private float startX, startY;
   private float endX, endY;
 
-  public MoveAnimation(Movable movable, float endX, float endY, float duration, Interpolation interpolation) {
+  public MoveAnimation(Movable movable, float endX, float endY, float duration,
+      Interpolation interpolation) {
     this(movable, endX, endY, duration);
     setInterpolation(interpolation);
   }

@@ -22,12 +22,8 @@ public class Camera {
   }
 
   private void update() {
-    projection = new Matrix4f().setOrtho2D(zoom * - width / 2, zoom * width / 2,
-      zoom * - height / 2, zoom * height / 2);
-  }
-
-  public void setPosition(Vector3f position) {
-    this.position.set(position);
+    projection = new Matrix4f().setOrtho2D(zoom * -width / 2, zoom * width / 2,
+        zoom * -height / 2, zoom * height / 2);
   }
 
   public void addPosition(Vector3f position) {
@@ -41,7 +37,6 @@ public class Camera {
     return target;
   }
 
-
   public void zoomBy(float by) {
     if (this.zoom <= 0.1f && by < 0 || this.zoom >= 2f && by > 0) {
       return;
@@ -52,6 +47,10 @@ public class Camera {
 
   public Vector3f getPosition() {
     return position;
+  }
+
+  public void setPosition(Vector3f position) {
+    this.position.set(position);
   }
 
   public float getZoom() {

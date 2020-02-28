@@ -53,12 +53,18 @@ public class CircleTest {
 
   private float sp = 0.0f;
   private boolean swapcolor = false;
+  private Rectangle rectangle = new Rectangle();
+
+  public static void main(String[] args) {
+    new CircleTest().run();
+  }
 
   private void init() {
     glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
-    if (glfwInit() != true)
+    if (glfwInit() != true) {
       throw new IllegalStateException("Unable to initialize GLFW");
+    }
 
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -68,14 +74,16 @@ public class CircleTest {
     int HEIGHT = 300;
 
     window = glfwCreateWindow(WIDTH, HEIGHT, "Hello LWJGL3", NULL, NULL);
-    if (window == NULL)
+    if (window == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
+    }
 
     glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
       @Override
       public void invoke(long window, int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
           glfwSetWindowShouldClose(window, true);
+        }
       }
     });
 
@@ -100,7 +108,6 @@ public class CircleTest {
     drawQuad();
   }
 
-  private Rectangle rectangle = new Rectangle();
   private void drawQuad() {
     if (!swapcolor) {
       glColor3f(0.0f, 1.0f, 0.0f);
@@ -142,6 +149,7 @@ public class CircleTest {
       glfwPollEvents();
     }
   }
+
   public void run() {
     System.out.println("Hello LWJGL3 " + Version.getVersion() + "!");
 
@@ -154,10 +162,6 @@ public class CircleTest {
       glfwTerminate();
       errorCallback.close();
     }
-  }
-
-  public static void main(String[] args) {
-    new CircleTest().run();
   }
 
 }

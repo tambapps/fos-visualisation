@@ -1,11 +1,11 @@
 package com.tambapps.papernet.gl.shape;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.lwjgl.opengl.GL11;
-
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
 @Data
 @AllArgsConstructor
@@ -33,7 +33,7 @@ public class Curve {
   public void draw() {
     GL11.glBegin(GL_TRIANGLES);
 
-    int segments  = NB_SEGMENTS;
+    int segments = NB_SEGMENTS;
 
     float subdiv_step = 1f / segments;
     float subdiv_step2 = subdiv_step * subdiv_step;

@@ -1,9 +1,13 @@
 package com.tambapps.papernet;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL20.glUseProgram;
+
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.gl.GlWindow;
-
 import com.tambapps.papernet.gl.shader.Color;
 import com.tambapps.papernet.gl.shader.ColorShader;
 import com.tambapps.papernet.gl.shader.Shader;
@@ -20,11 +24,6 @@ import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.Scanner;
-
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class Main extends GlWindow {
 
@@ -52,6 +51,28 @@ public class Main extends GlWindow {
     this.initialYear = year;
   }
 
+  public static void main(String[] args) throws IOException {
+    System.out.println("Started loading...");
+    long startTime = System.currentTimeMillis();
+    ResearchPaperData data = ResearchPaperDataParser.parseData();
+    System.out
+        .format("Loaded all data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.println("Here is the number of research paper by year:");
+    data.getPapersByYear().forEach((key, value) ->
+        System.out.format("%d -> %d papers", key, value.size()).println());
+    System.out.println("Enter the year or 'all' for all papers");
+    try (Scanner scanner = new Scanner(System.in)) {
+      int year;
+      String s = args.length > 0 ? args[0] : scanner.nextLine();
+      if (s.equals("all") || s.isEmpty()) {
+        year = FosNet.ALL_YEARS;
+      } else {
+        year = Integer.parseInt(s);
+      }
+      new Main(data, year).run();
+    }
+  }
+
   @Override
   public void onGlContextInitialized() throws IOException {
     System.out.println("Started initializing OpenGL...");
@@ -66,11 +87,14 @@ public class Main extends GlWindow {
     background.setWidth(1f);
     background.setHeight(1f);
 
-    System.out.format("Finished initialization of OpenGL (in %ds)\n\n", (System.currentTimeMillis() - startTime) / 1000L);
+    System.out.format("Finished initialization of OpenGL (in %ds)\n\n",
+        (System.currentTimeMillis() - startTime) / 1000L);
     System.out.println("Press the arrow keys to move on the screen");
     System.out.println("pressed 'z' with up/down to zoom/unzoom from the screen");
-    System.out.println("pressed 'l' with up/down to modify the threshold of links that will be displayed");
-    System.out.println("pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
+    System.out.println(
+        "pressed 'l' with up/down to modify the threshold of links that will be displayed");
+    System.out.println(
+        "pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
     System.out.println("click t to show/hide FOSs");
     System.out.println("click y/h to move through the years");
     System.out.println("click e/d to expand/tighten the graph");
@@ -94,7 +118,8 @@ public class Main extends GlWindow {
 
     int year = fosNet.getYear();
     yearShader.bind(UNPROJECTED_VIEW);
-    Text.drawString(year == FosNet.ALL_YEARS ? "All years" : String.valueOf(year), -7.25f, 6.75f, 0.5f, 10);
+    Text.drawString(year == FosNet.ALL_YEARS ? "All years" : String.valueOf(year), -7.25f, 6.75f,
+        0.5f, 10);
     glUseProgram(0);
   }
 
@@ -105,7 +130,7 @@ public class Main extends GlWindow {
 
   @Override
   public void onRightPressed(Character pressedCharacter) {
-    camera.addPosition(tempVec.set(- NAVIGATION_OFFSET, 0, 0));
+    camera.addPosition(tempVec.set(-NAVIGATION_OFFSET, 0, 0));
   }
 
   @Override
@@ -157,22 +182,26 @@ public class Main extends GlWindow {
 
   private void moveLinkThreshold(float offset) {
     if (linkThreshold <= BubblesNLink.MIN_LINK_WIDTH && offset < 0 ||
-      linkThreshold >= BubblesNLink.MAX_LINK_WIDTH && offset > 0) {
+        linkThreshold >= BubblesNLink.MAX_LINK_WIDTH && offset > 0) {
       return;
     }
     linkThreshold += offset;
     fosNet.setLinksThreshold(linkThreshold);
-    System.out.format("updated link threshold: %f.1\n", (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH - BubblesNLink.MIN_LINK_WIDTH));
+    System.out.format("updated link threshold: %f.1\n",
+        (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH
+            - BubblesNLink.MIN_LINK_WIDTH));
   }
 
   private void moveBubbleThreshold(float offset) {
     if (bubbleThreshold <= BubblesNLink.MIN_RADIUS && offset < 0 ||
-      bubbleThreshold >= BubblesNLink.MAX_RADIUS && offset > 0) {
+        bubbleThreshold >= BubblesNLink.MAX_RADIUS && offset > 0) {
       return;
     }
     bubbleThreshold += offset;
     fosNet.setBubblesThreshold(bubbleThreshold, linkThreshold);
-    System.out.format("updated bubble threshold: %f.1\n", (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH - BubblesNLink.MIN_LINK_WIDTH));
+    System.out.format("updated bubble threshold: %f.1\n",
+        (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH
+            - BubblesNLink.MIN_LINK_WIDTH));
   }
 
   @Override
@@ -210,29 +239,8 @@ public class Main extends GlWindow {
     if (withAnimation) {
       clearAnimations();
       fosNet.shuffle(true, this::addAnimation);
-    }  else {
+    } else {
       fosNet.shuffle();
-    }
-  }
-
-  public static void main(String[] args) throws IOException {
-    System.out.println("Started loading...");
-    long startTime = System.currentTimeMillis();
-    ResearchPaperData data =  ResearchPaperDataParser.parseData();
-    System.out.format("Loaded all data (in %ds)\n", (System.currentTimeMillis() - startTime) / 1000L);
-    System.out.println("Here is the number of research paper by year:");
-    data.getPapersByYear().forEach((key, value) ->
-      System.out.format("%d -> %d papers", key, value.size()).println());
-    System.out.println("Enter the year or 'all' for all papers");
-    try (Scanner scanner = new Scanner(System.in)) {
-      int year;
-      String s =  args.length > 0 ? args[0] : scanner.nextLine();
-      if (s.equals("all") || s.isEmpty()) {
-        year = FosNet.ALL_YEARS;
-      } else {
-        year = Integer.parseInt(s);
-      }
-      new Main(data, year).run();
     }
   }
 
@@ -243,7 +251,9 @@ public class Main extends GlWindow {
       ColorShader shader = selectedBubble.getShader();
       selectedBubbleColor = shader.getColor();
       shader.setColor(SELECTED_COLOR);
-      System.out.format("%s has been a FOS in %d papers and has been, in %d quoted papers", selectedBubble.getFos().toUpperCase(), selectedBubble.getNbOcc(), selectedBubble.getNCitations()).println();
+      System.out.format("%s has been a FOS in %d papers and has been in %d quoted papers",
+          selectedBubble.getFos().toUpperCase(), selectedBubble.getNbOcc(),
+          selectedBubble.getNCitations()).println();
     }
   }
 

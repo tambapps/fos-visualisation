@@ -1,7 +1,5 @@
 package com.tambapps.papernet.gl.shader;
 
-import com.tambapps.papernet.visualisation.drawable.Link;
-
 import java.io.IOException;
 
 public class ShaderFactory {
@@ -22,7 +20,7 @@ public class ShaderFactory {
     return shader;
   }
 
-    public static ColorShader rgbShader(float r, float g, float b) throws IOException {
+  public static ColorShader rgbShader(float r, float g, float b) throws IOException {
     ColorShader shader = new ColorShader("shader");
     shader.setColor(r, g, b);
     return shader;

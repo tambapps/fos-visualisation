@@ -16,12 +16,12 @@ abstract class AbstractDrawable implements Drawable {
   protected abstract void doDraw(Matrix4f projection);
 
   @Override
-  public void setVisible(boolean visible) {
-    this.visible = visible;
+  public boolean isVisible() {
+    return visible;
   }
 
   @Override
-  public boolean isVisible() {
-    return visible;
+  public void setVisible(boolean visible) {
+    this.visible = visible;
   }
 }

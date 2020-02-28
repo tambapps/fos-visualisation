@@ -24,7 +24,8 @@ public class Bubble extends AbstractDrawable implements Movable {
     this.nCitations = nCitations;
   }
 
-  public static Bubble newBubble(String text, float r, float g, float b, float radius, int nbOcc, int nCitations) throws IOException {
+  public static Bubble newBubble(String text, float r, float g, float b, float radius, int nbOcc,
+      int nCitations) throws IOException {
     return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, nbOcc, nCitations);
   }
 
@@ -38,16 +39,20 @@ public class Bubble extends AbstractDrawable implements Movable {
     return circle.getRadius();
   }
 
+  public void setRadius(float radius) {
+    circle.setRadius(radius);
+  }
+
   public float getX() {
     return circle.getX();
   }
 
-  public float getY() {
-    return circle.getY();
-  }
-
   public void setX(float x) {
     circle.setX(x);
+  }
+
+  public float getY() {
+    return circle.getY();
   }
 
   public void setY(float y) {
@@ -65,33 +70,29 @@ public class Bubble extends AbstractDrawable implements Movable {
   }
 
   @Override
-  public void setAlpha(float alpha) {
-    shader.setAlpha(alpha);
-  }
-
-  @Override
   public float getAlpha() {
     return shader.getAlpha();
   }
 
-  public void setRadius(float radius) {
-    circle.setRadius(radius);
-  }
-
-  public void setNCitations(int nCitations) {
-    this.nCitations = nCitations;
+  @Override
+  public void setAlpha(float alpha) {
+    shader.setAlpha(alpha);
   }
 
   public int getNCitations() {
     return nCitations;
   }
 
-  public void setNbOcc(int nbOcc) {
-    this.nbOcc = nbOcc;
+  public void setNCitations(int nCitations) {
+    this.nCitations = nCitations;
   }
 
   public int getNbOcc() {
     return nbOcc;
+  }
+
+  public void setNbOcc(int nbOcc) {
+    this.nbOcc = nbOcc;
   }
 
   public ColorShader getShader() {
@@ -100,8 +101,12 @@ public class Bubble extends AbstractDrawable implements Movable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Bubble bubble = (Bubble) o;
     return Objects.equals(fos, bubble.fos);
   }

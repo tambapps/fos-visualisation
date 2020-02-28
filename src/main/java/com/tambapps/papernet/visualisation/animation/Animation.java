@@ -23,7 +23,9 @@ public abstract class Animation {
   }
 
   public boolean act(float delta) {
-    if (complete) return true;
+    if (complete) {
+      return true;
+    }
     if (!began) {
       begin();
       began = true;
@@ -31,9 +33,13 @@ public abstract class Animation {
     time += delta;
     complete = time >= duration;
     float percent = complete ? 1 : time / duration;
-    if (interpolation != null) percent = interpolation.apply(percent);
+    if (interpolation != null) {
+      percent = interpolation.apply(percent);
+    }
     update(reverse ? 1 - percent : percent);
-    if (complete) end();
+    if (complete) {
+      end();
+    }
     return complete;
   }
 
@@ -46,7 +52,7 @@ public abstract class Animation {
     }
   }
 
-  abstract protected void update (float percent);
+  abstract protected void update(float percent);
 
   public void finish() {
     time = duration;

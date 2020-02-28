@@ -1,10 +1,5 @@
 package com.tambapps.papernet.gl.input;
 
-import org.lwjgl.glfw.GLFWKeyCallback;
-
-import java.util.Map;
-import java.util.function.Supplier;
-
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
@@ -21,19 +16,23 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+import org.lwjgl.glfw.GLFWKeyCallback;
+
+import java.util.Map;
+
 public class InputHandler extends GLFWKeyCallback {
 
   private final Map<Integer, Character> KEY_CHARACTER_MAP = Map.ofEntries(
-    Map.entry(GLFW_KEY_W, 'z'),
-    Map.entry(GLFW_KEY_S, 's'),
-    Map.entry(GLFW_KEY_E, 'e'),
-    Map.entry(GLFW_KEY_D, 'd'),
-    Map.entry(GLFW_KEY_R, 'r'),
-    Map.entry(GLFW_KEY_F, 'f'),
-    Map.entry(GLFW_KEY_Y, 'y'),
-    Map.entry(GLFW_KEY_H, 'h'),
-    Map.entry(GLFW_KEY_T, 't')
-    );
+      Map.entry(GLFW_KEY_W, 'z'),
+      Map.entry(GLFW_KEY_S, 's'),
+      Map.entry(GLFW_KEY_E, 'e'),
+      Map.entry(GLFW_KEY_D, 'd'),
+      Map.entry(GLFW_KEY_R, 'r'),
+      Map.entry(GLFW_KEY_F, 'f'),
+      Map.entry(GLFW_KEY_Y, 'y'),
+      Map.entry(GLFW_KEY_H, 'h'),
+      Map.entry(GLFW_KEY_T, 't')
+  );
   private final InputListener inputListener;
   private boolean upPressed = false;
   private boolean downPressed = false;

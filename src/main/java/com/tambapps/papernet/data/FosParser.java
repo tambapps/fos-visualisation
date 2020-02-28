@@ -15,10 +15,12 @@ class FosParser {
   static final int N_CITATION = 4;
   static final int FOS = 5;
 
-  private FosParser() {}
+  private FosParser() {
+  }
 
   public static ResearchPaper parse(String[] fields) {
-    return new ResearchPaper(parseFosWeights(fields[FOS]), Integer.parseInt(fields[YEAR]), Integer.parseInt(fields[N_CITATION]));
+    return new ResearchPaper(parseFosWeights(fields[FOS]), Integer.parseInt(fields[YEAR]),
+        Integer.parseInt(fields[N_CITATION]));
   }
 
   private static Map<String, Float> parseFosWeights(String field) {
@@ -41,7 +43,7 @@ class FosParser {
       i++;
       if (c == DOUBLE_QUOTE) {
         if (inField &&
-          (i == line.length() || line.charAt(i) == COMMA)) { // make sure this is the end of field
+            (i == line.length() || line.charAt(i) == COMMA)) { // make sure this is the end of field
           fields[currentField++] = builder.toString();
           builder.setLength(0); // clear builder
         }

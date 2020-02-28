@@ -1,16 +1,5 @@
 package com.tambapps.papernet.gl.shader;
 
-import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
@@ -29,11 +18,21 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glUniform1f;
-
 import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
+
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Shader {
 
@@ -103,13 +102,15 @@ public class Shader {
     glCompileShader(shader);
     // check if error on shader
     if (glGetShaderi(shader, GL_COMPILE_STATUS) != 1) {
-      throw new IOException("Couldn't compile shader '" + filename + "': " + glGetShaderInfoLog(shader));
+      throw new IOException(
+          "Couldn't compile shader '" + filename + "': " + glGetShaderInfoLog(shader));
     }
     return shader;
   }
+
   private String readFile(String filename) throws IOException {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-      Shader.class.getResourceAsStream("/shaders/" + filename)
+        Shader.class.getResourceAsStream("/shaders/" + filename)
     ))) {
       return reader.lines().collect(Collectors.joining("\n"));
     }

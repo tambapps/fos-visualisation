@@ -40,7 +40,7 @@ public class FosTextTextureFactory {
     int height = fm.getHeight();
     g2d.dispose();
 
-    img = new BufferedImage(width, height * (lines.length + 1),BufferedImage.TYPE_INT_ARGB);
+    img = new BufferedImage(width, height * (lines.length + 1), BufferedImage.TYPE_INT_ARGB);
     g2d = img.createGraphics();
     g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION,
         RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);

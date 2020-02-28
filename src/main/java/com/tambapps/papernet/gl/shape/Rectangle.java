@@ -1,11 +1,11 @@
 package com.tambapps.papernet.gl.shape;
 
-import lombok.Data;
-
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import lombok.Data;
 
 
 // 0, 0 is center
@@ -19,10 +19,10 @@ public class Rectangle {
 
   public void draw() {
     glBegin(GL_TRIANGLES);
-      glVertex3f(x - width, y + -height, 0.0f);
-      glVertex3f(x + width, y - height, 0.0f);
-      glVertex3f(x + width, y + height, 0.0f);
-      glVertex3f(x - width, y + height, 0.0f);
+    glVertex3f(x - width, y + -height, 0.0f);
+    glVertex3f(x + width, y - height, 0.0f);
+    glVertex3f(x + width, y + height, 0.0f);
+    glVertex3f(x - width, y + height, 0.0f);
 
     glEnd();
   }
