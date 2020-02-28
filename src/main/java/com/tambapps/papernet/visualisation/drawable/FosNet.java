@@ -182,7 +182,7 @@ public class FosNet {
         .normalize(EXPAND_TIGHTEN_LENGTH * length / GlWindow.WINDOW_HEIGHT);
       animationConsumer.accept(
         new MoveAnimation(bubble, operator.apply(bubble.getX(), tempVec.x), operator.apply(bubble.getY(), tempVec.y),
-          1f, Interpolation.pow2Out()));
+          1f, Interpolation.POW2_FAST_THEN_SLOW));
     }
   }
 

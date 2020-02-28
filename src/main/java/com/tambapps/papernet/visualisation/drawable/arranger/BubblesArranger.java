@@ -11,9 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.tambapps.papernet.gl.GlWindow.WINDOW_HEIGHT;
-import static com.tambapps.papernet.gl.GlWindow.WINDOW_WIDTH;
-
 public class BubblesArranger {
 
   private static final Vector3f tempVec = new Vector3f();
@@ -69,7 +66,7 @@ public class BubblesArranger {
       while (true) {
         Vector3f endPosition = positionArranger.arrange(bubble, tempVec);
         if (!overlaps(endPosition, arrangedBubblePositions)) {
-          animationConsumer.accept(new MoveAnimation(bubble, endPosition.x, endPosition.y, 1f, Interpolation.linear()));
+          animationConsumer.accept(new MoveAnimation(bubble, endPosition.x, endPosition.y, 1f, Interpolation.POW2_FAST_THEN_SLOW));
           arrangedBubblePositions.add(new Vector3f(endPosition));
           break;
         }
