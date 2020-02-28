@@ -30,7 +30,7 @@ public class FosTextDrawer {
     float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * 0.02f);
     texture.setHeightKeepRatio(height);
     texture.setPosition(zoomInv * (bubble.getX() + cameraPosition.x) / HALF_WIDTH,
-      zoomInv * (bubble.getY() + height / 2f + cameraPosition.y) / HALF_HEIGHT); // don't understand why text isn't centered
+      zoomInv * (bubble.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
     texture.bind();
     texture.draw();
   }
