@@ -12,7 +12,8 @@ import java.util.Collection;
 
 public class FosTextDrawer {
 
-  private static final float MIN_TEXT_HEIGHT = 0.01f;
+  private static final float MIN_TEXT_HEIGHT = 0.02f;
+  private static final float MAX_TEXT_HEIGHT = 0.055f;
   private static final float HALF_WIDTH = GlWindow.WINDOW_WIDTH >> 1;
   private static final float HALF_HEIGHT = GlWindow.WINDOW_HEIGHT >> 1;
 
@@ -27,7 +28,7 @@ public class FosTextDrawer {
     String fos = bubble.getFos();
     Texture texture = FosTextTextureFactory.getTextureFor(fos);
     float percentage = MathUtils.toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
-    float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * 0.02f);
+    float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * (MAX_TEXT_HEIGHT - MIN_TEXT_HEIGHT));
     texture.setHeightKeepRatio(height);
     texture.setPosition(zoomInv * (bubble.getX() + cameraPosition.x) / HALF_WIDTH,
       zoomInv * (bubble.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
