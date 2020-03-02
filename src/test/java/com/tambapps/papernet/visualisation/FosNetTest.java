@@ -3,7 +3,7 @@ package com.tambapps.papernet.visualisation;
 import com.tambapps.papernet.data.ResearchPaperData;
 import com.tambapps.papernet.data.ResearchPaperDataParser;
 import com.tambapps.papernet.visualisation.animation.Animation;
-import com.tambapps.papernet.visualisation.drawable.Bubble;
+import com.tambapps.papernet.visualisation.drawable.Node;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
 import org.junit.Test;
 
@@ -31,10 +31,10 @@ public class FosNetTest extends GlTest {
   @Test
   public void setYearTest() {
     fosNet.loadYear(2000, EMPTY_CONSUMER, 0, 0);
-    List<Bubble> yearBubbles = List.copyOf(fosNet.getBubbles());
-    assertFalse(yearBubbles.isEmpty());
+    List<Node> yearNodes = List.copyOf(fosNet.getNodes());
+    assertFalse(yearNodes.isEmpty());
     fosNet.loadYear(0, EMPTY_CONSUMER, 0, 0);
     fosNet.loadYear(2000, EMPTY_CONSUMER, 0, 0);
-    assertEquals(yearBubbles, fosNet.getBubbles());
+    assertEquals(yearNodes, fosNet.getNodes());
   }
 }

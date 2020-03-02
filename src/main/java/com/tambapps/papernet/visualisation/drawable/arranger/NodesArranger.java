@@ -3,7 +3,7 @@ package com.tambapps.papernet.visualisation.drawable.arranger;
 import com.tambapps.papernet.visualisation.animation.Animation;
 import com.tambapps.papernet.visualisation.animation.MoveAnimation;
 import com.tambapps.papernet.visualisation.animation.interpolation.Interpolation;
-import com.tambapps.papernet.visualisation.drawable.Bubble;
+import com.tambapps.papernet.visualisation.drawable.Node;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BubblesArranger {
+public class NodesArranger {
 
   private static final Vector3f tempVec = new Vector3f();
 
@@ -20,58 +20,58 @@ public class BubblesArranger {
     float xDif = x1 - x2;
     float yDif = y1 - y2;
     float distanceSquared = xDif * xDif + yDif * yDif;
-    radius1 = radius1 * 2f; // in order to have some space between each bubble
+    radius1 = radius1 * 2f; // in order to have some space between each node
     return distanceSquared < (radius1 + radius2) * (radius1 + radius2);
   }
 
-  private static boolean overlaps(Bubble b1, Bubble b2) {
+  private static boolean overlaps(Node b1, Node b2) {
     return overlaps(b1.getX(), b1.getY(), b1.getRadius(),
         b2.getX(), b2.getY(), b2.getRadius());
   }
 
-  private static boolean overlaps(Bubble bubble, Collection<Bubble> bubbles) {
-    return bubbles.stream()
-        .anyMatch(b -> overlaps(bubble, b));
+  private static boolean overlaps(Node node, Collection<Node> nodes) {
+    return nodes.stream()
+        .anyMatch(b -> overlaps(node, b));
   }
 
-  public static void arrange(Collection<Bubble> bubbles) {
-    arrange(bubbles, new ArrayList<>());
+  public static void arrange(Collection<Node> nodes) {
+    arrange(nodes, new ArrayList<>());
   }
 
-  public static void arrange(Collection<Bubble> bubbles, List<Bubble> arrangedBubbles) {
+  public static void arrange(Collection<Node> nodes, List<Node> arrangedNodes) {
     PositionArranger positionArranger = new PositionArranger();
-    for (Bubble bubble : bubbles) {
+    for (Node node : nodes) {
       positionArranger.init();
       while (true) {
-        Vector3f position = positionArranger.arrange(bubble, tempVec);
-        bubble.setX(position.x);
-        bubble.setY(position.y);
-        if (!overlaps(bubble, arrangedBubbles)) {
-          arrangedBubbles.add(bubble);
+        Vector3f position = positionArranger.arrange(node, tempVec);
+        node.setX(position.x);
+        node.setY(position.y);
+        if (!overlaps(node, arrangedNodes)) {
+          arrangedNodes.add(node);
           break;
         }
       }
     }
   }
 
-  private static boolean overlaps(Vector3f endPosition, Collection<Vector3f> bubblePositions) {
-    return bubblePositions.stream()
+  private static boolean overlaps(Vector3f endPosition, Collection<Vector3f> nodePositions) {
+    return nodePositions.stream()
         .anyMatch(position -> overlaps(endPosition.x, endPosition.y, endPosition.z,
             position.x, position.y, position.z));
   }
 
-  public static void arrangeWithAnimation(Collection<Bubble> bubbles,
+  public static void arrangeWithAnimation(Collection<Node> nodes,
       Consumer<Animation> animationConsumer) {
-    List<Vector3f> arrangedBubblePositions = new ArrayList<>(); // x, y, radius
+    List<Vector3f> arrangedNodePositions = new ArrayList<>(); // x, y, radius
     PositionArranger positionArranger = new PositionArranger();
-    for (Bubble bubble : bubbles) {
+    for (Node node : nodes) {
       positionArranger.init();
       while (true) {
-        Vector3f endPosition = positionArranger.arrange(bubble, tempVec);
-        if (!overlaps(endPosition, arrangedBubblePositions)) {
-          animationConsumer.accept(new MoveAnimation(bubble, endPosition.x, endPosition.y, 1f,
+        Vector3f endPosition = positionArranger.arrange(node, tempVec);
+        if (!overlaps(endPosition, arrangedNodePositions)) {
+          animationConsumer.accept(new MoveAnimation(node, endPosition.x, endPosition.y, 1f,
               Interpolation.POW2_FAST_THEN_SLOW));
-          arrangedBubblePositions.add(new Vector3f(endPosition));
+          arrangedNodePositions.add(new Vector3f(endPosition));
           break;
         }
       }

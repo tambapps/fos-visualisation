@@ -14,8 +14,8 @@ import com.tambapps.papernet.gl.shader.Shader;
 import com.tambapps.papernet.gl.shader.ShaderFactory;
 import com.tambapps.papernet.gl.text.Text;
 import com.tambapps.papernet.gl.texture.Texture;
-import com.tambapps.papernet.visualisation.drawable.Bubble;
-import com.tambapps.papernet.visualisation.drawable.BubblesNLink;
+import com.tambapps.papernet.visualisation.drawable.Node;
+import com.tambapps.papernet.visualisation.drawable.FosNetUtils;
 import com.tambapps.papernet.visualisation.drawable.FosNet;
 import com.tambapps.papernet.visualisation.drawable.Link;
 import com.tambapps.papernet.visualisation.text.drawer.FosTextDrawer;
@@ -37,12 +37,12 @@ public class Main extends GlWindow {
 
   private final int initialYear;
   private final FosNet fosNet;
-  private Color selectedBubbleColor = null;
+  private Color selectedNodeColor = null;
 
   private boolean showFoss = true;
   private Texture background;
-  private float linkThreshold = BubblesNLink.MIN_LINK_WIDTH;
-  private float bubbleThreshold = BubblesNLink.MIN_RADIUS;
+  private float linkThreshold = FosNetUtils.MIN_LINK_WIDTH;
+  private float nodeThreshold = FosNetUtils.MIN_RADIUS;
   private Shader yearShader;
 
 
@@ -79,9 +79,9 @@ public class Main extends GlWindow {
     long startTime = System.currentTimeMillis();
     ShaderFactory.setLinkShader(ShaderFactory.rgbaShader(0.5f, 0.5f, 0.5f, Link.MAX_ALPHA));
 
-    fosNet.loadYear(initialYear, this::addAnimation, bubbleThreshold, linkThreshold);
+    fosNet.loadYear(initialYear, this::addAnimation, nodeThreshold, linkThreshold);
     shuffle(false);
-    moveLinkThreshold(0); // to update links visibility
+    moveLinksThreshold(0); // to update links visibility
     yearShader = ShaderFactory.rgbShader(0, 1f, 0);
     background = Texture.newTexture("background.png");
     background.setWidth(1f);
@@ -94,12 +94,12 @@ public class Main extends GlWindow {
     System.out.println(
         "pressed 'l' with up/down to modify the threshold of links that will be displayed");
     System.out.println(
-        "pressed 'b' with up/down to modify the threshold of bubbles that will be displayed");
+        "pressed 'b' with up/down to modify the threshold of nodes that will be displayed");
     System.out.println("click t to show/hide FOSs");
     System.out.println("click y/h to move through the years");
     System.out.println("click e/d to expand/tighten the graph");
-    System.out.println("Use S to shuffle the bubbles");
-    System.out.println("You can also touch and drag a bubble to move it");
+    System.out.println("Use S to shuffle the nodes");
+    System.out.println("You can also touch and drag a node to move it");
     System.out.println("Use ESCAPE to exit");
   }
 
@@ -112,7 +112,7 @@ public class Main extends GlWindow {
 
     glUseProgram(0);
     if (showFoss) {
-      FosTextDrawer.drawFosTexts(fosNet.getBubbles(), camera.getPosition(), camera.getZoom());
+      FosTextDrawer.drawFosTexts(fosNet.getNodes(), camera.getPosition(), camera.getZoom());
     }
     glDisable(GL_BLEND);
 
@@ -147,10 +147,10 @@ public class Main extends GlWindow {
           camera.zoomBy(-factor * NAVIGATION_ZOOM_OFFSET);
           break;
         case 'l':
-          moveLinkThreshold(factor * THRESHOLD_OFFSET);
+          moveLinksThreshold(factor * THRESHOLD_OFFSET);
           break;
         case 'b':
-          moveBubbleThreshold(factor * THRESHOLD_OFFSET);
+          moveNodesThreshold(factor * THRESHOLD_OFFSET);
           break;
       }
     }
@@ -167,7 +167,7 @@ public class Main extends GlWindow {
       year += offset;
     }
     finishAnimations();
-    fosNet.loadYear(year, this::addAnimation, bubbleThreshold, linkThreshold);
+    fosNet.loadYear(year, this::addAnimation, nodeThreshold, linkThreshold);
   }
 
   @Override
@@ -180,28 +180,28 @@ public class Main extends GlWindow {
     close();
   }
 
-  private void moveLinkThreshold(float offset) {
-    if (linkThreshold <= BubblesNLink.MIN_LINK_WIDTH && offset < 0 ||
-        linkThreshold >= BubblesNLink.MAX_LINK_WIDTH && offset > 0) {
+  private void moveLinksThreshold(float offset) {
+    if (linkThreshold <= FosNetUtils.MIN_LINK_WIDTH && offset < 0 ||
+        linkThreshold >= FosNetUtils.MAX_LINK_WIDTH && offset > 0) {
       return;
     }
     linkThreshold += offset;
     fosNet.setLinksThreshold(linkThreshold);
     System.out.format("updated link threshold: %f.1\n",
-        (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH
-            - BubblesNLink.MIN_LINK_WIDTH));
+        (linkThreshold - FosNetUtils.MIN_LINK_WIDTH) / (FosNetUtils.MAX_LINK_WIDTH
+            - FosNetUtils.MIN_LINK_WIDTH));
   }
 
-  private void moveBubbleThreshold(float offset) {
-    if (bubbleThreshold <= BubblesNLink.MIN_RADIUS && offset < 0 ||
-        bubbleThreshold >= BubblesNLink.MAX_RADIUS && offset > 0) {
+  private void moveNodesThreshold(float offset) {
+    if (nodeThreshold <= FosNetUtils.MIN_RADIUS && offset < 0 ||
+        nodeThreshold >= FosNetUtils.MAX_RADIUS && offset > 0) {
       return;
     }
-    bubbleThreshold += offset;
-    fosNet.setBubblesThreshold(bubbleThreshold, linkThreshold);
-    System.out.format("updated bubble threshold: %f.1\n",
-        (linkThreshold - BubblesNLink.MIN_LINK_WIDTH) / (BubblesNLink.MAX_LINK_WIDTH
-            - BubblesNLink.MIN_LINK_WIDTH));
+    nodeThreshold += offset;
+    fosNet.setNodesThreshold(nodeThreshold, linkThreshold);
+    System.out.format("updated node threshold: %f.1\n",
+        (linkThreshold - FosNetUtils.MIN_LINK_WIDTH) / (FosNetUtils.MAX_LINK_WIDTH
+            - FosNetUtils.MIN_LINK_WIDTH));
   }
 
   @Override
@@ -246,34 +246,34 @@ public class Main extends GlWindow {
 
   @Override
   public void onTouchDown(float x, float y) {
-    Bubble selectedBubble = fosNet.select(camera, x, y);
-    if (selectedBubble != null) {
-      ColorShader shader = selectedBubble.getShader();
-      selectedBubbleColor = shader.getColor();
+    Node selectedNode = fosNet.select(camera, x, y);
+    if (selectedNode != null) {
+      ColorShader shader = selectedNode.getShader();
+      selectedNodeColor = shader.getColor();
       shader.setColor(SELECTED_COLOR);
       System.out.format("%s has been a FOS in %d papers and has been in %d quoted papers",
-          selectedBubble.getFos().toUpperCase(), selectedBubble.getNbOcc(),
-          selectedBubble.getNCitations()).println();
+          selectedNode.getFos().toUpperCase(), selectedNode.getNbOcc(),
+          selectedNode.getNCitations()).println();
     }
   }
 
   @Override
   public void onTouchUp() {
-    Bubble selectedBubble = fosNet.getSelectedBubble();
-    if (selectedBubble == null) {
+    Node selectedNode = fosNet.getSelectedNode();
+    if (selectedNode == null) {
       return;
     }
-    selectedBubble.getShader().setColor(selectedBubbleColor);
+    selectedNode.getShader().setColor(selectedNodeColor);
   }
 
   @Override
   public void onMouseDragged(float x, float y) {
-    Bubble selectedBubble = fosNet.getSelectedBubble();
-    if (selectedBubble == null) {
+    Node selectedNode = fosNet.getSelectedNode();
+    if (selectedNode == null) {
       return;
     }
     Vector3f projectPoint = camera.projectPoint(x, y);
-    selectedBubble.setPosition(projectPoint.x, projectPoint.y);
+    selectedNode.setPosition(projectPoint.x, projectPoint.y);
     fosNet.updateLinksPos();
   }
 }

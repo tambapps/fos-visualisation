@@ -4,8 +4,8 @@ import com.tambapps.papernet.gl.GlWindow;
 import com.tambapps.papernet.gl.text.FosTextTextureFactory;
 import com.tambapps.papernet.gl.texture.Texture;
 import com.tambapps.papernet.util.MathUtils;
-import com.tambapps.papernet.visualisation.drawable.Bubble;
-import com.tambapps.papernet.visualisation.drawable.BubblesNLink;
+import com.tambapps.papernet.visualisation.drawable.Node;
+import com.tambapps.papernet.visualisation.drawable.FosNetUtils;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -17,23 +17,23 @@ public class FosTextDrawer {
   private static final float HALF_WIDTH = GlWindow.WINDOW_WIDTH >> 1;
   private static final float HALF_HEIGHT = GlWindow.WINDOW_HEIGHT >> 1;
 
-  public static void drawFosTexts(Collection<Bubble> bubbles, Vector3f cameraPosition, float zoom) {
+  public static void drawFosTexts(Collection<Node> nodes, Vector3f cameraPosition, float zoom) {
     float zoomInverse = 1 / zoom;
-    bubbles.stream()
-        .filter(Bubble::isVisible)
-        .forEach(bubble -> drawFos(bubble, cameraPosition, zoomInverse));
+    nodes.stream()
+        .filter(Node::isVisible)
+        .forEach(node -> drawFos(node, cameraPosition, zoomInverse));
   }
 
-  private static void drawFos(Bubble bubble, Vector3f cameraPosition, float zoomInv) {
-    String fos = bubble.getFos();
+  private static void drawFos(Node node, Vector3f cameraPosition, float zoomInv) {
+    String fos = node.getFos();
     Texture texture = FosTextTextureFactory.getTextureFor(fos);
     float percentage = MathUtils
-        .toPercentage(bubble.getRadius(), BubblesNLink.MIN_RADIUS, BubblesNLink.MAX_RADIUS);
+        .toPercentage(node.getRadius(), FosNetUtils.MIN_RADIUS, FosNetUtils.MAX_RADIUS);
     float height = nbLines(fos) * zoomInv * (MIN_TEXT_HEIGHT + percentage * (MAX_TEXT_HEIGHT
         - MIN_TEXT_HEIGHT));
     texture.setHeightKeepRatio(height);
-    texture.setPosition(zoomInv * (bubble.getX() + cameraPosition.x) / HALF_WIDTH,
-        zoomInv * (bubble.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
+    texture.setPosition(zoomInv * (node.getX() + cameraPosition.x) / HALF_WIDTH,
+        zoomInv * (node.getY() + cameraPosition.y) / HALF_HEIGHT - height / 2f);
     texture.bind();
     texture.draw();
   }

@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class BubblesNLink {
+public class FosNetUtils {
 
   public static final float MIN_RADIUS = 4;
   public static final float MAX_RADIUS = 50;
@@ -34,8 +34,8 @@ public class BubblesNLink {
         .reduce(0f, Float::sum);
   }
 
-  public static Map<String, Bubble> generate(Map<String, Bubble> cachedFosBubbles,
-      Collection<ResearchPaper> researchPapers, List<Link> links) {
+  public static Map<String, Node> generate(Map<String, Node> cachedFosNodes,
+                                           Collection<ResearchPaper> researchPapers, List<Link> links) {
     Map<String, List<WeightedCitation>> fosWeightedCitations =
         ResearchPaperData.getFosWeightedCitations(researchPapers);
     Map<String, Float> radiusScore = fosWeightedCitations.entrySet()
@@ -71,9 +71,9 @@ public class BubblesNLink {
     float finalMaxScore = maxScore;
     float finalMinCitations = minCitations;
     float finalMaxCitations = maxCitations;
-    Map<String, BubbleData> fosBubbleData = fosWeightedCitations.entrySet()
+    Map<String, NodeData> fosNodeData = fosWeightedCitations.entrySet()
         .stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, e -> BubblesNLink.toBubbleData(
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> FosNetUtils.toNodeData(
             radiusScore.get(e.getKey()), finalMinScore, finalMaxScore,
             citations.get(e.getKey()), finalMinCitations, finalMaxCitations,
             fosWeightedCitations.get(e.getKey()).size())));
@@ -82,10 +82,10 @@ public class BubblesNLink {
     Map<String, Map<String, Integer>> connectedOccurenceMap = new HashMap<>();
     researchPapers.forEach(paper -> fillConnectionsMap(paper, connectedOccurenceMap));
 
-    Map<String, Bubble> fosBubble = fosBubbleData.entrySet()
+    Map<String, Node> fosNode = fosNodeData.entrySet()
         .stream()
-        .map(e -> getBubble(cachedFosBubbles, e.getKey(), e.getValue()))
-        .collect(Collectors.toMap(Bubble::getFos, b -> b));
+        .map(e -> getNode(cachedFosNodes, e.getKey(), e.getValue()))
+        .collect(Collectors.toMap(Node::getFos, b -> b));
 
     float maxLinkOcc = connectedOccurenceMap.values()
         .stream()
@@ -96,24 +96,20 @@ public class BubblesNLink {
         .flatMapToInt(m -> m.values().stream().mapToInt(i -> i))
         .min().orElse(0);
 
-    fillLinks(links, connectedOccurenceMap, fosBubble, minLinkOcc, maxLinkOcc);
-    return fosBubble;
-    // fosBubble.values()
-    // .stream()
-    //.sorted(Comparator.comparing(Bubble::getRadius).reversed()) // in decroissant order to draw big bubbles first
-    //.collect(Collectors.toMap(Bubble::getText, b -> b));
+    fillLinks(links, connectedOccurenceMap, fosNode, minLinkOcc, maxLinkOcc);
+    return fosNode;
   }
 
   private static void fillLinks(List<Link> links,
-      Map<String, Map<String, Integer>> connectedOccurenceMap,
-      Map<String, Bubble> fosBubble, float minLinkOcc, float maxLinkOcc) {
+                                Map<String, Map<String, Integer>> connectedOccurenceMap,
+                                Map<String, Node> fosNode, float minLinkOcc, float maxLinkOcc) {
     for (String fos1 : connectedOccurenceMap.keySet()) {
       Map<String, Integer> occMap = connectedOccurenceMap.get(fos1);
       for (String fos2 : occMap.keySet()) {
         float nbOcc = occMap.get(fos2);
         float width =
             percentageMapping(nbOcc, minLinkOcc, maxLinkOcc, MIN_LINK_WIDTH, MAX_LINK_WIDTH);
-        links.add(LinkPool.get(fosBubble.get(fos1), fosBubble.get(fos2), width));
+        links.add(LinkPool.get(fosNode.get(fos1), fosNode.get(fos2), width));
       }
     }
   }
@@ -137,8 +133,8 @@ public class BubblesNLink {
     }
   }
 
-  private static Bubble getBubble(Map<String, Bubble> fosBubbles, String fos, BubbleData data) {
-    Bubble b = fosBubbles.get(fos);
+  private static Node getNode(Map<String, Node> fosNodes, String fos, NodeData data) {
+    Node b = fosNodes.get(fos);
     if (b != null) {
       b.getShader().setColor(data.r, data.g, data.b);
       b.setRadius(data.radius);
@@ -147,21 +143,21 @@ public class BubblesNLink {
       return b;
     }
     try {
-      return Bubble.newBubble(fos, data.r, data.g, data.b, data.radius, data.nbOcc, data.citations);
+      return Node.newNode(fos, data.r, data.g, data.b, data.radius, data.nbOcc, data.citations);
     } catch (IOException e) {
-      throw new RuntimeException("Couldn't create bubble", e);
+      throw new RuntimeException("Couldn't create node", e);
     }
   }
 
-  private static BubbleData toBubbleData(float radiusScore, float minRadiusScore,
-      float maxRadiusScore, float citations, float minCitations, float maxCitations, int nbOcc) {
+  private static NodeData toNodeData(float radiusScore, float minRadiusScore,
+                                     float maxRadiusScore, float citations, float minCitations, float maxCitations, int nbOcc) {
     float radius =
         percentageMapping(radiusScore, minRadiusScore, maxRadiusScore, MIN_RADIUS, MAX_RADIUS);
     float citationPercentage = toPercentage(citations, minCitations, maxCitations);
     float r = getColorField(Color::getR, START_COLOR, END_COLOR, citationPercentage);
     float g = getColorField(Color::getG, START_COLOR, END_COLOR, citationPercentage);
     float b = getColorField(Color::getB, START_COLOR, END_COLOR, citationPercentage);
-    return new BubbleData(radius, r, g, b, (int) citations, nbOcc);
+    return new NodeData(radius, r, g, b, (int) citations, nbOcc);
   }
 
   private static float getColorField(Function<Color, Float> fieldExtractor, Color start, Color end,
@@ -173,7 +169,7 @@ public class BubblesNLink {
 
   @AllArgsConstructor
   @Value
-  private static class BubbleData {
+  private static class NodeData {
     private float radius;
     private float r;
     private float g;

@@ -11,7 +11,7 @@ import com.tambapps.papernet.visualisation.animation.Animation;
 import com.tambapps.papernet.visualisation.animation.MoveAnimation;
 import com.tambapps.papernet.visualisation.animation.ShaderAlphaAnimation;
 import com.tambapps.papernet.visualisation.animation.interpolation.Interpolation;
-import com.tambapps.papernet.visualisation.drawable.arranger.BubblesArranger;
+import com.tambapps.papernet.visualisation.drawable.arranger.NodesArranger;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -35,58 +35,58 @@ public class FosNet {
   private final ResearchPaperData data;
   private final List<Link> links = new ArrayList<>();
   private int year;
-  private Map<String, Bubble> cachedBubbles = new HashMap<>();
-  private Map<String, Bubble> fosBubbles = new HashMap<>();
-  private List<Bubble> currentBubbles;
-  private List<Bubble> removedBubbles;
-  private Bubble selectedBubble = null;
+  private Map<String, Node> cachedNodes = new HashMap<>();
+  private Map<String, Node> fosNodes = new HashMap<>();
+  private List<Node> currentNodes;
+  private List<Node> removedNodes;
+  private Node selectedNode = null;
 
   public FosNet(ResearchPaperData data) {
     this.data = data;
   }
 
-  public void loadYear(int year, Consumer<Animation> animationConsumer, float bubblesThreshold,
+  public void loadYear(int year, Consumer<Animation> animationConsumer, float nodesThreshold,
       float linkThreshold) {
     this.year = year;
     Collection<ResearchPaper> papers =
         year == ALL_YEARS ? data.getAllPapers() : data.getAllByYear(year);
     links.forEach(LinkPool::free);
     links.clear();
-    Map<String, Bubble> newFosBubbles = BubblesNLink.generate(cachedBubbles, papers, links);
-    removedBubbles = findRemovedBubbles(fosBubbles, newFosBubbles);
-    List<Bubble> addedBubbles = findAddedBubbles(fosBubbles, newFosBubbles);
+    Map<String, Node> newFosNodes = FosNetUtils.generate(cachedNodes, papers, links);
+    removedNodes = findRemovedNodes(fosNodes, newFosNodes);
+    List<Node> addedNodes = findAddedNodes(fosNodes, newFosNodes);
 
-    this.fosBubbles = newFosBubbles;
-    cachedBubbles.putAll(this.fosBubbles);
-    currentBubbles = fosBubbles.values()
+    this.fosNodes = newFosNodes;
+    cachedNodes.putAll(this.fosNodes);
+    currentNodes = fosNodes.values()
         .stream()
-        .sorted(Comparator.comparing(Bubble::getRadius)
-            .reversed()) // in decroissant order to draw big bubbles first
+        .sorted(Comparator.comparing(Node::getRadius)
+            .reversed()) // in descending order to draw big nodes first
         .collect(Collectors.toList());
     setLinksThreshold(linkThreshold);
-    setBubblesThreshold(bubblesThreshold, linkThreshold);
+    setNodesThreshold(nodesThreshold, linkThreshold);
 
-    addedBubbles.stream()
+    addedNodes.stream()
         .filter(Drawable::isVisible)
         .map(this::showAnimation)
         .forEach(animationConsumer);
 
-    removedBubbles.stream()
+    removedNodes.stream()
         .filter(Drawable::isVisible)
         .map(this::hideAnimation)
         .forEach(animationConsumer);
 
-    arrangeNewBubbles(currentBubbles, addedBubbles);
+    arrangeNewNodes(currentNodes, addedNodes);
     animationConsumer.accept(
         new ShaderAlphaAnimation(ShaderFactory.linksShader(), ALPHA_ANIMATION_DURATION,
             Link.MAX_ALPHA));
   }
 
-  private void arrangeNewBubbles(List<Bubble> currentBubbles, List<Bubble> addedBubbles) {
-    List<Bubble> notAddedBubbles = currentBubbles.stream()
-        .filter(b -> !addedBubbles.contains(b))
+  private void arrangeNewNodes(List<Node> currentNodes, List<Node> addedNodes) {
+    List<Node> notAddedNodes = currentNodes.stream()
+        .filter(b -> !addedNodes.contains(b))
         .collect(Collectors.toList());
-    BubblesArranger.arrange(addedBubbles, notAddedBubbles);
+    NodesArranger.arrange(addedNodes, notAddedNodes);
   }
 
   private AlphaAnimation hideAnimation(Drawable drawable) {
@@ -98,24 +98,24 @@ public class FosNet {
     return new AlphaAnimation(drawable, ALPHA_ANIMATION_DURATION);
   }
 
-  private List<Bubble> findAddedBubbles(Map<String, Bubble> fosBubbles,
-      Map<String, Bubble> newFosBubbles) {
-    Collection<Bubble> oldBubbles = fosBubbles.values();
-    return newFosBubbles.values().stream()
-        .filter(b -> !oldBubbles.contains(b))
+  private List<Node> findAddedNodes(Map<String, Node> fosNodes,
+                                    Map<String, Node> newFosNodes) {
+    Collection<Node> oldNodes = fosNodes.values();
+    return newFosNodes.values().stream()
+        .filter(b -> !oldNodes.contains(b))
         .collect(Collectors.toList());
   }
 
-  private List<Bubble> findRemovedBubbles(Map<String, Bubble> fosBubbles,
-      Map<String, Bubble> newFosBubbles) {
-    Collection<Bubble> newBubbles = newFosBubbles.values();
-    return fosBubbles.values().stream()
-        .filter(b -> !newBubbles.contains(b))
+  private List<Node> findRemovedNodes(Map<String, Node> fosNodes,
+                                      Map<String, Node> newFosNodes) {
+    Collection<Node> newNodes = newFosNodes.values();
+    return fosNodes.values().stream()
+        .filter(b -> !newNodes.contains(b))
         .collect(Collectors.toList());
   }
 
-  public Bubble getSelectedBubble() {
-    return selectedBubble;
+  public Node getSelectedNode() {
+    return selectedNode;
   }
 
   // shuffle without animation
@@ -125,9 +125,9 @@ public class FosNet {
 
   public void shuffle(boolean withAnimation, Consumer<Animation> animationConsumer) {
     if (withAnimation) {
-      BubblesArranger.arrangeWithAnimation(currentBubbles, animationConsumer);
+      NodesArranger.arrangeWithAnimation(currentNodes, animationConsumer);
     } else {
-      BubblesArranger.arrange(currentBubbles);
+      NodesArranger.arrange(currentNodes);
       links.forEach(Link::updatePos);
     }
   }
@@ -138,10 +138,10 @@ public class FosNet {
 
   public void draw(Matrix4f projection) {
     links.forEach(l -> l.draw(projection));
-    currentBubbles.forEach(b -> b.draw(projection));
-    removedBubbles.forEach(l -> l.draw(projection));
-    if (!removedBubbles.isEmpty() && removedBubbles.get(0).getAlpha() <= 0) {
-      removedBubbles.clear();
+    currentNodes.forEach(b -> b.draw(projection));
+    removedNodes.forEach(l -> l.draw(projection));
+    if (!removedNodes.isEmpty() && removedNodes.get(0).getAlpha() <= 0) {
+      removedNodes.clear();
     }
   }
 
@@ -149,24 +149,24 @@ public class FosNet {
     links.forEach(l -> l.setVisible(l.getWidth() >= threshold));
   }
 
-  public void setBubblesThreshold(float bubblesThreshold, float linkThreshold) {
-    currentBubbles.forEach(bubble -> bubble.setVisible(bubble.getRadius() >= bubblesThreshold));
+  public void setNodesThreshold(float nodesThreshold, float linkThreshold) {
+    currentNodes.forEach(node -> node.setVisible(node.getRadius() >= nodesThreshold));
     links.forEach(Link::update);
     links.forEach(l -> l.setVisible(l.getWidth() >= linkThreshold)); // re update links visibility
   }
 
-  public Bubble select(Camera camera, float x, float y) {
+  public Node select(Camera camera, float x, float y) {
     Vector3f projectPoint = camera.projectPoint(x, y);
-    selectedBubble = currentBubbles.stream()
+    selectedNode = currentNodes.stream()
         .filter(
             b -> b.isVisible() && intersect(b, projectPoint.x, projectPoint.y, camera.getZoom()))
         .findFirst().orElse(null);
-    return selectedBubble;
+    return selectedNode;
   }
 
-  private boolean intersect(Bubble bubble, float x, float y, float zoom) {
-    return pow2(x - bubble.getX()) + pow2(y - bubble.getY() - 5) // little offset?
-        < pow2(bubble.getRadius() / zoom);
+  private boolean intersect(Node node, float x, float y, float zoom) {
+    return pow2(x - node.getX()) + pow2(y - node.getY() - 5) // little offset?
+        < pow2(node.getRadius() / zoom);
   }
 
   private float pow2(float x) {
@@ -184,14 +184,14 @@ public class FosNet {
   private void stretchOrTighten(Consumer<Animation> animationConsumer,
       BinaryOperator<Float> operator) {
     Vector2f tempVec = new Vector2f();
-    for (Bubble bubble : getBubbles()) {
-      tempVec = tempVec.set(bubble.getX(), bubble.getY());
+    for (Node node : getNodes()) {
+      tempVec = tempVec.set(node.getX(), node.getY());
       float length = tempVec.length();
-      tempVec = tempVec.set(bubble.getX(), bubble.getY())
+      tempVec = tempVec.set(node.getX(), node.getY())
           .normalize(EXPAND_TIGHTEN_LENGTH * length / GlWindow.WINDOW_HEIGHT);
       animationConsumer.accept(
-          new MoveAnimation(bubble, operator.apply(bubble.getX(), tempVec.x),
-              operator.apply(bubble.getY(), tempVec.y),
+          new MoveAnimation(node, operator.apply(node.getX(), tempVec.x),
+              operator.apply(node.getY(), tempVec.y),
               1f, Interpolation.POW2_FAST_THEN_SLOW));
     }
   }
@@ -200,7 +200,7 @@ public class FosNet {
     return year;
   }
 
-  public List<Bubble> getBubbles() {
-    return currentBubbles;
+  public List<Node> getNodes() {
+    return currentNodes;
   }
 }

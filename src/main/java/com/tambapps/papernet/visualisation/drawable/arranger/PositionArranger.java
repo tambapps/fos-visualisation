@@ -3,7 +3,7 @@ package com.tambapps.papernet.visualisation.drawable.arranger;
 import static com.tambapps.papernet.gl.GlWindow.WINDOW_HEIGHT;
 import static com.tambapps.papernet.gl.GlWindow.WINDOW_WIDTH;
 
-import com.tambapps.papernet.visualisation.drawable.Bubble;
+import com.tambapps.papernet.visualisation.drawable.Node;
 import org.joml.Vector3f;
 
 class PositionArranger {
@@ -17,9 +17,9 @@ class PositionArranger {
     tries = 0;
   }
 
-  public Vector3f arrange(Bubble bubble, Vector3f vector) {
+  public Vector3f arrange(Node node, Vector3f vector) {
     try {
-      return vector.set(randomX(), randomY(), bubble.getRadius());
+      return vector.set(randomX(), randomY(), node.getRadius());
     } finally {
       tries++;
       if (tries > TRIES_LIMIT) {

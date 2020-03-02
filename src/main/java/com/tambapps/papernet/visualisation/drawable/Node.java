@@ -8,15 +8,15 @@ import org.joml.Matrix4f;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Bubble extends AbstractDrawable implements Movable {
+public class Node extends AbstractDrawable implements Movable {
 
   private Circle circle;
   private ColorShader shader;
   private String fos;
-  private int nbOcc; // will be displayed on bubble click
-  private int nCitations; // will be displayed on bubble click
+  private int nbOcc; // will be displayed on node click
+  private int nCitations; // will be displayed on node click
 
-  private Bubble(float radius, ColorShader shader, String fos, int nbOcc, int nCitations) {
+  private Node(float radius, ColorShader shader, String fos, int nbOcc, int nCitations) {
     this.circle = new Circle(radius);
     this.shader = shader;
     this.fos = fos;
@@ -24,9 +24,9 @@ public class Bubble extends AbstractDrawable implements Movable {
     this.nCitations = nCitations;
   }
 
-  public static Bubble newBubble(String text, float r, float g, float b, float radius, int nbOcc,
-      int nCitations) throws IOException {
-    return new Bubble(radius, ShaderFactory.rgbShader(r, g, b), text, nbOcc, nCitations);
+  public static Node newNode(String text, float r, float g, float b, float radius, int nbOcc,
+                             int nCitations) throws IOException {
+    return new Node(radius, ShaderFactory.rgbShader(r, g, b), text, nbOcc, nCitations);
   }
 
   @Override
@@ -107,8 +107,8 @@ public class Bubble extends AbstractDrawable implements Movable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Bubble bubble = (Bubble) o;
-    return Objects.equals(fos, bubble.fos);
+    Node node = (Node) o;
+    return Objects.equals(fos, node.fos);
   }
 
   @Override
