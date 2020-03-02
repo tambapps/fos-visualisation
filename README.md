@@ -60,7 +60,7 @@ When you change a year, we compute the nodes added, and the one removed to add/r
 All nodes that still remains in the new year stays in the same place, so that you don't get confused each time you change year.
 
 ### Expand/Tighten
-You can click `e` to expand, stretch the graph (the nodes will move away from the center),
+You can click `e` to expand, `s` to tighten the graph (the nodes will move away from the center),
 and `d` to tighten it.
 
 ## How to run
