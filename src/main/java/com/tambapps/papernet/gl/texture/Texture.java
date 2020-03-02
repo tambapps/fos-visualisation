@@ -72,10 +72,6 @@ public class Texture {
   }
 
   public static Texture newTexture(String path) throws IOException {
-    int width;
-    int height;
-    ByteBuffer buffer;
-
     try (InputStream is = Texture.class.getResourceAsStream("/textures/" + path)) {
       return fromBufferedImage(ImageIO.read(is));
     }
