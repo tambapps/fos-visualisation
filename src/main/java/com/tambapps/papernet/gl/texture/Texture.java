@@ -21,11 +21,11 @@ import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.lwjgl.BufferUtils;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,15 +77,8 @@ public class Texture {
     ByteBuffer buffer;
 
     try (InputStream is = Texture.class.getResourceAsStream("/textures/" + path)) {
-      PNGDecoder decoder = new PNGDecoder(is);
-      width = decoder.getWidth();
-      height = decoder.getHeight();
-      //we will decode to RGBA format, i.e. 4 components or "bytes per pixel"
-      buffer = BufferUtils.createByteBuffer(BPP * width * height);
-      decoder.decode(buffer, width * BPP, PNGDecoder.Format.RGBA);
-      buffer.flip();
+      return fromBufferedImage(ImageIO.read(is));
     }
-    return generateTexture(width, height, buffer);
   }
 
   private static Texture generateTexture(int width, int height, ByteBuffer buffer) {
