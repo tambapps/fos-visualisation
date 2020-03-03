@@ -47,7 +47,7 @@
 
   <properties>
     <lwjgl.version>3.2.3</lwjgl.version>
-    <lwjgl.natives>natives-linux</lwjgl.natives>
+    <lwjgl.natives>natives-windows</lwjgl.natives>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -155,6 +155,10 @@
     <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-ovr</artifactId>
     </dependency>
     <dependency>
       <groupId>org.lwjgl</groupId>
@@ -300,6 +304,11 @@
     <dependency>
       <groupId>org.lwjgl</groupId>
       <artifactId>lwjgl-opus</artifactId>
+      <classifier>${lwjgl.natives}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl</groupId>
+      <artifactId>lwjgl-ovr</artifactId>
       <classifier>${lwjgl.natives}</classifier>
     </dependency>
     <dependency>
